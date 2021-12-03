@@ -13,7 +13,6 @@ type signProps = {
 function AuthProvider({ children }){
   const [loadingAuth, setLoadingAuth] = useState(false);
 
-
   async function signIn({ name, email }: signProps) {
     setLoadingAuth(true)
   }
