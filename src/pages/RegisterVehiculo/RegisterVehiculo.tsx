@@ -1,7 +1,18 @@
-import { Flex, Button, FormControl,  Textarea as TextareaInput, FormLabel, Input as InputFile } from '@chakra-ui/react';
+import { Flex, Button, FormControl, Textarea as TextareaInput, FormLabel } from '@chakra-ui/react';
 import Input from '../../components/Input';
+import FileList from './components/FileList';
+import Upload from './components/Upload';
+
 
 export default function RegisterVehiculo() {
+  const state = {
+    uploadedFiles: []
+  }
+
+  function handleUpload(files){
+    console.log(files);
+  }
+
   return (
     <Flex
       w="100vw"
@@ -20,7 +31,7 @@ export default function RegisterVehiculo() {
       >
         <Input name="text" label="Nome do Veículo" />
 
-        <FormControl> 
+        <FormControl>
           {'Descrição do Veículo' && <FormLabel htmlFor={'Descrição do Veículo'}>Descrição do Veículo</FormLabel>}
           <TextareaInput
             name={'descriptionVehicle'}
@@ -35,8 +46,9 @@ export default function RegisterVehiculo() {
             size="lg"
           />
         </FormControl>
-        <FormLabel htmlFor="Foto do veículo">Foto do veículo</FormLabel>
-        <InputFile type="file" accept="image/*" />
+        
+        <Upload onUpload={handleUpload}/>
+        <FileList />
 
         <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
       </Flex>
