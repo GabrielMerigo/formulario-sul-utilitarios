@@ -6,7 +6,7 @@ export const Container = styled.ul`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #444;
+    color: white;
     & + li {
       margin-top: 15px;
     }
@@ -29,8 +29,8 @@ export const FileInfo = styled.div`
         color: #e57878;
         margin-left: 5px;
         cursor: pointer;
-        
       }
+      
     }
   }
 `;

@@ -1,16 +1,50 @@
-import { Flex, Button, FormControl, Textarea as TextareaInput, FormLabel } from '@chakra-ui/react';
+import { Flex, Button } from '@chakra-ui/react';
 import Input from '../../components/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
+import { uniqueId } from 'lodash';
+import filesize from 'filesize';
+import React, { useState } from 'react';
+import Textarea from '../../components/Textarea';
 
+export interface FileProps {
+  file: string
+  id: number,
+  name: string,
+  readableSize: () => void,
+  preview: () => void,
+  progress: number,
+  uploaded: boolean,
+  error: boolean,
+  url: string
+}
 
 export default function RegisterVehiculo() {
-  const state = {
-    uploadedFiles: []
+  const [uploadedFiles, setUploadedFiles] = useState([] as any);
+
+  function handleUpload(files) {
+    const filesAlready = files.map(file => {
+      const obj = {
+        file,
+        id: uniqueId(),
+        name: file.name,
+        readableSize: filesize(file.size),
+        preview: URL.createObjectURL(file),
+        progress: 0,
+        uploaded: false,
+        error: false,
+        url: null
+      }
+
+      return obj;
+    })
+    setUploadedFiles(uploadedFiles.concat(filesAlready));
+
+    uploadedFiles.forEach(processUpload)
   }
 
-  function handleUpload(files){
-    console.log(files);
+  function processUpload(uploadedFile){
+
   }
 
   return (
@@ -30,25 +64,13 @@ export default function RegisterVehiculo() {
         flexDir="column"
       >
         <Input name="text" label="Nome do Veículo" />
+        <Textarea name="text" label="Descrição do Veículo" />
 
-        <FormControl>
-          {'Descrição do Veículo' && <FormLabel htmlFor={'Descrição do Veículo'}>Descrição do Veículo</FormLabel>}
-          <TextareaInput
-            name={'descriptionVehicle'}
-            type="text"
-            id="descriptionVehicle"
-            focusBorderColor="blue.200"
-            bgColor="gray.900"
-            variant="filled"
-            _hover={{
-              bgColor: 'gray.900'
-            }}
-            size="lg"
-          />
-        </FormControl>
-        
-        <Upload onUpload={handleUpload}/>
-        <FileList />
+        <Upload onUpload={handleUpload} />
+
+        {!!uploadedFiles.length && (
+          <FileList files={uploadedFiles} />
+        )}
 
         <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
       </Flex>

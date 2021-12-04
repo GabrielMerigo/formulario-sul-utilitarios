@@ -6,7 +6,6 @@ const dragActive = css`
 
 const dragReject = css`
   border-color: #e57878;
-  
 `;
 
 export const DropContainer = styled.div.attrs({
@@ -16,6 +15,7 @@ export const DropContainer = styled.div.attrs({
   border-radius:4px;
   cursor: pointer;
 
+  
   transition: height 0.2s ease;
 
   ${props => props.isDragActive && dragActive}
@@ -26,6 +26,7 @@ const messageColors = {
   default: '#999',
   error: '#e57878',
   success: '#78e5d5'
+
 };
 
 export const UploadMessage = styled.p`
