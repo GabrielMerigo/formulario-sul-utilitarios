@@ -1,12 +1,8 @@
-import { DropContainer, UploadMessage } from './styles';
+import { DropContainer, UploadMessage } from '../Upload/styles';
 import Dropzone from 'react-dropzone';
+import { UploadProps } from '../Upload';
 
-export interface UploadProps {
-  onUpload: (files) => void;
-  disabled?: boolean;
-}
-
-export default function Upload({ onUpload }: UploadProps) {
+export default function UploadMainImage({ onUpload, disabled }: UploadProps) {
   function renderDragMessage(isDragActive: boolean, isDragReject: boolean) {
     if (!isDragActive) {
       return <UploadMessage>Arraste arquivos aqui...</UploadMessage>
@@ -26,8 +22,9 @@ export default function Upload({ onUpload }: UploadProps) {
           {...getRootProps()}
           isDragActive={isDragActive}
           isDragReject={isDragReject}
+          disabled={disabled}
         >
-          <input {...getInputProps()} />
+          <input disabled={disabled} {...getInputProps()} />
           {renderDragMessage(isDragActive, isDragReject)}
         </DropContainer>
       )}

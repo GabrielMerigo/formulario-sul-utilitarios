@@ -1,6 +1,6 @@
 import { Container, FileInfo, Preview } from './styles.FileList';
-import { CircularProgressbar } from 'react-circular-progressbar';
 import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
+import { AiFillCheckCircle } from 'react-icons/ai'
 import 'react-circular-progressbar/dist/styles.css';
 import { FileProps } from '../../RegisterVehiculo';
 
@@ -14,6 +14,7 @@ export default function FileList({ files }: FileListProps) {
       {files.map(uploadedFile => (
         <li key={uploadedFile.id}>
           <FileInfo>
+            
             <Preview src={uploadedFile.preview} />
             <div>
               <strong>{uploadedFile.name}</strong>
@@ -31,14 +32,10 @@ export default function FileList({ files }: FileListProps) {
           <div>
             {!uploadedFile.uploaded &&
               !uploadedFile.error && (
-                <CircularProgressbar
-                  styles={{
-                    root: { width: 24 },
-                    path: { stroke: "#7159c1" }
-                  }}
-                  strokeWidth={10}
-                  value={uploadedFile.progress}
-                />
+                <AiFillCheckCircle style={{
+                  fontSize: '27px',
+                  color: '#78e5d5'
+                }} />
               )}
 
             {uploadedFile.url && (
