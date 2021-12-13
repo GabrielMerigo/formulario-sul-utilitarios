@@ -15,6 +15,7 @@ export default function FileList({ files }: FileListProps) {
         <li key={uploadedFile.id}>
           <FileInfo>
             
+            
             <Preview src={uploadedFile.preview} />
             <div>
               <strong>{uploadedFile.name}</strong>
