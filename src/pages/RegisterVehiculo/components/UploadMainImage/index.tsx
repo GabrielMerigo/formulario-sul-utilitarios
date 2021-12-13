@@ -19,6 +19,7 @@ export default function UploadMainImage({ onUpload, disabled }: UploadProps) {
     <Dropzone accept="image/*" onDropAccepted={onUpload}>
       {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
         <DropContainer
+          style={{ width: '80%' }}
           {...getRootProps()}
           isDragActive={isDragActive}
           isDragReject={isDragReject}

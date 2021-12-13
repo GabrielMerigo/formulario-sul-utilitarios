@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack } from '@chakra-ui/react';
 import Input from '../../components/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
@@ -67,60 +67,65 @@ export default function RegisterVehiculo() {
   }
 
   function processUpload(uploadedFile) {
-    
+
   }
 
   return (
-    <Flex
-      w="100vw"
-      h="100vh"
-      align="center"
-      justify="center"
-    >
+    <>
       <Flex
-        as="form"
-        w="100%"
-        maxWidth="700"
-        bg="gray.800"
-        p="8"
-        borderRadius={8}
-        flexDir="column"
+        w="100vw"
+        h="100vh"
+        align="center"
+        justify="center"
       >
-        <FormControl id='carOrTruck'>
-          <FormLabel>Carro ou Caminhão?</FormLabel>
-          <Select bgColor="white" color="black">
-            <option>Selecione</option>
-            <option>Carro</option>
-            <option>Caminhão</option>
-          </Select>
-        </FormControl>
+        <Flex
+          as="form"
+          w="100%"
+          maxWidth="700"
+          bg="gray.800"
+          p="8"
+          borderRadius={8}
+          flexDir="column"
+        >
+          <FormControl id='carOrTruck'>
+            <FormLabel>Carro ou Caminhão?</FormLabel>
+            <Select bgColor="white" color="black">
+              <option>Selecione</option>
+              <option>Carro</option>
+              <option>Caminhão</option>
+            </Select>
+          </FormControl>
 
-        <Input name="text" label="Nome do Veículo" />
-        <Textarea name="text" label="Descrição do Veículo" />
+          <HStack>
+            <Input name="text" label="Nome do Veículo" />
+            <FormControl mt={2}>
+              <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
+              <NumberInput>
+                <NumberInputField />
+              </NumberInput>
+            </FormControl>
+          </HStack>
+          <Input name="text" label="Descrição do Veículo" />
 
-        <FormControl mt={2}>
-          <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-          <NumberInput>
-            <NumberInputField />
-          </NumberInput>
-        </FormControl>
+          <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
+          <HStack>
+            <UploadMainImage disabled={!!uploadedMainImage.length} onUpload={handleUploadMainImage} />
 
-        <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos adicionais'}>{'Fotos adicionais'}</FormLabel>
-        <Upload onUpload={handleUpload} />
+            {!!uploadedMainImage.length && (
+              <FileList files={uploadedMainImage} />
+            )}
+          </HStack>
 
-        {!!uploadedFiles.length && (
-          <FileList files={uploadedFiles} />
-        )}
+          <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
+          <Upload onUpload={handleUpload} />
 
-        <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal'}>{'Foto Principal'}</FormLabel>
-        <UploadMainImage disabled={!!uploadedMainImage.length} onUpload={handleUploadMainImage} />
-
-        {!!uploadedMainImage.length && (
-          <FileList files={uploadedMainImage} />
-        )}
-
-        <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+          {!!uploadedFiles.length && (
+            <FileList files={uploadedFiles} />
+          )}
+          <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+        </Flex>
       </Flex>
-    </Flex>
+
+    </>
   )
 }
