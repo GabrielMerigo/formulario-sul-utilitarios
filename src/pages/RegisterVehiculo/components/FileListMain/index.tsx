@@ -1,4 +1,4 @@
-import { Container, FileInfo, Preview } from './styles.FileList';
+import { Container, FileInfo, Preview, Icons } from '../FileList/styles.FileList';
 import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
@@ -7,10 +7,11 @@ import { FileProps } from '../../RegisterVehiculo';
 import { HStack } from '@chakra-ui/react';
 
 interface FileListProps {
-  files: FileProps[]
+  files: FileProps[],
+  handleDelete: () => void;
 }
 
-export default function FileList({ files }: FileListProps) {
+export default function FileListMain({ files, handleDelete }: FileListProps) {
   return (
     <Container>
       {files.map(uploadedFile => (
@@ -33,13 +34,15 @@ export default function FileList({ files }: FileListProps) {
           <div>
             {!uploadedFile.uploaded &&
               !uploadedFile.error && (
-                <HStack p={4}>
-                  <AiFillCheckCircle style={{
-                    fontSize: '27px',
-                    color: '#78e5d5'
-                  }} />
-                  <BsFillTrashFill onClick={() => {}} size={24} color="#e57878" />
-                </HStack>
+                <Icons>
+                  <HStack p={4}>
+                    <AiFillCheckCircle style={{
+                      fontSize: '27px',
+                      color: '#78e5d5'
+                    }} />
+                    <BsFillTrashFill onClick={handleDelete} size={24} color="#e57878" />
+                  </HStack>
+                </Icons>
               )}
 
             {uploadedFile.url && (

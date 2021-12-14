@@ -30,13 +30,13 @@ export const FileInfo = styled.div`
         margin-left: 5px;
         cursor: pointer;
       }
-      
     }
   }
 `;
 
 export const Preview = styled.div`
   width: 36px;
+
   height: 36px;
   border-radius: 5px;
   background-image: url(${props => props.src});
@@ -44,4 +44,12 @@ export const Preview = styled.div`
   background-size: cover;
   background-position: 50% 50%;
   margin-right: 10px;
+`;
+
+export const Icons = styled.div`
+  svg:last-child:hover{
+    filter: brightness(0.8);
+    cursor: pointer;
+  }
+
 `;

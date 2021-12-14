@@ -4,6 +4,7 @@ const dragActive = css`
   border-color: #78e5d5;
 `;
 
+
 const dragReject = css`
   border-color: #e57878;
 `;
@@ -11,6 +12,7 @@ const dragReject = css`
 const disabled = css`
   border: 1px dashed #3d3d3d;
   cursor: not-allowed;
+
 `;
 
 export const DropContainer = styled.div.attrs({

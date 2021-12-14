@@ -7,6 +7,7 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import Textarea from '../../components/Textarea';
 import UploadMainImage from './components/UploadMainImage';
+import FileListMain from './components/FileListMain';
 
 export interface FileProps {
   file: string
@@ -41,8 +42,6 @@ export default function RegisterVehiculo() {
       return obj;
     })
     setUploadedFiles(uploadedFiles.concat(filesAlready));
-
-    uploadedFiles.forEach(processUpload)
   }
 
   function handleUploadMainImage(files) {
@@ -62,19 +61,17 @@ export default function RegisterVehiculo() {
       return obj;
     })
     setUploadedMainImage(uploadedMainImage.concat(filesAlready));
-
-    uploadedMainImage.forEach(processUpload)
   }
 
-  function processUpload(uploadedFile) {
-
+  function handleDeleteFileMain() {
+    setUploadedMainImage([])
   }
 
   return (
     <>
       <Flex
         w="100vw"
-        h="100vh"
+        h="100%"
         align="center"
         justify="center"
       >
@@ -112,7 +109,7 @@ export default function RegisterVehiculo() {
             <UploadMainImage disabled={!!uploadedMainImage.length} onUpload={handleUploadMainImage} />
 
             {!!uploadedMainImage.length && (
-              <FileList files={uploadedMainImage} />
+              <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
             )}
           </HStack>
 
