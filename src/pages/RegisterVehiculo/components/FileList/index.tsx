@@ -1,4 +1,4 @@
-import { Container, FileInfo, Preview } from './styles.FileList';
+import { Container, FileInfo, Icons, Preview } from './styles.FileList';
 import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
@@ -8,9 +8,10 @@ import { HStack } from '@chakra-ui/react';
 
 interface FileListProps {
   files: FileProps[]
+  handleDeleteOtherFiles: (id: number) => void;
 }
 
-export default function FileList({ files }: FileListProps) {
+export default function FileList({ files, handleDeleteOtherFiles }: FileListProps) {
   return (
     <Container>
       {files.map(uploadedFile => (
@@ -22,7 +23,7 @@ export default function FileList({ files }: FileListProps) {
               <span>
                 {uploadedFile.readableSize}{" "}
                 {!!uploadedFile.url && (
-                  <button onClick={() => { }}>
+                  <button>
                     Excluir
                   </button>
                 )}
@@ -33,13 +34,15 @@ export default function FileList({ files }: FileListProps) {
           <div>
             {!uploadedFile.uploaded &&
               !uploadedFile.error && (
-                <HStack p={4}>
-                  <AiFillCheckCircle style={{
-                    fontSize: '27px',
-                    color: '#78e5d5'
-                  }} />
-                  <BsFillTrashFill onClick={() => {}} size={24} color="#e57878" />
-                </HStack>
+                <Icons>
+                  <HStack p={4}>
+                    <AiFillCheckCircle style={{
+                      fontSize: '27px',
+                      color: '#78e5d5'
+                    }} />
+                    <BsFillTrashFill onClick={() => handleDeleteOtherFiles(uploadedFile.id)} size={24} color="#e57878" />
+                  </HStack>
+                </Icons>
               )}
 
             {uploadedFile.url && (

@@ -5,7 +5,6 @@ import Upload from './components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import React, { useState } from 'react';
-import Textarea from '../../components/Textarea';
 import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
 
@@ -67,6 +66,11 @@ export default function RegisterVehiculo() {
     setUploadedMainImage([])
   }
 
+  function handleDeleteOtherFiles(id: number) {
+    const filesFiltered = uploadedFiles.filter(file => file.id !== id)
+    setUploadedFiles(filesFiltered)
+  }
+
   return (
     <>
       <Flex
@@ -117,7 +121,7 @@ export default function RegisterVehiculo() {
           <Upload onUpload={handleUpload} />
 
           {!!uploadedFiles.length && (
-            <FileList files={uploadedFiles} />
+            <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
           <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>

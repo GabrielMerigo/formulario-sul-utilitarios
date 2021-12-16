@@ -10,6 +10,7 @@ export const Container = styled.ul`
     & + li {
       margin-top: 15px;
     }
+    
   }
 `;
 
