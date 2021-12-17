@@ -22,11 +22,6 @@ export default function FileListMain({ files, handleDelete }: FileListProps) {
               <strong>{uploadedFile.name}</strong>
               <span>
                 {uploadedFile.readableSize}{" "}
-                {!!uploadedFile.url && (
-                  <button onClick={() => { }}>
-                    Excluir
-                  </button>
-                )}
               </span>
             </div>
           </FileInfo>

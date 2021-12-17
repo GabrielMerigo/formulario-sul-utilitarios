@@ -12,6 +12,7 @@ const dragReject = css`
 const disabled = css`
   border: 1px dashed #3d3d3d;
   cursor: not-allowed;
+
 `;
 
 export const DropContainer = styled.div.attrs({

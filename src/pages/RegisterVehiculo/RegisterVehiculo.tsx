@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../components/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
@@ -23,6 +23,10 @@ export interface FileProps {
 export default function RegisterVehiculo() {
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
   const [uploadedMainImage, setUploadedMainImage] = useState([] as any);
+  const [carOrTruck, setCarOrTruck] = useState('');
+  const [vehicleName, setVehicleName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState('');
 
   function handleUpload(files) {
     const filesAlready = files.map(file => {
@@ -63,7 +67,7 @@ export default function RegisterVehiculo() {
   }
 
   function handleDeleteFileMain() {
-    setUploadedMainImage([])
+    setUploadedMainImage([]);
   }
 
   function handleDeleteOtherFiles(id: number) {
@@ -74,10 +78,12 @@ export default function RegisterVehiculo() {
   return (
     <>
       <Flex
-        w="100vw"
+        w="100%"
         h="100%"
         align="center"
         justify="center"
+        marginTop={5}
+        marginBottom={5}
       >
         <Flex
           as="form"
@@ -90,7 +96,9 @@ export default function RegisterVehiculo() {
         >
           <FormControl id='carOrTruck'>
             <FormLabel>Carro ou Caminhão?</FormLabel>
-            <Select bgColor="white" color="black">
+            <Select onChange={(e: any) => {
+              setCarOrTruck(e.target.value)
+            }} bgColor="white" color="black">
               <option>Selecione</option>
               <option>Carro</option>
               <option>Caminhão</option>
@@ -98,15 +106,19 @@ export default function RegisterVehiculo() {
           </FormControl>
 
           <HStack>
-            <Input name="text" label="Nome do Veículo" />
+            <Input onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
             <FormControl mt={2}>
               <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput>
-                <NumberInputField />
+              <NumberInput defaultValue={0} precision={2} step={0.2}>
+                <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
               </NumberInput>
             </FormControl>
           </HStack>
-          <Input name="text" label="Descrição do Veículo" />
+          <Input onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
 
           <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
           <HStack>
@@ -123,9 +135,21 @@ export default function RegisterVehiculo() {
           {!!uploadedFiles.length && (
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
-          <Button type="submit" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
-        </Flex>
+          <Button onClick={() => {
+            const imagesString = uploadedFiles.map(file => file.preview)
+            
+            console.log({
+              childImages: imagesString,
+              createdAt: new Date(),
+              description,
+              title: vehicleName,
+              priceFormatted: price,
+              isTruck: carOrTruck === 'Carro' ? false : true,
+              mainImage: uploadedMainImage
+            })
+          }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
       </Flex>
+    </Flex>
 
     </>
   )
