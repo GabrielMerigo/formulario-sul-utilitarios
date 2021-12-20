@@ -7,6 +7,8 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
+import { db, addDoc, collection } from "../../services/firebaseConnection";
+import { addAbortSignal } from 'stream';
 
 export interface FileProps {
   file: string
@@ -18,6 +20,16 @@ export interface FileProps {
   uploaded: boolean,
   error: boolean,
   url: string
+}
+
+interface Vehicle {
+  createdAt: Date;
+  mainImage: string;
+  childImages: string[];
+  priceFormatted: number;
+  description: string;
+  title: string;
+  isTruck: boolean;
 }
 
 export default function RegisterVehiculo() {
@@ -73,6 +85,11 @@ export default function RegisterVehiculo() {
   function handleDeleteOtherFiles(id: number) {
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
+  }
+
+  async function createVehicle(payload: Vehicle, truckOrVehicle) {
+    const dbRef = collection(db, truckOrVehicle);
+    await addDoc(dbRef, payload)
   }
 
   return (
@@ -137,19 +154,20 @@ export default function RegisterVehiculo() {
           )}
           <Button onClick={() => {
             const imagesString = uploadedFiles.map(file => file.preview)
-            
-            console.log({
+
+            createVehicle({
               childImages: imagesString,
               createdAt: new Date(),
               description,
               title: vehicleName,
               priceFormatted: price,
               isTruck: carOrTruck === 'Carro' ? false : true,
-              mainImage: uploadedMainImage
-            })
+              mainImage: uploadedMainImage[0].preview
+            }, carOrTruck === 'Carro' ? 'vehicle' : 'truck')
+            
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+        </Flex>
       </Flex>
-    </Flex>
 
     </>
   )
