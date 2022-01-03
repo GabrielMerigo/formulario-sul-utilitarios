@@ -7,8 +7,7 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
-import { db, addDoc, collection } from "../../services/firebaseConnection";
-import { addAbortSignal } from 'stream';
+import { db, addDoc, collection, storage, ref } from "../../services/firebaseConnection";
 
 export interface FileProps {
   file: string
@@ -41,6 +40,8 @@ export default function RegisterVehiculo() {
   const [description, setDescription] = useState('');
 
   function handleUpload(files) {
+    const storageRef = ref(storage, `images/${files.name}`);
+
     const filesAlready = files.map(file => {
       const obj = {
         file,
@@ -164,7 +165,7 @@ export default function RegisterVehiculo() {
               isTruck: carOrTruck === 'Carro' ? false : true,
               mainImage: uploadedMainImage[0].preview
             }, carOrTruck === 'Carro' ? 'vehicle' : 'truck')
-            
+
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>
       </Flex>
