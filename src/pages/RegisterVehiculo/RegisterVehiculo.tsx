@@ -7,7 +7,7 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
-import { db, addDoc, collection, storage, ref } from "../../services/firebaseConnection";
+import { db, addDoc, collection, storage, ref, uploadBytes } from "../../services/firebaseConnection";
 
 export interface FileProps {
   file: string
@@ -24,7 +24,7 @@ export interface FileProps {
 interface Vehicle {
   createdAt: Date;
   mainImage: string;
-  childImages: string[];
+  childImages: String[];
   priceFormatted: number;
   description: string;
   title: string;
@@ -34,27 +34,35 @@ interface Vehicle {
 export default function RegisterVehiculo() {
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
   const [uploadedMainImage, setUploadedMainImage] = useState([] as any);
+  const filesNames: String[] = [];
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
 
   function handleUpload(files) {
-    const storageRef = ref(storage, `images/${files.name}`);
 
     const filesAlready = files.map(file => {
+      
+      const storageRef = ref(storage, `vehicles/${file.name}-${uniqueId()}`);
+      uploadBytes(storageRef, files[0]).then((snapshot) => {
+        console.log(snapshot);
+      });
+
+      filesNames.push(`vehicles/${file.name}-${uniqueId()}`);
+
       const obj = {
         file,
         id: uniqueId(),
         name: file.name,
         readableSize: filesize(file.size),
-        preview: URL.createObjectURL(file),
         progress: 0,
         uploaded: false,
         error: false,
         url: null
       }
 
+      console.log(obj)
       return obj;
     })
     setUploadedFiles(uploadedFiles.concat(filesAlready));
@@ -62,12 +70,17 @@ export default function RegisterVehiculo() {
 
   function handleUploadMainImage(files) {
     const filesAlready = files.map(file => {
+      const storageRef = ref(storage, `vehicles/${file.name}-${uniqueId()}`);
+      uploadBytes(storageRef, files[0]).then((snapshot) => {
+        console.log(snapshot);
+      });
+
       const obj = {
         file,
         id: uniqueId(),
         name: file.name,
         readableSize: filesize(file.size),
-        preview: URL.createObjectURL(file),
+        preview: `${file.name}-${uniqueId()}`,
         progress: 0,
         uploaded: false,
         error: false,
@@ -88,8 +101,9 @@ export default function RegisterVehiculo() {
     setUploadedFiles(filesFiltered)
   }
 
-  async function createVehicle(payload: Vehicle, truckOrVehicle) {
+  async function createVehicle(payload: Vehicle, truckOrVehicle: string) {
     const dbRef = collection(db, truckOrVehicle);
+    console.log(payload)
     await addDoc(dbRef, payload)
   }
 
@@ -154,10 +168,9 @@ export default function RegisterVehiculo() {
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
           <Button onClick={() => {
-            const imagesString = uploadedFiles.map(file => file.preview)
 
             createVehicle({
-              childImages: imagesString,
+              childImages: filesNames,
               createdAt: new Date(),
               description,
               title: vehicleName,
@@ -169,7 +182,6 @@ export default function RegisterVehiculo() {
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>
       </Flex>
-
     </>
   )
 }
