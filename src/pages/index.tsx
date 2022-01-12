@@ -1,11 +1,11 @@
-import RegisterVehiculo from './RegisterVehiculo/RegisterVehiculo';
+import RegisterVehicle from './RegisterVehiculo/RegisterVehicle';
 import SignIn from './SignIn';
 
 export default function Home() {
   return (
     <>
       {/* <SignIn /> */}
-      <RegisterVehiculo />
+      <RegisterVehicle />
     </>
   );
 }

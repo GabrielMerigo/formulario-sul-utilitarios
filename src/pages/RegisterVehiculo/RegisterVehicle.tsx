@@ -7,7 +7,16 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
-import { db, addDoc, collection, storage, ref, uploadBytes } from "../../services/firebaseConnection";
+import {
+  db,
+  addDoc,
+  collection,
+  storage,
+  ref,
+  uploadBytes,
+  deleteObject,
+  getDownloadURL
+} from "../../services/firebaseConnection";
 
 export interface FileProps {
   file: string
@@ -44,6 +53,12 @@ interface MainImage {
   error: boolean,
   url: string
   idMainImage: string;
+}
+
+const getImage = async mainImage => {
+  const listRef = ref(storage, `vehicles/${mainImage}`)
+  const url = await getDownloadURL(listRef)
+  return url
 }
 
 export default function RegisterVehiculo() {
@@ -92,7 +107,7 @@ export default function RegisterVehiculo() {
       uploadBytes(storageRef, files[0]).then((snapshot) => {
         console.log(snapshot);
       });
-  
+
       const obj = {
         file,
         id: uniqueId(),
@@ -102,7 +117,7 @@ export default function RegisterVehiculo() {
         progress: 0,
         uploaded: false,
         error: false,
-        idMainImage:`${file.name}`,
+        idMainImage: `${file.name}`,
         url: null
       }
 
@@ -112,18 +127,43 @@ export default function RegisterVehiculo() {
   }
 
   function handleDeleteFileMain() {
+    const fileName = uploadedMainImage[0].name;
+    const desertRef = ref(storage, `vehicles/${fileName}`);
+    deleteObject(desertRef).then(res => {
+      console.log('Excluído')
+    }).catch((err) => {
+      console.log(err)
+    })
+
     setUploadedMainImage([]);
   }
 
   function handleDeleteOtherFiles(id: number) {
+    const file = uploadedFiles.filter(file => file.id === id);
+    const fileName = file[0].name;
+    const desertRef = ref(storage, `vehicles/${fileName}`);
+    deleteObject(desertRef).then(res => {
+      console.log('Excluído')
+    }).catch((err) => {
+      console.log(err)
+    })
+
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
   }
 
-  async function createVehicle(payload: Vehicle, truckOrVehicle) {
+  async function createVehicle(payload: Vehicle, truckOrVehicle: string) {
     const dbRef = collection(db, truckOrVehicle);
-    console.log(payload)
-    await addDoc(dbRef, payload)
+    const nameImages = payload.childImages.map(async (file: string) => await getImage(file));
+    const mainImage = await getImage(payload.mainImage)
+
+    Promise.all(nameImages).then(arrayUrls => {
+      payload.childImages = arrayUrls;
+      payload.mainImage = mainImage
+    })
+
+    console.log(payload);
+    addDoc(dbRef, payload)
   }
 
   return (
