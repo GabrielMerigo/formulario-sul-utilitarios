@@ -59,13 +59,13 @@ export default function RegisterVehiculo() {
   function handleUpload(files) {
 
     const filesAlready = files.map(file => {
-      const storageRef = ref(storage, `vehicles/${file.name}-${uniqueId()}`);
+      const storageRef = ref(storage, `vehicles/${file.name}`);
       uploadBytes(storageRef, files[0]).then((snapshot) => {
         console.log(snapshot);
       });
 
       setFilesIds([
-        `${file.name}-${uniqueId()}`,
+        `${file.name}`,
         ...filesIds
       ])
 
@@ -88,7 +88,7 @@ export default function RegisterVehiculo() {
 
   function handleUploadMainImage(files) {
     const filesAlready = files.map(file => {
-      const storageRef = ref(storage, `vehicles/${file.name}-${uniqueId()}`);
+      const storageRef = ref(storage, `vehicles/${file.name}`);
       uploadBytes(storageRef, files[0]).then((snapshot) => {
         console.log(snapshot);
       });
@@ -102,7 +102,7 @@ export default function RegisterVehiculo() {
         progress: 0,
         uploaded: false,
         error: false,
-        idMainImage:`${file.name}-${uniqueId()}`,
+        idMainImage:`${file.name}`,
         url: null
       }
 

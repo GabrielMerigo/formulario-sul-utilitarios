@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import { getFirestore, collection, getDocs, getDoc, doc, addDoc } from 'firebase/firestore/lite';
 import 'firebase/firestore';
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { getStorage, ref, uploadBytes, } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDc9ad2YMJ8g_y7z8ATC-bR4BJzaxEj2pw",
@@ -18,6 +18,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export {
+  firebase,
   db,
   uploadBytes,
   storage,
