@@ -7,6 +7,9 @@ import filesize from 'filesize';
 import React, { useState } from 'react';
 import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
 import FileListMain from './RegisterVehicle/components/FileListMain';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import {
   db,
   addDoc,
@@ -68,11 +71,11 @@ export default function RegisterVehiculo() {
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [filesIds, setFilesIds] = useState<String[]>([]);
 
   function handleUpload(files) {
-
     const filesAlready = files.map(file => {
       const storageRef = ref(storage, `vehicles/${file.name}`);
       uploadBytes(storageRef, files[0]).then((snapshot) => {
@@ -153,6 +156,7 @@ export default function RegisterVehiculo() {
   }
 
   async function createVehicle(payload: Vehicle, truckOrVehicle: string) {
+    setLoading(true);
     const dbRef = collection(db, truckOrVehicle);
     const nameImages = payload.childImages.map(async (file: string) => await getImage(file));
     const mainImage = await getImage(payload.mainImage)
@@ -160,9 +164,22 @@ export default function RegisterVehiculo() {
     Promise.all(nameImages).then(arrayUrls => {
       payload.childImages = arrayUrls;
       payload.mainImage = mainImage
-      
+
       addDoc(dbRef, payload)
+      toast.success('O veículo foi cadastrado com sucesso!');
+
+      setUploadedFiles([])
+      setUploadedMainImage([])
+      setCarOrTruck('')
+      setVehicleName('')
+      setDescription('')
+      setPrice(0)
+    }).catch(() => {
+      toast.error('Ops! Ocorreu algum problema para cadastrar o veículo...');
+    }).finally(() => {
+      setLoading(false);
     })
+
   }
 
   return (
@@ -186,7 +203,7 @@ export default function RegisterVehiculo() {
         >
           <FormControl id='carOrTruck'>
             <FormLabel>Carro ou Caminhão?</FormLabel>
-            <Select onChange={(e: any) => {
+            <Select value={carOrTruck} onChange={(e: any) => {
               setCarOrTruck(e.target.value)
             }} bgColor="white" color="black">
               <option>Selecione</option>
@@ -194,12 +211,13 @@ export default function RegisterVehiculo() {
               <option>Caminhão</option>
             </Select>
           </FormControl>
+          <ToastContainer />
 
           <HStack>
             <Input onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
             <FormControl mt={2}>
               <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput defaultValue={0} precision={2} step={0.2}>
+              <NumberInput value={price} defaultValue={0} precision={2} step={0.2}>
                 <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -225,7 +243,7 @@ export default function RegisterVehiculo() {
           {!!uploadedFiles.length && (
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
-          <Button onClick={() => {
+          <Button isLoading={loading} onClick={() => {
             createVehicle({
               childImages: filesIds,
               createdAt: new Date(),

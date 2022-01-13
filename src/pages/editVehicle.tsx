@@ -1,6 +1,7 @@
 import { Flex, Button, Grid, GridItem } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
 import { useState, useCallback, useEffect } from 'react';
+import { BoxItem } from './EditVehicle/components/BoxItem';
 
 export interface VehiclesTypes {
   createdAt: string;
@@ -9,13 +10,14 @@ export interface VehiclesTypes {
   title: string;
   description: string;
   priceFormatted: number;
+  isTruck: boolean;
   id: string;
 }
 
 export default function EditVehicle() {
   const [vehicles, setVehicles] = useState<VehiclesTypes[]>([]);
 
-  async function getVehicles(){
+  async function getVehicles() {
     const vehiclesCol = collection(db, 'vehicles');
     const vehicleSnapshot = await getDocs(vehiclesCol);
     const vehicleList = vehicleSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Array<VehiclesTypes>;
@@ -24,11 +26,12 @@ export default function EditVehicle() {
 
   useEffect(() => {
     getVehicles().then(res => {
+      console.log(res)
       setVehicles(res)
     })
-    .catch(err => {
-      console.log('erro', err)
-    })
+      .catch(err => {
+        console.log('erro', err)
+      })
   }, [])
 
   return (
@@ -43,16 +46,25 @@ export default function EditVehicle() {
       <Flex
         as="form"
         w="100%"
-        maxWidth="900"
+        maxWidth="1000"
         bg="gray.800"
         p="8"
         borderRadius={8}
         flexDir="column"
       >
-        <Grid templateColumns='repeat(3, 1fr)' gap={4}>
-          <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
-          <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
-          <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
+        <Grid templateColumns='repeat(3, 1fr)' gap={2}>
+          {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
+            <BoxItem
+              isTruck={isTruck}
+              createdAt={createdAt}
+              id={id}
+              mainImage={mainImage}
+              title={title}
+              key={id}
+              description={description}
+              priceFormatted={priceFormatted}
+            />
+          ))}
         </Grid>
       </Flex>
     </Flex>
