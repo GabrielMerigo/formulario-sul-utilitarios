@@ -24,7 +24,6 @@ export default function EditVehicle() {
 
   useEffect(() => {
     getVehicles().then(res => {
-      console.log(res)
       setVehicles(res)
     })
     .catch(err => {
@@ -54,10 +53,7 @@ export default function EditVehicle() {
           <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
           <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
           <GridItem borderRadius={10} w='100%' h='250' bg='blue.500' />
-
         </Grid>
-
-
       </Flex>
     </Flex>
   )
