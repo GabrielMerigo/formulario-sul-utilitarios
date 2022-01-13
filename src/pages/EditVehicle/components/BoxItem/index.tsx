@@ -49,7 +49,7 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id }: B
         >
           {description}
         </Box>
-        <Link href={`vehicle?id=${id}`} passHref>
+        <Link href={`editVehicle?id=${id}`} as={`editVehicle?id=${id}`} passHref>
           <Button margin={'10px auto'} background={'blue.500'}> Editar </Button>
         </Link>
       </Box>

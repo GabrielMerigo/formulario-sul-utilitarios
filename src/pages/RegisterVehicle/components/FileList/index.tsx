@@ -3,7 +3,7 @@ import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
 import 'react-circular-progressbar/dist/styles.css';
-import { FileProps } from '../../../registerVehicle';
+import { FileProps } from '../..';
 import { HStack } from '@chakra-ui/react';
 
 interface FileListProps {

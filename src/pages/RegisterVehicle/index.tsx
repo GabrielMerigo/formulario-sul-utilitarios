@@ -1,12 +1,12 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
-import Input from '../components/Input';
-import FileList from './RegisterVehicle/components/FileList';
-import Upload from './RegisterVehicle/components/Upload';
+import Input from '../../components/Input';
+import FileList from './components/FileList';
+import Upload from './components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import React, { useState } from 'react';
-import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
-import FileListMain from './RegisterVehicle/components/FileListMain';
+import UploadMainImage from './components/UploadMainImage';
+import FileListMain from './components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -19,7 +19,7 @@ import {
   uploadBytes,
   deleteObject,
   getDownloadURL
-} from "../services/firebaseConnection";
+} from "../../services/firebaseConnection";
 
 export interface FileProps {
   file: string
@@ -214,10 +214,10 @@ export default function RegisterVehiculo() {
           <ToastContainer />
 
           <HStack>
-            <Input onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
+            <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
             <FormControl mt={2}>
               <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput value={price} defaultValue={0} precision={2} step={0.2}>
+              <NumberInput value={price} precision={2} step={0.2}>
                 <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -226,7 +226,8 @@ export default function RegisterVehiculo() {
               </NumberInput>
             </FormControl>
           </HStack>
-          <Input onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
+
+          <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
 
           <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
           <HStack>
