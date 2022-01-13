@@ -1,12 +1,12 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
-import Input from '../../components/Input';
-import FileList from './components/FileList';
-import Upload from './components/Upload';
+import Input from '../components/Input';
+import FileList from './RegisterVehicle/components/FileList';
+import Upload from './RegisterVehicle/components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import React, { useState } from 'react';
-import UploadMainImage from './components/UploadMainImage';
-import FileListMain from './components/FileListMain';
+import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
+import FileListMain from './RegisterVehicle/components/FileListMain';
 import {
   db,
   addDoc,
@@ -16,7 +16,7 @@ import {
   uploadBytes,
   deleteObject,
   getDownloadURL
-} from "../../services/firebaseConnection";
+} from "../services/firebaseConnection";
 
 export interface FileProps {
   file: string
@@ -160,10 +160,9 @@ export default function RegisterVehiculo() {
     Promise.all(nameImages).then(arrayUrls => {
       payload.childImages = arrayUrls;
       payload.mainImage = mainImage
+      
+      addDoc(dbRef, payload)
     })
-
-    console.log(payload);
-    addDoc(dbRef, payload)
   }
 
   return (
@@ -235,7 +234,7 @@ export default function RegisterVehiculo() {
               priceFormatted: price,
               isTruck: carOrTruck === 'Carro' ? false : true,
               mainImage: uploadedMainImage[0].idMainImage,
-            }, carOrTruck === 'Carro' ? 'vehicles' : 'truck')
+            }, 'vehicles')
 
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>
