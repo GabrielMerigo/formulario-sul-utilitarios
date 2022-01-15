@@ -1,5 +1,5 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
-import Input from '../../components/Input';
+import Input from '../../../utils/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
 import { uniqueId } from 'lodash';
