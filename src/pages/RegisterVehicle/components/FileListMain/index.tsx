@@ -3,56 +3,53 @@ import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
 import 'react-circular-progressbar/dist/styles.css';
-import { FileProps } from '../..';
+import { MainImage } from '../..';
 import { HStack } from '@chakra-ui/react';
 
 interface FileListProps {
-  files: FileProps[],
+  files: MainImage,
   handleDelete: () => void;
 }
 
 export default function FileListMain({ files, handleDelete }: FileListProps) {
   return (
     <Container>
-      {files.map(uploadedFile => (
-        <li key={uploadedFile.id}>
-          <FileInfo>
-            <Preview src={uploadedFile.preview} />
-            <div>
-              <strong>{uploadedFile.name}</strong>
-              <span>
-                {uploadedFile.readableSize}{" "}
-              </span>
-            </div>
-          </FileInfo>
-
+      <li key={files.id}>
+        <FileInfo>
+          <Preview src={files.preview} />
           <div>
-            {!uploadedFile.uploaded &&
-              !uploadedFile.error && (
-                <Icons>
-                  <HStack p={4}>
-                    <AiFillCheckCircle style={{
-                      fontSize: '27px',
-                      color: '#78e5d5'
-                    }} />
-                    <BsFillTrashFill onClick={handleDelete} size={24} color="#e57878" />
-                  </HStack>
-                </Icons>
-              )}
+            <strong>{files.name}</strong>
+            <span>
+              {files.readableSize}{" "}
+            </span>
+          </div>
+        </FileInfo>
 
-            {uploadedFile.url && (
-              <a
-                href={uploadedFile.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MdLink style={{ marginRight: 8 }} size={24} color="white" />
-              </a>
+        <div>
+          {!files.uploaded &&
+            !files.error && (
+              <Icons>
+                <HStack p={4}>
+                  <AiFillCheckCircle style={{
+                    fontSize: '27px',
+                    color: '#78e5d5'
+                  }} />
+                  <BsFillTrashFill onClick={handleDelete} size={24} color="#e57878" />
+                  {files.url && (
+                    <a
+                      href={files.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <MdLink style={{ marginRight: 8 }} size={24} color="white" />
+                    </a>
+                  )}
+                </HStack>
+              </Icons>
             )}
 
-          </div>
-        </li>
-      ))}
+        </div>
+      </li>
     </Container>
   )
 }

@@ -22,11 +22,6 @@ export default function FileList({ files, handleDeleteOtherFiles }: FileListProp
               <strong>{uploadedFile.name}</strong>
               <span>
                 {uploadedFile.readableSize}{" "}
-                {!!uploadedFile.url && (
-                  <button>
-                    Excluir
-                  </button>
-                )}
               </span>
             </div>
           </FileInfo>
@@ -41,20 +36,18 @@ export default function FileList({ files, handleDeleteOtherFiles }: FileListProp
                       color: '#78e5d5'
                     }} />
                     <BsFillTrashFill onClick={() => handleDeleteOtherFiles(uploadedFile.id)} size={24} color="#e57878" />
+                    {uploadedFile.url && (
+                      <a
+                        href={uploadedFile.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MdLink style={{ marginRight: 8 }} size={24} color="white" />
+                      </a>
+                    )}
                   </HStack>
                 </Icons>
               )}
-
-            {uploadedFile.url && (
-              <a
-                href={uploadedFile.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MdLink style={{ marginRight: 8 }} size={24} color="white" />
-              </a>
-            )}
-
           </div>
         </li>
       ))}

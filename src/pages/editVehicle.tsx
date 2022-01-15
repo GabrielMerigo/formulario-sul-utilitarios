@@ -45,24 +45,24 @@ interface Vehicle {
 }
 
 interface MainImage {
-  file: string
-  id: number,
-  name: string,
-  readableSize: () => void,
-  preview: () => void,
-  progress: number,
-  uploaded: boolean,
-  mainImage: string,
-  error: boolean,
-  url: string
-  idMainImage: string;
+  file?: string
+  id?: number,
+  name?: string,
+  readableSize?: string,
+  preview?: string,
+  progress?: number,
+  uploaded?: boolean,
+  mainImage?: string,
+  error?: boolean,
+  url?: string
+  idMainImage?: string;
 }
 
 export default function EditVehicle() {
   const router = useRouter();
   const id: string = useMemo(() => router.query.id as string, [router.query]);
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
-  const [uploadedMainImage, setUploadedMainImage] = useState<MainImage[]>([]);
+  const [uploadedMainImage, setUploadedMainImage] = useState<MainImage>({} as MainImage);
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
@@ -74,19 +74,17 @@ export default function EditVehicle() {
 
   const getVehicle = useCallback(async () => {
     if (id) {
-      setLoading(true)
       const docRef = doc(db, 'vehicles', id);
       await getDoc(docRef)
         .then((docSnap) => {
-          setVehicle({
-            createdAt: docSnap.data().createdAt,
-            mainImage: docSnap.data().mainImage,
-            childImages: docSnap.data().childImages,
-            priceFormatted: docSnap.data().priceFormatted,
-            description: docSnap.data().description,
-            title: docSnap.data().title,
-            id
-          });
+          const isTruck = docSnap.data().isTruck === true 
+          setUploadedMainImage(docSnap.data().mainImage);
+          setUploadedFiles(docSnap.data().childImages)
+          setPrice(docSnap.data().priceFormatted)
+          setDescription(docSnap.data().description)
+          setVehicleName(docSnap.data().title)
+          setCarOrTruck(isTruck ? 'Caminhão' : 'Carro')
+          console.log(docSnap.data())
         })
         .catch(err => console.log)
         .finally(() => setLoading(false))
@@ -127,7 +125,7 @@ export default function EditVehicle() {
   }
 
   function handleUploadMainImage(files) {
-    const filesAlready = files.map(file => {
+    const fileAlready = files.forEach(file => {
       const storageRef = ref(storage, `vehicles/${file.name}`);
       uploadBytes(storageRef, files[0]).then((snapshot) => {
         console.log(snapshot);
@@ -148,7 +146,7 @@ export default function EditVehicle() {
 
       return obj;
     })
-    setUploadedMainImage(uploadedMainImage.concat(filesAlready));
+    setUploadedMainImage(fileAlready);
   }
 
   function handleDeleteFileMain() {
@@ -160,7 +158,20 @@ export default function EditVehicle() {
       console.log(err)
     })
 
-    setUploadedMainImage([]);
+  
+    setUploadedMainImage({
+      file: '',
+      id: 0,
+      name: '',
+      readableSize: '',
+      preview: '',
+      progress: 0,
+      uploaded: null,
+      mainImage: '',
+      error: null,
+      url: '',
+      idMainImage: ''
+    });
   }
 
   function handleDeleteOtherFiles(id: number) {
@@ -228,9 +239,9 @@ export default function EditVehicle() {
 
           <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
           <HStack>
-            <UploadMainImage disabled={!!uploadedMainImage.length} onUpload={handleUploadMainImage} />
+            <UploadMainImage disabled={!!uploadedMainImage} onUpload={handleUploadMainImage} />
 
-            {!!uploadedMainImage.length && (
+            {!!uploadedMainImage && (
               <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
             )}
           </HStack>

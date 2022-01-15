@@ -22,40 +22,48 @@ import {
 } from "../../services/firebaseConnection";
 
 export interface FileProps {
-  file: string
-  id: number,
-  name: string,
-  readableSize: () => void,
-  preview: () => void,
-  progress: number,
-  uploaded: boolean,
-  mainImage: string,
-  error: boolean,
-  url: string
+  file?: string
+  id?: number,
+  name?: string,
+  readableSize?: () => void,
+  preview?: () => void,
+  progress?: number,
+  uploaded?: boolean,
+  mainImage?: string,
+  error?: boolean,
+  url?: string
+  idMainImage?: string;
 }
 
 interface Vehicle {
   createdAt: Date;
-  mainImage: string;
-  childImages: String[];
+  mainImage: MainImage;
+  childImages: Files[];
   priceFormatted: number;
   description: string;
   title: string;
   isTruck: boolean;
 }
 
-interface MainImage {
-  file: string
-  id: number,
-  name: string,
-  readableSize: () => void,
-  preview: () => void,
-  progress: number,
-  uploaded: boolean,
-  mainImage: string,
-  error: boolean,
-  url: string
-  idMainImage: string;
+export interface MainImage {
+  file?: any,
+  id?: string | number,
+  name?: any,
+  readableSize?: string,
+  preview?: string,
+  progress?: number,
+  uploaded?: boolean,
+  mainImage?: string,
+  error?: boolean,
+  url?: string
+  idMainImage?: string;
+}
+
+interface Files {
+  name?: string
+  preview?: string,
+  readableSize?: string,
+  url?: string
 }
 
 const getImage = async mainImage => {
@@ -66,24 +74,28 @@ const getImage = async mainImage => {
 
 export default function RegisterVehiculo() {
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
-  const [uploadedMainImage, setUploadedMainImage] = useState<MainImage[]>([]);
+  const [uploadedMainImage, setUploadedMainImage] = useState<MainImage>({} as MainImage);
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [filesIds, setFilesIds] = useState<String[]>([]);
+  const [filesIds, setFilesIds] = useState<Files[]>([]);
 
   function handleUpload(files) {
-    const filesAlready = files.map(file => {
+    const filesUploaded = files.map(async file => {
       const storageRef = ref(storage, `vehicles/${file.name}`);
-      uploadBytes(storageRef, files[0]).then((snapshot) => {
-        console.log(snapshot);
-      });
+      await uploadBytes(storageRef, files[0])
+      const url = await getImage(file.name)
 
       setFilesIds([
-        `${file.name}`,
+        {
+          name: file.name,
+          preview: URL.createObjectURL(file),
+          readableSize: filesize(file.size),
+          url
+        },
         ...filesIds
       ])
 
@@ -96,41 +108,41 @@ export default function RegisterVehiculo() {
         progress: 0,
         uploaded: false,
         error: false,
-        url: null
+        url
       }
 
       return obj;
     })
-    setUploadedFiles(uploadedFiles.concat(filesAlready));
+
+    Promise.all(filesUploaded).then(res => {
+      setUploadedFiles(uploadedFiles.concat(res));
+    })
   }
 
-  function handleUploadMainImage(files) {
-    const filesAlready = files.map(file => {
-      const storageRef = ref(storage, `vehicles/${file.name}`);
-      uploadBytes(storageRef, files[0]).then((snapshot) => {
-        console.log(snapshot);
-      });
+  async function handleUploadMainImage(files) {
+    const storageRef = ref(storage, `vehicles/${files[0].name}`);
+    await uploadBytes(storageRef, files[0])
+    const mainImage = await getImage(files[0].name);
 
-      const obj = {
-        file,
-        id: uniqueId(),
-        name: file.name,
-        readableSize: filesize(file.size),
-        preview: URL.createObjectURL(file),
-        progress: 0,
-        uploaded: false,
-        error: false,
-        idMainImage: `${file.name}`,
-        url: null
-      }
+    const obj = {
+      file: files[0],
+      id: uniqueId(),
+      name: files[0].name,
+      readableSize: filesize(files[0].size),
+      preview: URL.createObjectURL(files[0]),
+      progress: 0,
+      uploaded: false,
+      error: false,
+      idMainImage: `${files[0].name}`,
+      url: mainImage
+    }
 
-      return obj;
-    })
-    setUploadedMainImage(uploadedMainImage.concat(filesAlready));
+
+    setUploadedMainImage(obj)
   }
 
   function handleDeleteFileMain() {
-    const fileName = uploadedMainImage[0].name;
+    const fileName = uploadedMainImage.name;
     const desertRef = ref(storage, `vehicles/${fileName}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -138,13 +150,30 @@ export default function RegisterVehiculo() {
       console.log(err)
     })
 
-    setUploadedMainImage([]);
+    setUploadedMainImage({
+      file: '',
+      id: 0,
+      name: '',
+      readableSize: '',
+      preview: '',
+      progress: 0,
+      uploaded: null,
+      mainImage: '',
+      error: null,
+      url: '',
+      idMainImage: ''
+    });
   }
 
   function handleDeleteOtherFiles(id: number) {
-    const file = uploadedFiles.filter(file => file.id === id);
-    const fileName = file[0].name;
-    const desertRef = ref(storage, `vehicles/${fileName}`);
+    const fileName = uploadedFiles.filter(fileid => {
+      if(fileid.id === id){
+        return fileid
+      }
+    });
+
+    
+    const desertRef = ref(storage, `vehicles/${fileName[0].name}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
     }).catch((err) => {
@@ -155,30 +184,26 @@ export default function RegisterVehiculo() {
     setUploadedFiles(filesFiltered)
   }
 
-  async function createVehicle(payload: Vehicle, truckOrVehicle: string) {
+  async function createVehicle(payload: Vehicle) {
     setLoading(true);
-    const dbRef = collection(db, truckOrVehicle);
-    const nameImages = payload.childImages.map(async (file: string) => await getImage(file));
-    const mainImage = await getImage(payload.mainImage)
+    const dbRef = collection(db, 'vehicles');
 
-    Promise.all(nameImages).then(arrayUrls => {
-      payload.childImages = arrayUrls;
-      payload.mainImage = mainImage
-
-      addDoc(dbRef, payload)
+    delete payload.mainImage.file
+    addDoc(dbRef, payload).then((res) => {
       toast.success('O veículo foi cadastrado com sucesso!');
 
       setUploadedFiles([])
-      setUploadedMainImage([])
+      setUploadedMainImage({})
       setCarOrTruck('')
       setVehicleName('')
       setDescription('')
       setPrice(0)
     }).catch(() => {
-      toast.error('Ops! Ocorreu algum problema para cadastrar o veículo...');
+      toast.error('Ops... Algo de errado aconteceu.');
     }).finally(() => {
       setLoading(false);
     })
+
 
   }
 
@@ -217,7 +242,7 @@ export default function RegisterVehiculo() {
             <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
             <FormControl mt={2}>
               <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput value={price} precision={2} step={0.2}>
+              <NumberInput value={price} step={0.2}>
                 <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -231,9 +256,9 @@ export default function RegisterVehiculo() {
 
           <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
           <HStack>
-            <UploadMainImage disabled={!!uploadedMainImage.length} onUpload={handleUploadMainImage} />
+            <UploadMainImage disabled={!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
 
-            {!!uploadedMainImage.length && (
+            {!!uploadedMainImage.name && (
               <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
             )}
           </HStack>
@@ -252,8 +277,8 @@ export default function RegisterVehiculo() {
               title: vehicleName,
               priceFormatted: price,
               isTruck: carOrTruck === 'Carro' ? false : true,
-              mainImage: uploadedMainImage[0].idMainImage,
-            }, 'vehicles')
+              mainImage: uploadedMainImage,
+            })
 
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>
