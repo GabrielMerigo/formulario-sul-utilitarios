@@ -36,7 +36,7 @@ export interface FileProps {
   idMainImage?: string;
 }
 
-interface Vehicle {
+export interface Vehicle {
   createdAt: Date;
   mainImage: MainImage;
   childImages: Files[];
@@ -86,12 +86,16 @@ export default function RegisterVehiculo() {
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
+      const storageRef = ref(storage, `vehicles/${file.name}`);
+      await uploadBytes(storageRef, files[0])
+      const url = await getImage(file.name)
 
       setFilesIds([
         {
           name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
+          url
         },
         ...filesIds
       ])
@@ -104,7 +108,8 @@ export default function RegisterVehiculo() {
         preview: URL.createObjectURL(file),
         progress: 0,
         uploaded: false,
-        error: false
+        error: false,
+        url
       }
 
       return obj;
@@ -177,17 +182,12 @@ export default function RegisterVehiculo() {
   async function createVehicle(payload: Vehicle) {
     setLoading(true);
     const dbRef = collection(db, 'vehicles');
-    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
 
-    filesIds.forEach(async file => {
-      await uploadBytes(storageRef, file[0])
-      const url = await getImage(file.name)
-      file.url = url;
-    })
-    
+    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
     await uploadBytes(storageRef, payload.mainImage.name);
     const mainImage = await getImage(payload.mainImage.name);
- 
+    console.log(mainImage)
+    
     payload.mainImage.url = mainImage;
     delete payload.mainImage.file;
     addDoc(dbRef, payload).then((res) => {

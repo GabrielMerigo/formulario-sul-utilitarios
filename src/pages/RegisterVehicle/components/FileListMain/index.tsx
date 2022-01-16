@@ -14,7 +14,7 @@ interface FileListProps {
 export default function FileListMain({ files, handleDelete }: FileListProps) {
   return (
     <Container>
-      <li key={files.id}>
+      <li>
         <FileInfo>
           <div>
             <strong>{files.name}</strong>

@@ -21,7 +21,8 @@ import {
   getDoc,
   updateDoc
 } from "../services/firebaseConnection";
-import { Files, getImage, MainImage } from './registerVehicle';
+import { Files, getImage, MainImage, Vehicle } from './registerVehicle';
+import slugify from 'slugify';
 
 export interface FileProps {
   file: string
@@ -36,19 +37,9 @@ export interface FileProps {
   url: string
 }
 
-interface Vehicle {
-  createdAt: string;
-  mainImage: string;
-  childImages: string[];
-  priceFormatted: string;
-  description: string;
-  title: string;
-  id: string;
-}
-
 export default function EditVehicle() {
   const router = useRouter();
-  const id: string = useMemo(() => router.query.id as string, [router.query]);
+  const idUrl: string = useMemo(() => router.query.id as string, [router.query]);
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
   const [uploadedMainImage, setUploadedMainImage] = useState<MainImage>({} as MainImage);
   const [carOrTruck, setCarOrTruck] = useState('');
@@ -57,14 +48,13 @@ export default function EditVehicle() {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [filesIds, setFilesIds] = useState<Files[]>([]);
-  const [vehicle, setVehicle] = useState<Vehicle | undefined>(undefined);
 
   const getVehicle = useCallback(async () => {
-    if (id) {
-      const docRef = doc(db, 'vehicles', id);
+    if (idUrl) {
+      const docRef = doc(db, 'vehicles', idUrl);
       await getDoc(docRef)
         .then((docSnap) => {
-          const isTruck = docSnap.data().isTruck === true 
+          const isTruck = docSnap.data().isTruck === true
           setUploadedMainImage(docSnap.data().mainImage);
           setUploadedFiles(docSnap.data().childImages)
           setPrice(docSnap.data().priceFormatted)
@@ -75,11 +65,12 @@ export default function EditVehicle() {
         .catch(err => console.log)
         .finally(() => setLoading(false))
     }
-  }, [id])
+  }, [idUrl])
 
   useEffect(() => {
     getVehicle();
   }, [getVehicle])
+
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
@@ -89,7 +80,7 @@ export default function EditVehicle() {
 
       setFilesIds([
         {
-          name: file.name,
+          name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           url
@@ -100,7 +91,7 @@ export default function EditVehicle() {
       const obj = {
         file,
         id: uniqueId(),
-        name: file.name,
+        name: slugify(file.name),
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -114,33 +105,34 @@ export default function EditVehicle() {
 
     Promise.all(filesUploaded).then(res => {
       setUploadedFiles(uploadedFiles.concat(res));
+      const vehicleRef = doc(db, 'vehicles', idUrl);
+      res.forEach(item => delete item.file);
+      
+      updateDoc(vehicleRef, {
+        childImages: res
+      });
+
     })
   }
 
   async function handleUploadMainImage(files) {
-    const storageRef = ref(storage, `vehicles/${files[0].name}`);
-    await uploadBytes(storageRef, files[0])
-    const mainImage = await getImage(files[0].name);
-
     const obj = {
       file: files[0],
       id: uniqueId(),
-      name: files[0].name,
+      name: slugify(files[0].name),
       readableSize: filesize(files[0].size),
       preview: URL.createObjectURL(files[0]),
       progress: 0,
       uploaded: false,
       error: false,
-      idMainImage: `${files[0].name}`,
-      url: mainImage
+      idMainImage: `${files[0].name}`
     }
 
     setUploadedMainImage(obj)
   }
 
   function handleDeleteFileMain() {
-    const fileName = uploadedMainImage.name;
-    console.log(fileName);
+    const fileName = uploadedMainImage.name;;
     const desertRef = ref(storage, `vehicles/${fileName}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -161,6 +153,11 @@ export default function EditVehicle() {
       url: '',
       idMainImage: ''
     });
+
+    const vehicleRef = doc(db, 'vehicles', idUrl);
+    updateDoc(vehicleRef, {
+      mainImage: {}
+    });
   }
 
   function handleDeleteOtherFiles(id: number) {
@@ -175,23 +172,24 @@ export default function EditVehicle() {
 
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
+
+    filesFiltered.forEach(item => delete item.file)
+    const vehicleRef = doc(db, 'vehicles', idUrl);
+    updateDoc(vehicleRef, {
+      childImages: filesFiltered
+    });
   }
 
-  function updateVehicle(payload){
-    const vehicleRef = doc(db, 'vehicles', id);
+  async function updateVehicle(payload) {
+    const vehicleRef = doc(db, 'vehicles', idUrl);
 
-    payload.childImages.forEach(item => {
-      delete item.file
-    })
     delete payload.mainImage.file
     updateDoc(vehicleRef, payload).then(res => {
-      console.log(res)
       toast.success('O veículo foi editado com sucesso!');
     }).catch(err => {
       console.log(err)
     })
   }
-
 
   return (
     <>
@@ -257,15 +255,18 @@ export default function EditVehicle() {
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
           <Button onClick={() => {
-            updateVehicle({
-              childImages: uploadedFiles,
+            const obj = {
+              childImages: filesIds,
               createdAt: new Date(),
               description,
               title: vehicleName,
               priceFormatted: price,
               isTruck: carOrTruck === 'Carro' ? false : true,
               mainImage: uploadedMainImage,
-            })
+            }
+
+            updateVehicle(obj)
+
           }} isLoading={loading} type="button" mt="6" colorScheme="blue" size="lg">Editar Veículo</Button>
         </Flex>
       </Flex>

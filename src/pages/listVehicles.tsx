@@ -7,12 +7,13 @@ import { MainImage } from './registerVehicle';
 export interface VehiclesTypes {
   createdAt: string;
   mainImage: MainImage;
-  childImages: String[];
+  childImages: FileList[];
   title: string;
   description: string;
   priceFormatted: number;
   isTruck: boolean;
   id: string;
+
 }
 
 export default function EditVehicle() {

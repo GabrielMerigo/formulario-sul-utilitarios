@@ -14,8 +14,8 @@ interface FileListProps {
 export default function FileList({ files, handleDeleteOtherFiles }: FileListProps) {
   return (
     <Container>
-      {files.map(uploadedFile => (
-        <li key={uploadedFile.id}>
+      {files.map((uploadedFile, index) => (
+        <li key={index}>
           <FileInfo>
             <div>
               <strong>{uploadedFile.name}</strong>
