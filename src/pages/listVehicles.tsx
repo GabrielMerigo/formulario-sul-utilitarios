@@ -2,10 +2,11 @@ import { Flex, Button, Grid, GridItem } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
 import { useState, useCallback, useEffect } from 'react';
 import { BoxItem } from './editVehicle/components/BoxItem';
+import { MainImage } from './registerVehicle';
 
 export interface VehiclesTypes {
   createdAt: string;
-  mainImage: string;
+  mainImage: MainImage;
   childImages: String[];
   title: string;
   description: string;

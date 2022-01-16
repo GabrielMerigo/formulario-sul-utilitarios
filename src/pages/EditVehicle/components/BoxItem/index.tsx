@@ -1,9 +1,10 @@
 import { Box, Badge, Image, Button } from '@chakra-ui/react';
 import Link from 'next/link';
+import { MainImage } from '../../../registerVehicle';
 
 export interface BoxItemProps {
   createdAt: string;
-  mainImage: string;
+  mainImage: MainImage;
   title: string;
   description: string;
   priceFormatted: number;
@@ -12,6 +13,7 @@ export interface BoxItemProps {
 }
 
 export function BoxItem({ mainImage, title, description, priceFormatted, id }: BoxItemProps) {
+  console.log(mainImage)
   const formattedPrice = Number(priceFormatted).toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
@@ -19,7 +21,7 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id }: B
 
   return (
     <Box borderColor="white" shadow={'lg'} borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Image height="15rem" width="30rem" src={mainImage} alt={description} />
+      <Image height="15rem" width="30rem" src={mainImage.url} alt={description} />
 
       <Box p="6">
         <Box display="flex" alignItems="baseline">

@@ -55,18 +55,18 @@ export interface MainImage {
   uploaded?: boolean,
   mainImage?: string,
   error?: boolean,
-  url?: string
+  url?: string | void,
   idMainImage?: string;
 }
 
-interface Files {
+export interface Files {
   name?: string
   preview?: string,
   readableSize?: string,
-  url?: string
+  url?: string | void
 }
 
-const getImage = async mainImage => {
+export const getImage = async (mainImage: string) => {
   const listRef = ref(storage, `vehicles/${mainImage}`)
   const url = await getDownloadURL(listRef)
   return url
@@ -136,7 +136,6 @@ export default function RegisterVehiculo() {
       idMainImage: `${files[0].name}`,
       url: mainImage
     }
-
 
     setUploadedMainImage(obj)
   }

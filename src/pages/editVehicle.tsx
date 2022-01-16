@@ -18,8 +18,10 @@ import {
   uploadBytes,
   deleteObject,
   doc,
-  getDoc
+  getDoc,
+  updateDoc
 } from "../services/firebaseConnection";
+import { Files, getImage, MainImage } from './registerVehicle';
 
 export interface FileProps {
   file: string
@@ -44,20 +46,6 @@ interface Vehicle {
   id: string;
 }
 
-interface MainImage {
-  file?: string
-  id?: number,
-  name?: string,
-  readableSize?: string,
-  preview?: string,
-  progress?: number,
-  uploaded?: boolean,
-  mainImage?: string,
-  error?: boolean,
-  url?: string
-  idMainImage?: string;
-}
-
 export default function EditVehicle() {
   const router = useRouter();
   const id: string = useMemo(() => router.query.id as string, [router.query]);
@@ -68,8 +56,7 @@ export default function EditVehicle() {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [filesIds, setFilesIds] = useState<String[]>([]);
-
+  const [filesIds, setFilesIds] = useState<Files[]>([]);
   const [vehicle, setVehicle] = useState<Vehicle | undefined>(undefined);
 
   const getVehicle = useCallback(async () => {
@@ -84,7 +71,6 @@ export default function EditVehicle() {
           setDescription(docSnap.data().description)
           setVehicleName(docSnap.data().title)
           setCarOrTruck(isTruck ? 'Caminhão' : 'Carro')
-          console.log(docSnap.data())
         })
         .catch(err => console.log)
         .finally(() => setLoading(false))
@@ -96,14 +82,18 @@ export default function EditVehicle() {
   }, [getVehicle])
 
   function handleUpload(files) {
-    const filesAlready = files.map(file => {
+    const filesUploaded = files.map(async file => {
       const storageRef = ref(storage, `vehicles/${file.name}`);
-      uploadBytes(storageRef, files[0]).then((snapshot) => {
-        console.log(snapshot);
-      });
+      await uploadBytes(storageRef, files[0])
+      const url = await getImage(file.name)
 
       setFilesIds([
-        `${file.name}`,
+        {
+          name: file.name,
+          preview: URL.createObjectURL(file),
+          readableSize: filesize(file.size),
+          url
+        },
         ...filesIds
       ])
 
@@ -116,41 +106,41 @@ export default function EditVehicle() {
         progress: 0,
         uploaded: false,
         error: false,
-        url: null
+        url
       }
 
       return obj;
     })
-    setUploadedFiles(uploadedFiles.concat(filesAlready));
+
+    Promise.all(filesUploaded).then(res => {
+      setUploadedFiles(uploadedFiles.concat(res));
+    })
   }
 
-  function handleUploadMainImage(files) {
-    const fileAlready = files.forEach(file => {
-      const storageRef = ref(storage, `vehicles/${file.name}`);
-      uploadBytes(storageRef, files[0]).then((snapshot) => {
-        console.log(snapshot);
-      });
+  async function handleUploadMainImage(files) {
+    const storageRef = ref(storage, `vehicles/${files[0].name}`);
+    await uploadBytes(storageRef, files[0])
+    const mainImage = await getImage(files[0].name);
 
-      const obj = {
-        file,
-        id: uniqueId(),
-        name: file.name,
-        readableSize: filesize(file.size),
-        preview: URL.createObjectURL(file),
-        progress: 0,
-        uploaded: false,
-        error: false,
-        idMainImage: `${file.name}`,
-        url: null
-      }
+    const obj = {
+      file: files[0],
+      id: uniqueId(),
+      name: files[0].name,
+      readableSize: filesize(files[0].size),
+      preview: URL.createObjectURL(files[0]),
+      progress: 0,
+      uploaded: false,
+      error: false,
+      idMainImage: `${files[0].name}`,
+      url: mainImage
+    }
 
-      return obj;
-    })
-    setUploadedMainImage(fileAlready);
+    setUploadedMainImage(obj)
   }
 
   function handleDeleteFileMain() {
-    const fileName = uploadedMainImage[0].name;
+    const fileName = uploadedMainImage.name;
+    console.log(fileName);
     const desertRef = ref(storage, `vehicles/${fileName}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -158,7 +148,6 @@ export default function EditVehicle() {
       console.log(err)
     })
 
-  
     setUploadedMainImage({
       file: '',
       id: 0,
@@ -186,6 +175,21 @@ export default function EditVehicle() {
 
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
+  }
+
+  function updateVehicle(payload){
+    const vehicleRef = doc(db, 'vehicles', id);
+
+    payload.childImages.forEach(item => {
+      delete item.file
+    })
+    delete payload.mainImage.file
+    updateDoc(vehicleRef, payload).then(res => {
+      console.log(res)
+      toast.success('O veículo foi editado com sucesso!');
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
 
@@ -239,9 +243,9 @@ export default function EditVehicle() {
 
           <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
           <HStack>
-            <UploadMainImage disabled={!!uploadedMainImage} onUpload={handleUploadMainImage} />
+            <UploadMainImage disabled={!!!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
 
-            {!!uploadedMainImage && (
+            {!!uploadedMainImage.name && (
               <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
             )}
           </HStack>
@@ -252,7 +256,17 @@ export default function EditVehicle() {
           {!!uploadedFiles.length && (
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
-          <Button isLoading={loading} type="button" mt="6" colorScheme="blue" size="lg">Editar Veículo</Button>
+          <Button onClick={() => {
+            updateVehicle({
+              childImages: uploadedFiles,
+              createdAt: new Date(),
+              description,
+              title: vehicleName,
+              priceFormatted: price,
+              isTruck: carOrTruck === 'Carro' ? false : true,
+              mainImage: uploadedMainImage,
+            })
+          }} isLoading={loading} type="button" mt="6" colorScheme="blue" size="lg">Editar Veículo</Button>
         </Flex>
       </Flex>
     </>
