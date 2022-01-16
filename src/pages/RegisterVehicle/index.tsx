@@ -9,6 +9,7 @@ import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import slugify from 'slugify';
 
 import {
   db,
@@ -91,7 +92,7 @@ export default function RegisterVehiculo() {
 
       setFilesIds([
         {
-          name: file.name,
+          name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           url
@@ -102,7 +103,7 @@ export default function RegisterVehiculo() {
       const obj = {
         file,
         id: uniqueId(),
-        name: file.name,
+        name: slugify(file.name),
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -127,7 +128,7 @@ export default function RegisterVehiculo() {
     const obj = {
       file: files[0],
       id: uniqueId(),
-      name: files[0].name,
+      name: slugify(files[0].name),
       readableSize: filesize(files[0].size),
       preview: URL.createObjectURL(files[0]),
       progress: 0,
@@ -165,13 +166,12 @@ export default function RegisterVehiculo() {
   }
 
   function handleDeleteOtherFiles(id: number) {
-    const fileName = uploadedFiles.filter(fileid => {
-      if(fileid.id === id){
-        return fileid
+    const fileName = uploadedFiles.filter(fileId => {
+      if(fileId.id === id){
+        return fileId
       }
     });
 
-    
     const desertRef = ref(storage, `vehicles/${fileName[0].name}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -191,19 +191,17 @@ export default function RegisterVehiculo() {
     addDoc(dbRef, payload).then((res) => {
       toast.success('O veículo foi cadastrado com sucesso!');
 
-      setUploadedFiles([])
-      setUploadedMainImage({})
-      setCarOrTruck('')
-      setVehicleName('')
-      setDescription('')
-      setPrice(0)
+      setUploadedFiles([]);
+      setUploadedMainImage({});
+      setCarOrTruck('');
+      setVehicleName('');
+      setDescription('');
+      setPrice(0);
     }).catch(() => {
       toast.error('Ops... Algo de errado aconteceu.');
     }).finally(() => {
       setLoading(false);
     })
-
-
   }
 
   return (
