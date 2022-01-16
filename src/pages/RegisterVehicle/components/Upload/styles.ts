@@ -35,7 +35,6 @@ const messageColors = {
   default: '#999',
   error: '#e57878',
   success: '#78e5d5'
-
 };
 
 export const UploadMessage = styled.p`
