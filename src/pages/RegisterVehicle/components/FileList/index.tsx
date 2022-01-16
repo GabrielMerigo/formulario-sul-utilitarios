@@ -17,7 +17,6 @@ export default function FileList({ files, handleDeleteOtherFiles }: FileListProp
       {files.map(uploadedFile => (
         <li key={uploadedFile.id}>
           <FileInfo>
-            <Preview src={uploadedFile.url} />
             <div>
               <strong>{uploadedFile.name}</strong>
               <span>

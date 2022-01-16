@@ -86,16 +86,12 @@ export default function RegisterVehiculo() {
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
-      const storageRef = ref(storage, `vehicles/${file.name}`);
-      await uploadBytes(storageRef, files[0])
-      const url = await getImage(file.name)
 
       setFilesIds([
         {
           name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
-          url
         },
         ...filesIds
       ])
@@ -108,8 +104,7 @@ export default function RegisterVehiculo() {
         preview: URL.createObjectURL(file),
         progress: 0,
         uploaded: false,
-        error: false,
-        url
+        error: false
       }
 
       return obj;
@@ -121,9 +116,6 @@ export default function RegisterVehiculo() {
   }
 
   async function handleUploadMainImage(files) {
-    const storageRef = ref(storage, `vehicles/${files[0].name}`);
-    await uploadBytes(storageRef, files[0])
-    const mainImage = await getImage(files[0].name);
 
     const obj = {
       file: files[0],
@@ -134,8 +126,7 @@ export default function RegisterVehiculo() {
       progress: 0,
       uploaded: false,
       error: false,
-      idMainImage: `${files[0].name}`,
-      url: mainImage
+      idMainImage: `${files[0].name}`
     }
 
     setUploadedMainImage(obj)
@@ -186,8 +177,19 @@ export default function RegisterVehiculo() {
   async function createVehicle(payload: Vehicle) {
     setLoading(true);
     const dbRef = collection(db, 'vehicles');
+    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
 
-    delete payload.mainImage.file
+    filesIds.forEach(async file => {
+      await uploadBytes(storageRef, file[0])
+      const url = await getImage(file.name)
+      file.url = url;
+    })
+    
+    await uploadBytes(storageRef, payload.mainImage.name);
+    const mainImage = await getImage(payload.mainImage.name);
+ 
+    payload.mainImage.url = mainImage;
+    delete payload.mainImage.file;
     addDoc(dbRef, payload).then((res) => {
       toast.success('O veículo foi cadastrado com sucesso!');
 

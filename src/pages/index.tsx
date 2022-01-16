@@ -6,7 +6,7 @@ export default function Home() {
     <>
       {/* <SignIn /> */}
       {/*
-        1 - MUDAR A FORMA COMO AS FOTOS SÃO SALVAS NO STORAGE
+        1 - MUDAR A FORMA COMO AS FOTOS SÃO SALVAS NO STORAGE - ok
         2 - MANDAR O NOME DA IMAGEM COMO SLUGIFY
       */}
     </>

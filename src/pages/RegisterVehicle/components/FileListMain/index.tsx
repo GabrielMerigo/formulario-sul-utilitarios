@@ -16,7 +16,6 @@ export default function FileListMain({ files, handleDelete }: FileListProps) {
     <Container>
       <li key={files.id}>
         <FileInfo>
-          <Preview src={files.url} />
           <div>
             <strong>{files.name}</strong>
             <span>
