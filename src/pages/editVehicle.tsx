@@ -22,7 +22,6 @@ import {
   updateDoc
 } from "../services/firebaseConnection";
 import { Files, getImage, MainImage, Vehicle } from './registerVehicle';
-import slugify from 'slugify';
 
 export interface FileProps {
   file: string
@@ -80,7 +79,7 @@ export default function EditVehicle() {
 
       setFilesIds([
         {
-          name: slugify(file.name),
+          name: file.name,
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           url
@@ -91,7 +90,7 @@ export default function EditVehicle() {
       const obj = {
         file,
         id: uniqueId(),
-        name: slugify(file.name),
+        name: file.name,
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -107,7 +106,7 @@ export default function EditVehicle() {
       setUploadedFiles(uploadedFiles.concat(res));
       const vehicleRef = doc(db, 'vehicles', idUrl);
       res.forEach(item => delete item.file);
-      
+
       updateDoc(vehicleRef, {
         childImages: res
       });
@@ -116,23 +115,35 @@ export default function EditVehicle() {
   }
 
   async function handleUploadMainImage(files) {
+    const vehicleRef = doc(db, 'vehicles', idUrl);
+    const storageRef = ref(storage, `vehicles/${files[0].name}`);
+    await uploadBytes(storageRef, files[0])
+    const url = await getImage(files[0].name);
+
     const obj = {
       file: files[0],
       id: uniqueId(),
-      name: slugify(files[0].name),
+      name: files[0].name,
       readableSize: filesize(files[0].size),
       preview: URL.createObjectURL(files[0]),
       progress: 0,
       uploaded: false,
       error: false,
-      idMainImage: `${files[0].name}`
+      idMainImage: `${files[0].name}`,
+      url
     }
 
+
     setUploadedMainImage(obj)
+    delete obj.file
+    updateDoc(vehicleRef, {
+      mainImage: obj 
+    });
   }
 
   function handleDeleteFileMain() {
-    const fileName = uploadedMainImage.name;;
+    const fileName = uploadedMainImage.name;
+    console.log(fileName)
     const desertRef = ref(storage, `vehicles/${fileName}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -256,7 +267,7 @@ export default function EditVehicle() {
           )}
           <Button onClick={() => {
             const obj = {
-              childImages: filesIds,
+              childImages: uploadedFiles,
               createdAt: new Date(),
               description,
               title: vehicleName,

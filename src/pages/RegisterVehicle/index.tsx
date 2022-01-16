@@ -121,6 +121,9 @@ export default function RegisterVehiculo() {
   }
 
   async function handleUploadMainImage(files) {
+    const storageRef = ref(storage, `vehicles/${files.name}`);
+    await uploadBytes(storageRef, files[0])
+    const url = await getImage(files.name);
 
     const obj = {
       file: files[0],
@@ -131,7 +134,8 @@ export default function RegisterVehiculo() {
       progress: 0,
       uploaded: false,
       error: false,
-      idMainImage: `${files[0].name}`
+      idMainImage: `${files[0].name}`,
+      url
     }
 
     setUploadedMainImage(obj)
