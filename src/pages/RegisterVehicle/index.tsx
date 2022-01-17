@@ -86,16 +86,11 @@ export default function RegisterVehiculo() {
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
-      const storageRef = ref(storage, `vehicles/${file.name}`);
-      await uploadBytes(storageRef, files[0])
-      const url = await getImage(file.name)
-
       setFilesIds([
         {
           name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
-          url
         },
         ...filesIds
       ])
@@ -109,7 +104,6 @@ export default function RegisterVehiculo() {
         progress: 0,
         uploaded: false,
         error: false,
-        url
       }
 
       return obj;
@@ -121,10 +115,6 @@ export default function RegisterVehiculo() {
   }
 
   async function handleUploadMainImage(files) {
-    const storageRef = ref(storage, `vehicles/${files.name}`);
-    await uploadBytes(storageRef, files[0])
-    const url = await getImage(files.name);
-
     const obj = {
       file: files[0],
       id: uniqueId(),
@@ -135,66 +125,40 @@ export default function RegisterVehiculo() {
       uploaded: false,
       error: false,
       idMainImage: `${files[0].name}`,
-      url
     }
 
     setUploadedMainImage(obj)
   }
 
   function handleDeleteFileMain() {
-    const fileName = uploadedMainImage.name;
-    const desertRef = ref(storage, `vehicles/${fileName}`);
-    deleteObject(desertRef).then(res => {
-      console.log('Excluído')
-    }).catch((err) => {
-      console.log(err)
-    })
-
-    setUploadedMainImage({
-      file: '',
-      id: 0,
-      name: '',
-      readableSize: '',
-      preview: '',
-      progress: 0,
-      uploaded: null,
-      mainImage: '',
-      error: null,
-      url: '',
-      idMainImage: ''
-    });
+    setUploadedMainImage({});
   }
 
   function handleDeleteOtherFiles(id: number) {
-    const fileName = uploadedFiles.filter(fileId => {
-      if(fileId.id === id){
-        return fileId
-      }
-    });
-
-    const desertRef = ref(storage, `vehicles/${fileName[0].name}`);
-    deleteObject(desertRef).then(res => {
-      console.log('Excluído')
-    }).catch((err) => {
-      console.log(err)
-    })
-
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
+  }
+
+  async function throwImagesInStorage() {
+    filesIds.map(async (item: any) => {
+      const vehicleRef = ref(storage, `vehicles/${item.name}`);
+      await uploadBytes(vehicleRef, item.name)
+      const url = await getImage(item.name);
+      item.url = url;
+    });
+
+    const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
+    await uploadBytes(storageRef, uploadedMainImage.name);
+    const mainImageUrl = await getImage(uploadedMainImage.name);
+    uploadedMainImage.url = mainImageUrl;
   }
 
   async function createVehicle(payload: Vehicle) {
     setLoading(true);
     const dbRef = collection(db, 'vehicles');
-
-    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
-    await uploadBytes(storageRef, payload.mainImage.name);
-    const mainImage = await getImage(payload.mainImage.name);
-    console.log(mainImage)
     
-    payload.mainImage.url = mainImage;
     delete payload.mainImage.file;
-    addDoc(dbRef, payload).then((res) => {
+    await addDoc(dbRef, payload).then((res) => {
       toast.success('O veículo foi cadastrado com sucesso!');
 
       setUploadedFiles([]);
@@ -273,7 +237,9 @@ export default function RegisterVehiculo() {
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
           <Button isLoading={loading} onClick={() => {
-            createVehicle({
+            throwImagesInStorage()
+
+            const obj = {
               childImages: filesIds,
               createdAt: new Date(),
               description,
@@ -281,7 +247,9 @@ export default function RegisterVehiculo() {
               priceFormatted: price,
               isTruck: carOrTruck === 'Carro' ? false : true,
               mainImage: uploadedMainImage,
-            })
+            }
+
+            createVehicle(obj)
 
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>
