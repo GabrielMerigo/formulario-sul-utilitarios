@@ -82,6 +82,7 @@ export default function EditVehicle() {
           name: file.name,
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
+          id: file.id,
           url
         },
         ...filesIds
@@ -151,19 +152,7 @@ export default function EditVehicle() {
       console.log(err)
     })
 
-    setUploadedMainImage({
-      file: '',
-      id: 0,
-      name: '',
-      readableSize: '',
-      preview: '',
-      progress: 0,
-      uploaded: null,
-      mainImage: '',
-      error: null,
-      url: '',
-      idMainImage: ''
-    });
+    setUploadedMainImage({});
 
     const vehicleRef = doc(db, 'vehicles', idUrl);
     updateDoc(vehicleRef, {
@@ -175,6 +164,8 @@ export default function EditVehicle() {
     const file = uploadedFiles.filter(file => file.id === id);
     const fileName = file[0].name;
     const desertRef = ref(storage, `vehicles/${fileName}`);
+    console.log(file[0].id, id)
+
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
     }).catch((err) => {
@@ -182,6 +173,7 @@ export default function EditVehicle() {
     })
 
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
+    console.log(filesFiltered)
     setUploadedFiles(filesFiltered)
 
     filesFiltered.forEach(item => delete item.file)

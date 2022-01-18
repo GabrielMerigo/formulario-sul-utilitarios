@@ -65,6 +65,8 @@ export interface Files {
   preview?: string,
   readableSize?: string,
   url?: string | void
+  id: string,
+  file?: any
 }
 
 export const getImage = async (mainImage: string) => {
@@ -86,18 +88,22 @@ export default function RegisterVehiculo() {
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
+      const id = uniqueId()
+
       setFilesIds([
         {
           name: slugify(file.name),
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
+          id,
+          file
         },
         ...filesIds
       ])
 
       const obj = {
         file,
-        id: uniqueId(),
+        id,
         name: slugify(file.name),
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
@@ -139,25 +145,30 @@ export default function RegisterVehiculo() {
     setUploadedFiles(filesFiltered)
   }
 
-  async function throwImagesInStorage() {
-    filesIds.map(async (item: any) => {
+  async function createObject(payload: Vehicle) {
+    setLoading(true);
+
+    payload.childImages.map(async (item: any) => {
       const vehicleRef = ref(storage, `vehicles/${item.name}`);
-      await uploadBytes(vehicleRef, item.name)
+      await uploadBytes(vehicleRef, item.file)
       const url = await getImage(item.name);
       item.url = url;
     });
 
-    const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
-    await uploadBytes(storageRef, uploadedMainImage.name);
-    const mainImageUrl = await getImage(uploadedMainImage.name);
-    uploadedMainImage.url = mainImageUrl;
-  }
-
-  async function createVehicle(payload: Vehicle) {
-    setLoading(true);
-    const dbRef = collection(db, 'vehicles');
+    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
+    await uploadBytes(storageRef, payload.mainImage.file);
+    const mainImageUrl = await getImage(payload.mainImage.name);
+    payload.mainImage.url = mainImageUrl;
     
     delete payload.mainImage.file;
+    payload.childImages.map(item => delete item.file)
+    return payload
+  }
+
+  async function createVehicle(payload: Vehicle){
+    const dbRef = collection(db, 'vehicles'); 
+    console.log(payload);
+
     await addDoc(dbRef, payload).then((res) => {
       toast.success('O veículo foi cadastrado com sucesso!');
 
@@ -236,8 +247,7 @@ export default function RegisterVehiculo() {
           {!!uploadedFiles.length && (
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
-          <Button isLoading={loading} onClick={() => {
-            throwImagesInStorage()
+          <Button isLoading={loading} onClick={async () => {
 
             const obj = {
               childImages: filesIds,
@@ -249,7 +259,9 @@ export default function RegisterVehiculo() {
               mainImage: uploadedMainImage,
             }
 
-            createVehicle(obj)
+            const data = await createObject(obj)
+
+            createVehicle(data)
 
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>

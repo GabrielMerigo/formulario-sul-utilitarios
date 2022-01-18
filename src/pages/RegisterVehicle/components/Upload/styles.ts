@@ -12,7 +12,6 @@ const dragReject = css`
 const disabled = css`
   border: 1px dashed #3d3d3d;
   cursor: not-allowed;
-
 `;
 
 export const DropContainer = styled.div.attrs({
@@ -26,7 +25,6 @@ export const DropContainer = styled.div.attrs({
   transition: height 0.2s ease;
 
   ${props => props.disabled && disabled}
-
   ${props => props.isDragActive && dragActive}
   ${props => props.isDragReject && dragReject}
 `;
@@ -35,7 +33,6 @@ const messageColors = {
   default: '#999',
   error: '#e57878',
   success: '#78e5d5'
-  
 };
 
 export const UploadMessage = styled.p`
@@ -44,4 +41,5 @@ export const UploadMessage = styled.p`
   justify-content: center;
   align-items:center;
   padding: 15px 0;
+
 `;
