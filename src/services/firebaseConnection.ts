@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 import { getFirestore, collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore/lite';
 import 'firebase/firestore';
 import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDc9ad2YMJ8g_y7z8ATC-bR4BJzaxEj2pw",
@@ -32,5 +33,7 @@ export {
   deleteObject,
   getDownloadURL,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  getAuth,
+  signInWithEmailAndPassword
 }
