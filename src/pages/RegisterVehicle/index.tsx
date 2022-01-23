@@ -9,6 +9,8 @@ import UploadMainImage from './components/UploadMainImage';
 import FileListMain from './components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import Link from 'next/link';
+
 import slugify from 'slugify';
 
 import {
@@ -89,10 +91,11 @@ export default function RegisterVehiculo() {
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
       const id = uniqueId()
+      const timeStamp = new Date().getTime();
 
       setFilesIds([
         {
-          name: slugify(file.name),
+          name: slugify(file.name) + timeStamp,
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           id,
@@ -104,7 +107,7 @@ export default function RegisterVehiculo() {
       const obj = {
         file,
         id,
-        name: slugify(file.name),
+        name: slugify(file.name) + timeStamp,
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -121,10 +124,11 @@ export default function RegisterVehiculo() {
   }
 
   async function handleUploadMainImage(files) {
+    const timeStamp = new Date().getTime();
     const obj = {
       file: files[0],
       id: uniqueId(),
-      name: slugify(files[0].name),
+      name: slugify(files[0].name) + timeStamp,
       readableSize: filesize(files[0].size),
       preview: URL.createObjectURL(files[0]),
       progress: 0,
@@ -159,14 +163,14 @@ export default function RegisterVehiculo() {
     await uploadBytes(storageRef, payload.mainImage.file);
     const mainImageUrl = await getImage(payload.mainImage.name);
     payload.mainImage.url = mainImageUrl;
-    
+
     delete payload.mainImage.file;
     payload.childImages.map(item => delete item.file)
     return payload
   }
 
-  async function createVehicle(payload: Vehicle){
-    const dbRef = collection(db, 'vehicles'); 
+  async function createVehicle(payload: Vehicle) {
+    const dbRef = collection(db, 'vehicles');
     console.log(payload);
 
     await addDoc(dbRef, payload).then((res) => {
@@ -187,6 +191,14 @@ export default function RegisterVehiculo() {
 
   return (
     <>
+      <Flex justifyContent="right" margin="20px">
+        <Link href={`listVehicles`} as={`listVehicles`} passHref>
+          <Button colorScheme='teal' variant='outline'>
+            Lista de Veículos
+          </Button>
+        </Link>
+      </Flex>
+
       <Flex
         w="100%"
         h="100%"
