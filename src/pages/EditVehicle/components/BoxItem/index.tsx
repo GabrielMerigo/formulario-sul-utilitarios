@@ -1,5 +1,8 @@
 import { Box, Badge, Image, Button } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { deleteDoc, doc, db } from '../../../../services/firebaseConnection';
 import { MainImage } from '../../../registerVehicle';
 
 export interface BoxItemProps {
@@ -12,12 +15,18 @@ export interface BoxItemProps {
   isTruck: boolean;
 }
 
-export function BoxItem({ mainImage, title, description, priceFormatted, id }: BoxItemProps) {
-  console.log(mainImage)
+export function BoxItem({ mainImage, title, description, priceFormatted, id: idDb }: BoxItemProps) {
+  const router = useRouter();
   const formattedPrice = Number(priceFormatted).toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
+
+  async function deleteVehicle(id) {
+    const vehicleRef = doc(db, 'vehicles', id);
+    await deleteDoc(vehicleRef)
+    router.reload()
+  }
 
   return (
     <Box borderColor="white" shadow={'lg'} borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -51,9 +60,11 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id }: B
         >
           {description}
         </Box>
-        <Link href={`editVehicle?id=${id}`} as={`editVehicle?id=${id}`} passHref>
+        <Link href={`editVehicle?id=${idDb}`} as={`editVehicle?id=${idDb}`} passHref>
           <Button margin={'10px auto'} background={'blue.500'}> Editar </Button>
         </Link>
+        <Button onClick={() => deleteVehicle(idDb)} margin={'10px'} background={'red.500'}> Excluir </Button>
+
       </Box>
     </Box>
   )

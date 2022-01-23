@@ -1,5 +1,5 @@
 import * as firebase from 'firebase/app';
-import { getFirestore, collection, getDocs, getDoc, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore/lite';
 import 'firebase/firestore';
 import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 
@@ -31,5 +31,6 @@ export {
   addDoc,
   deleteObject,
   getDownloadURL,
-  updateDoc
+  updateDoc,
+  deleteDoc
 }

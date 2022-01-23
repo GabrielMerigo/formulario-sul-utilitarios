@@ -58,7 +58,7 @@ export interface MainImage {
   uploaded?: boolean,
   mainImage?: string,
   error?: boolean,
-  url?: string | void,
+  url?: string,
   idMainImage?: string;
 }
 
@@ -67,7 +67,7 @@ export interface Files {
   preview?: string,
   readableSize?: string,
   url?: string | void
-  id: string,
+  id?: string,
   file?: any
 }
 
@@ -85,6 +85,7 @@ export default function RegisterVehiculo() {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
+  const [urls, setUrls] = useState<string[]>([]);
 
   const [filesIds, setFilesIds] = useState<Files[]>([]);
 
@@ -152,49 +153,33 @@ export default function RegisterVehiculo() {
   async function createObject(payload: Vehicle) {
     setLoading(true);
 
-    payload.childImages.map(async (item: any) => {
-      const vehicleRef = ref(storage, `vehicles/${item.name}`);
-      await uploadBytes(vehicleRef, item.file)
-      const url = await getImage(item.name);
-      item.url = url;
-    });
+    (async function () {
+      for await (let child of payload.childImages) {
+        const fileCurrentRemoved = payload.childImages.filter(item => item.id !== child.id);
+        setFilesIds(fileCurrentRemoved);
 
-    const storageRef = ref(storage, `vehicles/${payload.mainImage.name}`);
-    await uploadBytes(storageRef, payload.mainImage.file);
-    const mainImageUrl = await getImage(payload.mainImage.name);
-    payload.mainImage.url = mainImageUrl;
+        const vehicleRef = ref(storage, `vehicles/${child.name}`);
+        await uploadBytes(vehicleRef, child.file);
+        const url = await getImage(child.name);
+        const fileCurrent = payload.childImages.filter(item => item.id === child.id);
+        fileCurrent[0].url = url
+        setFilesIds([
+          fileCurrent[0],
+          ...filesIds
+        ])
+      }
+    })()
 
-    delete payload.mainImage.file;
-    payload.childImages.map(item => delete item.file)
+
     return payload
-  }
-
-  async function createVehicle(payload: Vehicle) {
-    const dbRef = collection(db, 'vehicles');
-    console.log(payload);
-
-    await addDoc(dbRef, payload).then((res) => {
-      toast.success('O veículo foi cadastrado com sucesso!');
-
-      setUploadedFiles([]);
-      setUploadedMainImage({});
-      setCarOrTruck('');
-      setVehicleName('');
-      setDescription('');
-      setPrice(0);
-    }).catch(() => {
-      toast.error('Ops... Algo de errado aconteceu.');
-    }).finally(() => {
-      setLoading(false);
-    })
   }
 
   return (
     <>
       <Flex justifyContent="right" margin="20px">
         <Link href={`listVehicles`} as={`listVehicles`} passHref>
-          <Button colorScheme='teal' variant='outline'>
-            Lista de Veículos
+          <Button type="button" colorScheme="blue" >
+            Listar de Veículos
           </Button>
         </Link>
       </Flex>
@@ -260,9 +245,27 @@ export default function RegisterVehiculo() {
             <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
           )}
           <Button isLoading={loading} onClick={async () => {
+            const dbRef = collection(db, 'vehicles');
+            let nameImages = [];
+
+            const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
+            await uploadBytes(storageRef, uploadedMainImage.file);
+            const mainImageUrl = await getImage(uploadedMainImage.name);
+            uploadedMainImage.url = mainImageUrl;
+
+            delete uploadedMainImage.file;
+
+
+            for (let child of filesIds) {
+              const vehicleRef = ref(storage, `vehicles/${child.name}`);
+              await uploadBytes(vehicleRef, child.file);
+              const url = await getImage(child.name);
+              child.url = url
+              nameImages.push(child)
+            }
 
             const obj = {
-              childImages: filesIds,
+              childImages: nameImages,
               createdAt: new Date(),
               description,
               title: vehicleName,
@@ -271,9 +274,24 @@ export default function RegisterVehiculo() {
               mainImage: uploadedMainImage,
             }
 
-            const data = await createObject(obj)
-
-            createVehicle(data)
+            obj.childImages.map(item => delete item.file);
+            console.log(obj)
+            await addDoc(dbRef, obj).then((res) => {
+              console.log(res)
+              toast.success('O veículo foi cadastrado com sucesso!');
+              nameImages = []
+              setUploadedFiles([]);
+              setUploadedMainImage({});
+              setFilesIds([])
+              setCarOrTruck('');
+              setVehicleName('');
+              setDescription('');
+              setPrice(0);
+            }).catch(() => {
+              toast.error('Ops... Algo de errado aconteceu.');
+            }).finally(() => {
+              setLoading(false);
+            })
 
           }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
         </Flex>

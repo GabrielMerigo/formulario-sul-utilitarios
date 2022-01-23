@@ -22,6 +22,7 @@ import {
   updateDoc
 } from "../services/firebaseConnection";
 import { Files, getImage, MainImage, Vehicle } from './registerVehicle';
+import Link from 'next/link';
 
 export interface FileProps {
   file: string
@@ -138,7 +139,7 @@ export default function EditVehicle() {
     setUploadedMainImage(obj)
     delete obj.file
     updateDoc(vehicleRef, {
-      mainImage: obj 
+      mainImage: obj
     });
   }
 
@@ -196,6 +197,18 @@ export default function EditVehicle() {
 
   return (
     <>
+      <Flex justifyContent="right" margin="20px">
+        <Link href={`registerVehicle`} as={`registerVehicle`} passHref>
+          <Button marginRight="10px" type="button" color="blue.500" background="white">
+            Cadastrar Veículo
+          </Button>
+        </Link>
+        <Link href={`listVehicles`} as={`listVehicles`} passHref>
+          <Button type="button" colorScheme="blue" >
+            Listar de Veículos
+          </Button>
+        </Link>
+      </Flex>
       <Flex
         w="100%"
         h="100%"
