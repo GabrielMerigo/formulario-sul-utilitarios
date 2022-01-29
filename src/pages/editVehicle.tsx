@@ -9,6 +9,7 @@ import UploadMainImage from './registerVehicle/components/UploadMainImage';
 import FileListMain from './registerVehicle/components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import {
@@ -70,7 +71,6 @@ export default function EditVehicle() {
   useEffect(() => {
     getVehicle();
   }, [getVehicle])
-
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {

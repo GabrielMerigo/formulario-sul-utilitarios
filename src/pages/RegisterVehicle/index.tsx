@@ -10,7 +10,7 @@ import FileListMain from './components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Link from 'next/link';
-
+import cookie from 'js-cookie';
 import slugify from 'slugify';
 
 import {
@@ -20,9 +20,9 @@ import {
   storage,
   ref,
   uploadBytes,
-  deleteObject,
   getDownloadURL
 } from "../../services/firebaseConnection";
+import SignIn from '../signIn';
 
 export interface FileProps {
   file?: string
@@ -85,8 +85,6 @@ export default function RegisterVehiculo() {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [urls, setUrls] = useState<string[]>([]);
-
   const [filesIds, setFilesIds] = useState<Files[]>([]);
 
   function handleUpload(files) {
@@ -175,127 +173,134 @@ export default function RegisterVehiculo() {
   }
 
   return (
+
     <>
-      <Flex justifyContent="right" margin="20px">
-        <Link href={`listVehicles`} as={`listVehicles`} passHref>
-          <Button type="button" colorScheme="blue" >
-            Listar de Veículos
-          </Button>
-        </Link>
-      </Flex>
+      {!cookie.get('token-auth') ? (
+        <SignIn />
+      ) : (
+        <Flex justify="center">
+          <Flex
+            w="100%"
+            h="100%"
+            align="center"
+            justify="center"
+            marginTop={5}
+            marginBottom={5}
+          >
+            <Flex
+              as="form"
+              w="100%"
+              maxWidth="700"
+              bg="gray.800"
+              p="8"
+              borderRadius={8}
+              flexDir="column"
+            >
+              <Flex justify="end">
+                <Link href={`listVehicles`} as={`listVehicles`} passHref>
+                  <Button type="button" colorScheme="blue" >
+                    Listar de Veículos
+                  </Button>
+                </Link>
+              </Flex>
 
-      <Flex
-        w="100%"
-        h="100%"
-        align="center"
-        justify="center"
-        marginTop={5}
-        marginBottom={5}
-      >
-        <Flex
-          as="form"
-          w="100%"
-          maxWidth="700"
-          bg="gray.800"
-          p="8"
-          borderRadius={8}
-          flexDir="column"
-        >
-          <FormControl id='carOrTruck'>
-            <FormLabel>Carro ou Caminhão?</FormLabel>
-            <Select value={carOrTruck} onChange={(e: any) => {
-              setCarOrTruck(e.target.value)
-            }} bgColor="white" color="black">
-              <option>Selecione</option>
-              <option>Carro</option>
-              <option>Caminhão</option>
-            </Select>
-          </FormControl>
-          <ToastContainer />
+              <FormControl id='carOrTruck'>
+                <FormLabel>Carro ou Caminhão?</FormLabel>
+                <Select value={carOrTruck} onChange={(e: any) => {
+                  setCarOrTruck(e.target.value)
+                }} bgColor="white" color="black">
+                  <option>Selecione</option>
+                  <option>Carro</option>
+                  <option>Caminhão</option>
+                </Select>
+              </FormControl>
+              <ToastContainer />
 
-          <HStack>
-            <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
-            <FormControl mt={2}>
-              <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput value={price} step={0.2}>
-                <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-          </HStack>
+              <HStack>
+                <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
+                <FormControl mt={2}>
+                  <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
+                  <NumberInput value={price} step={0.2}>
+                    <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                </FormControl>
+              </HStack>
 
-          <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
+              <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
 
-          <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
-          <HStack>
-            <UploadMainImage disabled={!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
+              <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
+              <HStack>
+                <UploadMainImage disabled={!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
 
-            {!!uploadedMainImage.name && (
-              <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
-            )}
-          </HStack>
+                {!!uploadedMainImage.name && (
+                  <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
+                )}
+              </HStack>
 
-          <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
-          <Upload onUpload={handleUpload} />
+              <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
+              <Upload onUpload={handleUpload} />
 
-          {!!uploadedFiles.length && (
-            <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
-          )}
-          <Button isLoading={loading} onClick={async () => {
-            const dbRef = collection(db, 'vehicles');
-            let nameImages = [];
+              {!!uploadedFiles.length && (
+                <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
+              )}
+              <Button isLoading={loading} onClick={async () => {
+                const dbRef = collection(db, 'vehicles');
+                let nameImages = [];
 
-            const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
-            await uploadBytes(storageRef, uploadedMainImage.file);
-            const mainImageUrl = await getImage(uploadedMainImage.name);
-            uploadedMainImage.url = mainImageUrl;
+                const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
+                await uploadBytes(storageRef, uploadedMainImage.file);
+                const mainImageUrl = await getImage(uploadedMainImage.name);
+                uploadedMainImage.url = mainImageUrl;
 
-            delete uploadedMainImage.file;
+                delete uploadedMainImage.file;
 
 
-            for (let child of filesIds) {
-              const vehicleRef = ref(storage, `vehicles/${child.name}`);
-              await uploadBytes(vehicleRef, child.file);
-              const url = await getImage(child.name);
-              child.url = url
-              nameImages.push(child)
-            }
+                for (let child of filesIds) {
+                  const vehicleRef = ref(storage, `vehicles/${child.name}`);
+                  await uploadBytes(vehicleRef, child.file);
+                  const url = await getImage(child.name);
+                  child.url = url
+                  nameImages.push(child)
+                }
 
-            const obj = {
-              childImages: nameImages,
-              createdAt: new Date(),
-              description,
-              title: vehicleName,
-              priceFormatted: price,
-              isTruck: carOrTruck === 'Carro' ? false : true,
-              mainImage: uploadedMainImage,
-            }
+                const obj = {
+                  childImages: nameImages,
+                  createdAt: new Date(),
+                  description,
+                  title: vehicleName,
+                  priceFormatted: price,
+                  isTruck: carOrTruck === 'Carro' ? false : true,
+                  mainImage: uploadedMainImage,
+                }
 
-            obj.childImages.map(item => delete item.file);
-            console.log(obj)
-            await addDoc(dbRef, obj).then((res) => {
-              console.log(res)
-              toast.success('O veículo foi cadastrado com sucesso!');
-              nameImages = []
-              setUploadedFiles([]);
-              setUploadedMainImage({});
-              setFilesIds([])
-              setCarOrTruck('');
-              setVehicleName('');
-              setDescription('');
-              setPrice(0);
-            }).catch(() => {
-              toast.error('Ops... Algo de errado aconteceu.');
-            }).finally(() => {
-              setLoading(false);
-            })
+                obj.childImages.map(item => delete item.file);
+                console.log(obj)
+                await addDoc(dbRef, obj).then((res) => {
+                  console.log(res)
+                  toast.success('O veículo foi cadastrado com sucesso!');
+                  nameImages = []
+                  setUploadedFiles([]);
+                  setUploadedMainImage({});
+                  setFilesIds([])
+                  setCarOrTruck('');
+                  setVehicleName('');
+                  setDescription('');
+                  setPrice(0);
+                }).catch(() => {
+                  toast.error('Ops... Algo de errado aconteceu.');
+                }).finally(() => {
+                  setLoading(false);
+                })
 
-          }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+              }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+            </Flex>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
     </>
   )
 }

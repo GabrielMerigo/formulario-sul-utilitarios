@@ -4,6 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 import { BoxItem } from './editVehicle/components/BoxItem';
 import { MainImage } from './registerVehicle';
 import Link from 'next/link';
+import cookie from 'js-cookie';
+import router from 'next/router';
+import SignIn from './signIn';
 
 export interface VehiclesTypes {
   createdAt: string;
@@ -19,7 +22,6 @@ export interface VehiclesTypes {
 
 export default function EditVehicle() {
   const [vehicles, setVehicles] = useState<VehiclesTypes[]>([]);
-
   async function getVehicles() {
     const vehiclesCol = collection(db, 'vehicles');
     const vehicleSnapshot = await getDocs(vehiclesCol);
@@ -39,47 +41,54 @@ export default function EditVehicle() {
 
   return (
     <>
-      <Flex justifyContent="right" margin="20px">
-        <Link href={`registerVehicle`} as={`registerVehicle`} passHref>
-          <Button colorScheme='teal' variant='outline'>
-            Cadastrar Veículo
-          </Button>
-        </Link>
-      </Flex>
-      <Flex
-        isLoading={true}
-        w="100%"
-        h="100%"
-        align="center"
-        justify="center"
-        marginTop={5}
-        marginBottom={5}
-      >
-        <Flex
-          as="form"
-          w="100%"
-          maxWidth="1000"
-          bg="gray.800"
-          p="8"
-          borderRadius={8}
-          flexDir="column"
-        >
-          <Grid templateColumns='repeat(3, 1fr)' gap={2}>
-            {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
-              <BoxItem
-                isTruck={isTruck}
-                createdAt={createdAt}
-                id={id}
-                mainImage={mainImage}
-                title={title}
-                key={id}
-                description={description}
-                priceFormatted={priceFormatted}
-              />
-            ))}
-          </Grid>
-        </Flex>
-      </Flex>
+      {!cookie.get('token-auth') ? (
+        <SignIn />
+      ) : (
+        <>
+          <Flex
+            isLoading={true}
+            w="100%"
+            h="100%"
+            align="center"
+            justify="center"
+            marginTop={5}
+            marginBottom={5}
+          >
+            <Flex
+              as="form"
+              w="100%"
+              maxWidth="1000"
+              bg="gray.800"
+              p="8"
+              borderRadius={8}
+              flexDir="column"
+            >
+              <Flex justifyContent="right" marginBottom="10px">
+                <Link href={`registerVehicle`} as={`registerVehicle`} passHref>
+                  <Button colorScheme="blue">
+                    Cadastrar Veículo
+                  </Button>
+                </Link>
+              </Flex>
+
+              <Grid templateColumns='repeat(3, 1fr)' gap={2}>
+                {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
+                  <BoxItem
+                    isTruck={isTruck}
+                    createdAt={createdAt}
+                    id={id}
+                    mainImage={mainImage}
+                    title={title}
+                    key={id}
+                    description={description}
+                    priceFormatted={priceFormatted}
+                  />
+                ))}
+              </Grid>
+            </Flex>
+          </Flex>
+        </>
+      )}
     </>
   )
 }
