@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField,  Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../../utils/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
@@ -22,7 +22,8 @@ import {
   uploadBytes,
   getDownloadURL
 } from "../../services/firebaseConnection";
-import SignIn from '../signIn';
+
+import SignIn from '../SignIn';
 
 export interface FileProps {
   file?: string
@@ -80,10 +81,17 @@ export const getImage = async (mainImage: string) => {
 export default function RegisterVehiculo() {
   const [uploadedFiles, setUploadedFiles] = useState([] as any);
   const [uploadedMainImage, setUploadedMainImage] = useState<MainImage>({} as MainImage);
+  //Fiels
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
+  const [marca, setMarca] = useState('');
+  const [modelo, setModelo] = useState('');
+  const [anoFabricacao, setAnoFabricacao] = useState('');
+  const [anoModelo, setAnoModelo] = useState('');
+  const [carroceria, setCarroceria] = useState('');
+  const [tracao, setTracao] = useState('');
   const [loading, setLoading] = useState(false);
   const [filesIds, setFilesIds] = useState<Files[]>([]);
 
@@ -148,32 +156,7 @@ export default function RegisterVehiculo() {
     setUploadedFiles(filesFiltered)
   }
 
-  async function createObject(payload: Vehicle) {
-    setLoading(true);
-
-    (async function () {
-      for await (let child of payload.childImages) {
-        const fileCurrentRemoved = payload.childImages.filter(item => item.id !== child.id);
-        setFilesIds(fileCurrentRemoved);
-
-        const vehicleRef = ref(storage, `vehicles/${child.name}`);
-        await uploadBytes(vehicleRef, child.file);
-        const url = await getImage(child.name);
-        const fileCurrent = payload.childImages.filter(item => item.id === child.id);
-        fileCurrent[0].url = url
-        setFilesIds([
-          fileCurrent[0],
-          ...filesIds
-        ])
-      }
-    })()
-
-
-    return payload
-  }
-
   return (
-
     <>
       {!cookie.get('token-auth') ? (
         <SignIn />
@@ -184,7 +167,6 @@ export default function RegisterVehiculo() {
             h="100%"
             align="center"
             justify="center"
-            marginTop={5}
             marginBottom={5}
           >
             <Flex
@@ -193,10 +175,10 @@ export default function RegisterVehiculo() {
               maxWidth="700"
               bg="gray.800"
               p="8"
-              borderRadius={8}
+              margin="auto"
               flexDir="column"
             >
-              <Flex justify="end">
+              <Flex justify="end" marginTop={2}>
                 <Link href={`listVehicles`} as={`listVehicles`} passHref>
                   <Button type="button" colorScheme="blue" >
                     Listar de Veículos
@@ -204,17 +186,19 @@ export default function RegisterVehiculo() {
                 </Link>
               </Flex>
 
-              <FormControl id='carOrTruck'>
-                <FormLabel>Carro ou Caminhão?</FormLabel>
-                <Select value={carOrTruck} onChange={(e: any) => {
-                  setCarOrTruck(e.target.value)
-                }} bgColor="white" color="black">
-                  <option>Selecione</option>
-                  <option>Carro</option>
-                  <option>Caminhão</option>
-                </Select>
-              </FormControl>
+              <Text as="b" align="center" fontSize='4xl'>Cadastre o Veículo</Text>
+
               <ToastContainer />
+              <FormControl id='carOrTruck'>
+                  <FormLabel>Veículo ou Caminhão?</FormLabel>
+                  <Select value={carOrTruck} onChange={(e: any) => {
+                    setCarOrTruck(e.target.value)
+                  }} bgColor="white" color="black">
+                    <option>Selecione</option>
+                    <option>Veículo</option>
+                    <option>Caminhão</option>
+                  </Select>
+                </FormControl>
 
               <HStack>
                 <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
@@ -230,6 +214,21 @@ export default function RegisterVehiculo() {
                 </FormControl>
               </HStack>
 
+              <HStack marginTop={2}>
+                <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
+                <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
+                <Input value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+              </HStack>
+
+              <HStack marginTop={2}>
+                <Input value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
+                <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
+              </HStack>
+
+              <HStack>
+              </HStack>
+
               <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
 
               <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
@@ -240,7 +239,7 @@ export default function RegisterVehiculo() {
                   <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
                 )}
               </HStack>
-
+              
               <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
               <Upload onUpload={handleUpload} />
 
@@ -248,6 +247,7 @@ export default function RegisterVehiculo() {
                 <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
               )}
               <Button isLoading={loading} onClick={async () => {
+                setLoading(true)
                 const dbRef = collection(db, 'vehicles');
                 let nameImages = [];
 
@@ -266,21 +266,26 @@ export default function RegisterVehiculo() {
                   child.url = url
                   nameImages.push(child)
                 }
-
+     
                 const obj = {
                   childImages: nameImages,
                   createdAt: new Date(),
                   description,
                   title: vehicleName,
+                  marca, 
+                  modelo,
+                  anoFabricacao, 
                   priceFormatted: price,
-                  isTruck: carOrTruck === 'Carro' ? false : true,
+                  anoModelo,
+                  carroceria,
+                  tracao,
+                  isTruck: carOrTruck === 'Veículo' ? false : true,
                   mainImage: uploadedMainImage,
                 }
 
                 obj.childImages.map(item => delete item.file);
-                console.log(obj)
                 await addDoc(dbRef, obj).then((res) => {
-                  console.log(res)
+  
                   toast.success('O veículo foi cadastrado com sucesso!');
                   nameImages = []
                   setUploadedFiles([]);

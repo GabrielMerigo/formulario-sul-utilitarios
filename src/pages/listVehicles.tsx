@@ -6,7 +6,7 @@ import { MainImage } from './registerVehicle';
 import Link from 'next/link';
 import cookie from 'js-cookie';
 import router from 'next/router';
-import SignIn from './signIn';
+import SignIn from './SignIn';
 
 export interface VehiclesTypes {
   createdAt: string;

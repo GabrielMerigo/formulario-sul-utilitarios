@@ -46,6 +46,12 @@ export default function EditVehicle() {
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
   const [price, setPrice] = useState(0);
+  const [marca, setMarca] = useState('');
+  const [modelo, setModelo] = useState('');
+  const [anoFabricacao, setAnoFabricacao] = useState('');
+  const [anoModelo, setAnoModelo] = useState('');
+  const [carroceria, setCarroceria] = useState('');
+  const [tracao, setTracao] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [filesIds, setFilesIds] = useState<Files[]>([]);
@@ -62,6 +68,12 @@ export default function EditVehicle() {
           setDescription(docSnap.data().description)
           setVehicleName(docSnap.data().title)
           setCarOrTruck(isTruck ? 'Caminhão' : 'Carro')
+          setAnoModelo(docSnap.data().anoModelo)
+          setMarca(docSnap.data().marca)
+          setModelo(docSnap.data().modelo)
+          setTracao(docSnap.data().tracao)
+          setCarroceria(docSnap.data().carroceria)
+          setAnoFabricacao(docSnap.data().anoFabricacao)
         })
         .catch(err => console.log)
         .finally(() => setLoading(false))
@@ -251,6 +263,18 @@ export default function EditVehicle() {
                 </NumberInputStepper>
               </NumberInput>
             </FormControl>
+          </HStack>
+
+          <HStack marginTop={2}>
+            <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
+            <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
+            <Input value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+          </HStack>
+
+          <HStack marginTop={2}>
+            <Input value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+            <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
+            <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
           </HStack>
 
           <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
