@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField,  Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../../utils/Input';
 import FileList from './components/FileList';
 import Upload from './components/Upload';
@@ -161,35 +161,31 @@ export default function RegisterVehiculo() {
       {!cookie.get('token-auth') ? (
         <SignIn />
       ) : (
-        <Flex justify="center">
-          <Flex
-            w="100%"
-            h="100%"
-            align="center"
-            justify="center"
-            marginBottom={5}
-          >
+        <>
+          <Link href={`listVehicles`} as={`listVehicles`} passHref>
+            <Button marginLeft={1150} marginTop={5}  type="button" colorScheme="blue" >
+              Listar de Veículos
+            </Button>
+          </Link>
+
+          <Flex justify="center">
             <Flex
-              as="form"
               w="100%"
-              maxWidth="700"
-              bg="gray.800"
-              p="8"
-              margin="auto"
-              flexDir="column"
+              h="100%"
+              align="center"
+              justify="center"
             >
-              <Flex justify="end" marginTop={2}>
-                <Link href={`listVehicles`} as={`listVehicles`} passHref>
-                  <Button type="button" colorScheme="blue" >
-                    Listar de Veículos
-                  </Button>
-                </Link>
-              </Flex>
-
-              <Text as="b" align="center" fontSize='4xl'>Cadastre o Veículo</Text>
-
-              <ToastContainer />
-              <FormControl id='carOrTruck'>
+              <Flex
+                as="form"
+                w="100%"
+                maxWidth="700"
+                bg="gray.800"
+                p="8"
+                borderRadius={8}
+                flexDir="column"
+              >
+                <ToastContainer />
+                <FormControl id='carOrTruck'>
                   <FormLabel>Veículo ou Caminhão?</FormLabel>
                   <Select value={carOrTruck} onChange={(e: any) => {
                     setCarOrTruck(e.target.value)
@@ -200,111 +196,113 @@ export default function RegisterVehiculo() {
                   </Select>
                 </FormControl>
 
-              <HStack>
-                <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
-                <FormControl mt={2}>
-                  <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-                  <NumberInput value={price} step={0.2}>
-                    <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FormControl>
-              </HStack>
+                <HStack>
+                  <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
+                  <FormControl mt={2}>
+                    <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
+                    <NumberInput value={price} step={0.2}>
+                      <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                </HStack>
 
-              <HStack marginTop={2}>
-                <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
-                <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-                <Input value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
-              </HStack>
+                <HStack marginTop={2}>
+                  <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
+                  <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
+                  <Input value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+                </HStack>
 
-              <HStack marginTop={2}>
-                <Input value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
-                <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
-                <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
-              </HStack>
+                <HStack marginTop={2}>
+                  <Input value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                  <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
+                  <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
+                </HStack>
 
-              <HStack>
-              </HStack>
+                <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
+                <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
+                <HStack>
+                  <UploadMainImage disabled={!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
 
-              <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
+                  {!!uploadedMainImage.name && (
+                    <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
+                  )}
+                </HStack>
 
-              <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
-              <HStack>
-                <UploadMainImage disabled={!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
+                <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
+                <Upload onUpload={handleUpload} />
 
-                {!!uploadedMainImage.name && (
-                  <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
+                {!!uploadedFiles.length && (
+                  <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
                 )}
-              </HStack>
-              
-              <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
-              <Upload onUpload={handleUpload} />
+                <Button isLoading={loading} onClick={async () => {
+                  setLoading(true)
+                  const dbRef = collection(db, 'vehicles');
+                  let nameImages = [];
 
-              {!!uploadedFiles.length && (
-                <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
-              )}
-              <Button isLoading={loading} onClick={async () => {
-                setLoading(true)
-                const dbRef = collection(db, 'vehicles');
-                let nameImages = [];
+                  const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
+                  await uploadBytes(storageRef, uploadedMainImage.file);
+                  const mainImageUrl = await getImage(uploadedMainImage.name);
+                  uploadedMainImage.url = mainImageUrl;
 
-                const storageRef = ref(storage, `vehicles/${uploadedMainImage.name}`);
-                await uploadBytes(storageRef, uploadedMainImage.file);
-                const mainImageUrl = await getImage(uploadedMainImage.name);
-                uploadedMainImage.url = mainImageUrl;
-
-                delete uploadedMainImage.file;
+                  delete uploadedMainImage.file;
 
 
-                for (let child of filesIds) {
-                  const vehicleRef = ref(storage, `vehicles/${child.name}`);
-                  await uploadBytes(vehicleRef, child.file);
-                  const url = await getImage(child.name);
-                  child.url = url
-                  nameImages.push(child)
-                }
-     
-                const obj = {
-                  childImages: nameImages,
-                  createdAt: new Date(),
-                  description,
-                  title: vehicleName,
-                  marca, 
-                  modelo,
-                  anoFabricacao, 
-                  priceFormatted: price,
-                  anoModelo,
-                  carroceria,
-                  tracao,
-                  isTruck: carOrTruck === 'Veículo' ? false : true,
-                  mainImage: uploadedMainImage,
-                }
+                  for (let child of filesIds) {
+                    const vehicleRef = ref(storage, `vehicles/${child.name}`);
+                    await uploadBytes(vehicleRef, child.file);
+                    const url = await getImage(child.name);
+                    child.url = url
+                    nameImages.push(child)
+                  }
 
-                obj.childImages.map(item => delete item.file);
-                await addDoc(dbRef, obj).then((res) => {
-  
-                  toast.success('O veículo foi cadastrado com sucesso!');
-                  nameImages = []
-                  setUploadedFiles([]);
-                  setUploadedMainImage({});
-                  setFilesIds([])
-                  setCarOrTruck('');
-                  setVehicleName('');
-                  setDescription('');
-                  setPrice(0);
-                }).catch(() => {
-                  toast.error('Ops... Algo de errado aconteceu.');
-                }).finally(() => {
-                  setLoading(false);
-                })
+                  const obj = {
+                    childImages: nameImages,
+                    createdAt: new Date(),
+                    description,
+                    title: vehicleName,
+                    marca,
+                    modelo,
+                    anoFabricacao,
+                    priceFormatted: price,
+                    anoModelo,
+                    carroceria,
+                    tracao,
+                    isTruck: carOrTruck === 'Veículo' ? false : true,
+                    mainImage: uploadedMainImage,
+                  }
 
-              }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+                  obj.childImages.map(item => delete item.file);
+                  await addDoc(dbRef, obj).then((res) => {
+                    toast.success('O veículo foi cadastrado com sucesso!');
+                    nameImages = []
+                    setUploadedFiles([]);
+                    setUploadedMainImage({});
+                    setFilesIds([])
+                    setCarOrTruck('');
+                    setVehicleName('');
+                    setDescription('');
+                    setMarca('');
+                    setModelo('')
+                    setAnoFabricacao('');
+                    setAnoModelo('')
+                    setTracao('')
+                    setCarroceria('')
+                    setPrice(0);
+                  }).catch(() => {
+                    toast.error('Ops... Algo de errado aconteceu.');
+                  }).finally(() => {
+                    setLoading(false);
+                  })
+
+                }} type="button" mt="6" colorScheme="blue" size="lg">Cadastar Veículo</Button>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
+        </>
       )}
     </>
   )

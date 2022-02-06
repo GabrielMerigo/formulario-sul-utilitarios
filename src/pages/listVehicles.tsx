@@ -58,6 +58,8 @@ export default function EditVehicle() {
               as="form"
               w="100%"
               maxWidth="1000"
+              minWidth="800"
+              minHeight="700"
               bg="gray.800"
               p="8"
               borderRadius={8}

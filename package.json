@@ -1,34 +1,43 @@
 {
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "workbench.colorTheme": "Dracula",
-  "editor.fontFamily": "JetBrains Mono",
-  "editor.fontLigatures": true,
-  "editor.fontSize": 19,
-  "editor.minimap.maxColumn": 100,
-  "editor.renderLineHighlight": "gutter",
-  "editor.rulers": [
-      80
-  ],
-  "workbench.iconTheme": "material-icon-theme",
-  "liveshare.authenticationProvider": "GitHub",
-  "liveServer.settings.donotShowInfoMsg": true,
-  "editor.tabSize": 2,
-  "workbench.editor.untitled.hint": "hidden",
-  "explorer.compactFolders": false,
-  "workbench.startupEditor": "none",
-  "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true 
-  },
-  "tabnine.experimentalAutoImports": true,
-  "window.zoomLevel": -1,
-  "redhat.telemetry.enabled": true,
-  "files.eol": "\n",
-  "files.associations": {
-      "*.env.development": "env",
-      "*.env.production": "env"
-  },
-  "bracketPairColorizer.depreciation-notice": false,
-  "git.enableSmartCommit": true,
-  "diffEditor.ignoreTrimWhitespace": false
-}
+    "name": "formulario-sul-utilitarios",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "set PORT=3006 && next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "dependencies": {
+      "@chakra-ui/core": "^0.8.0",
+      "@chakra-ui/react": "^1.6.8",
+      "@emotion/react": "^11.4.1",
+      "@emotion/styled": "^11.3.0",
+      "@types/firebase": "^3.2.1",
+      "filesize": "^8.0.6",
+      "firebase": "^9.1.2",
+      "framer-motion": "^4.1.17",
+      "js-cookie": "^3.0.1",
+      "lodash": "^4.17.21",
+      "next": "11.1.2",
+      "react": "17.0.2",
+      "react-circular-progressbar": "^2.0.4",
+      "react-dom": "17.0.2",
+      "react-dropzone": "^11.4.2",
+      "react-icons": "^4.3.1",
+      "react-notifications": "^1.7.3",
+      "react-router-dom": "^6.2.1",
+      "react-toastify": "^8.1.0",
+      "sass": "^1.42.1",
+      "scss": "^0.2.4",
+      "slugify": "^1.6.5",
+      "styled-components": "^5.3.3"
+    },
+    "devDependencies": {
+      "@types/node": "^16.10.1",
+      "@types/react": "^17.0.24",
+      "eslint": "7.32.0",
+      "eslint-config-next": "11.1.2",
+      "typescript": "^4.4.3"
+    }
+  }
