@@ -154,6 +154,7 @@ export default function RegisterVehiculo() {
   function handleDeleteOtherFiles(id: number) {
     const filesFiltered = uploadedFiles.filter(file => file.id !== id)
     setUploadedFiles(filesFiltered)
+    setFilesIds(filesFiltered)
   }
 
   return (
@@ -238,6 +239,7 @@ export default function RegisterVehiculo() {
                 {!!uploadedFiles.length && (
                   <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
                 )}
+
                 <Button isLoading={loading} onClick={async () => {
                   setLoading(true)
                   const dbRef = collection(db, 'vehicles');
@@ -249,7 +251,6 @@ export default function RegisterVehiculo() {
                   uploadedMainImage.url = mainImageUrl;
 
                   delete uploadedMainImage.file;
-
 
                   for (let child of filesIds) {
                     const vehicleRef = ref(storage, `vehicles/${child.name}`);

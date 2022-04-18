@@ -1,12 +1,9 @@
-import { Flex, Button, Grid, GridItem } from '@chakra-ui/react';
+import { Flex, Button, Grid } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BoxItem } from './EditVehicle/components/BoxItem';
 import { MainImage } from './RegisterVehicle';
 import Link from 'next/link';
-import cookie from 'js-cookie';
-import router from 'next/router';
-import SignIn from './SignIn';
 
 export interface VehiclesTypes {
   createdAt: string;

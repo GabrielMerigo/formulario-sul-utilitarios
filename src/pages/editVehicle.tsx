@@ -9,8 +9,8 @@ import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
 import FileListMain from './RegisterVehicle/components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
-import cookie from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.min.css';
+import slugify from 'slugify';
 
 import {
   db,
@@ -89,10 +89,11 @@ export default function EditVehicle() {
       const storageRef = ref(storage, `vehicles/${file.name}`);
       await uploadBytes(storageRef, files[0])
       const url = await getImage(file.name)
+      const timeStamp = new Date().getTime();
 
       setFilesIds([
         {
-          name: file.name,
+          name: slugify(file.name) + timeStamp,
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           id: file.id,
@@ -104,7 +105,7 @@ export default function EditVehicle() {
       const obj = {
         file,
         id: uniqueId(),
-        name: file.name,
+        name: slugify(file.name) + timeStamp,
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -157,7 +158,6 @@ export default function EditVehicle() {
 
   function handleDeleteFileMain() {
     const fileName = uploadedMainImage.name;
-    console.log(fileName)
     const desertRef = ref(storage, `vehicles/${fileName}`);
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
@@ -177,7 +177,6 @@ export default function EditVehicle() {
     const file = uploadedFiles.filter(file => file.id === id);
     const fileName = file[0].name;
     const desertRef = ref(storage, `vehicles/${fileName}`);
-    console.log(file[0].id, id)
 
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
