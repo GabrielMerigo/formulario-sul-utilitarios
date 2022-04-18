@@ -1,12 +1,12 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../utils/Input';
-import FileList from './registerVehicle/components/FileList';
-import Upload from './registerVehicle/components/Upload';
+import FileList from './RegisterVehicle/components/FileList';
+import Upload from './RegisterVehicle/components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import UploadMainImage from './registerVehicle/components/UploadMainImage';
-import FileListMain from './registerVehicle/components/FileListMain';
+import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
+import FileListMain from './RegisterVehicle/components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
@@ -22,7 +22,7 @@ import {
   getDoc,
   updateDoc
 } from "../services/firebaseConnection";
-import { Files, getImage, MainImage, Vehicle } from './registerVehicle';
+import { Files, getImage, MainImage, Vehicle } from './RegisterVehicle';
 import Link from 'next/link';
 
 export interface FileProps {
@@ -210,7 +210,7 @@ export default function EditVehicle() {
   return (
     <>
       <Flex justifyContent="right" margin="20px">
-        <Link href={`registerVehicle`} as={`registerVehicle`} passHref>
+        <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
           <Button marginRight="10px" type="button" color="blue.500" background="white">
             Cadastrar Veículo
           </Button>

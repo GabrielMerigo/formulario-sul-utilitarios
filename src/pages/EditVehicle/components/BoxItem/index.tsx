@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { deleteDoc, doc, db } from '../../../../services/firebaseConnection';
-import { MainImage } from '../../../registerVehicle';
+import { MainImage } from '../../../RegisterVehicle';
 
 export interface BoxItemProps {
   createdAt: string;

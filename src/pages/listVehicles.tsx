@@ -1,8 +1,8 @@
 import { Flex, Button, Grid, GridItem } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
 import { useState, useCallback, useEffect } from 'react';
-import { BoxItem } from './editVehicle/components/BoxItem';
-import { MainImage } from './registerVehicle';
+import { BoxItem } from './EditVehicle/components/BoxItem';
+import { MainImage } from './RegisterVehicle';
 import Link from 'next/link';
 import cookie from 'js-cookie';
 import router from 'next/router';
@@ -41,9 +41,6 @@ export default function EditVehicle() {
 
   return (
     <>
-      {!cookie.get('token-auth') ? (
-        <SignIn />
-      ) : (
         <>
           <Flex
             isLoading={true}
@@ -66,7 +63,7 @@ export default function EditVehicle() {
               flexDir="column"
             >
               <Flex justifyContent="right" marginBottom="10px">
-                <Link href={`registerVehicle`} as={`registerVehicle`} passHref>
+                <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
                   <Button colorScheme="blue">
                     Cadastrar Veículo
                   </Button>
@@ -85,12 +82,11 @@ export default function EditVehicle() {
                     description={description}
                     priceFormatted={priceFormatted}
                   />
-                ))}
+                 ))}
               </Grid>
             </Flex>
           </Flex>
         </>
-      )}
     </>
   )
 }

@@ -36,7 +36,7 @@ export default function SignIn() {
             position: 'top-right',
             isClosable: true,
           });
-          router.push('/registerVehicle')
+          router.push('/RegisterVehicle')
         }
       })
       .catch((error) => {
