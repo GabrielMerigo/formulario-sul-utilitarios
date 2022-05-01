@@ -1,43 +1,44 @@
 {
-    "name": "formulario-sul-utilitarios",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-      "dev": "next dev -p 3001",
-      "build": "next build",
-      "start": "next start",
-      "lint": "next lint"
-    },
-    "dependencies": {
-      "@chakra-ui/core": "^0.8.0",
-      "@chakra-ui/react": "^1.6.8",
-      "@emotion/react": "^11.4.1",
-      "@emotion/styled": "^11.3.0",
-      "@types/firebase": "^3.2.1",
-      "filesize": "^8.0.6",
-      "firebase": "^9.1.2",
-      "framer-motion": "^4.1.17",
-      "js-cookie": "^3.0.1",
-      "lodash": "^4.17.21",
-      "next": "11.1.2",
-      "react": "17.0.2",
-      "react-circular-progressbar": "^2.0.4",
-      "react-dom": "17.0.2",
-      "react-dropzone": "^11.4.2",
-      "react-icons": "^4.3.1",
-      "react-notifications": "^1.7.3",
-      "react-router-dom": "^6.2.1",
-      "react-toastify": "^8.1.0",
-      "sass": "^1.42.1",
-      "scss": "^0.2.4",
-      "slugify": "^1.6.5",
-      "styled-components": "^5.3.3"
-    },
-    "devDependencies": {
-      "@types/node": "^16.10.1",
-      "@types/react": "^17.0.24",
-      "eslint": "7.32.0",
-      "eslint-config-next": "11.1.2",
-      "typescript": "^4.4.3"
-    }
+  "name": "formulario-sul-utilitarios",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/core": "^0.8.0",
+    "@chakra-ui/react": "^1.6.8",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@types/firebase": "^3.2.1",
+    "filesize": "^8.0.6",
+    "firebase": "^9.1.2",
+    "framer-motion": "^4.1.17",
+    "js-cookie": "^3.0.1",
+    "lodash": "^4.17.21",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-circular-progressbar": "^2.0.4",
+    "react-dom": "17.0.2",
+    "react-dropzone": "^11.4.2",
+    "react-icons": "^4.3.1",
+    "react-input-mask": "^2.0.4",
+    "react-notifications": "^1.7.3",
+    "react-router-dom": "^6.2.1",
+    "react-toastify": "^8.1.0",
+    "sass": "^1.42.1",
+    "scss": "^0.2.4",
+    "slugify": "^1.6.5",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "@types/react": "^17.0.24",
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.1.2",
+    "typescript": "^4.4.3"
   }
+}

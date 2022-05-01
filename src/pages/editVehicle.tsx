@@ -11,6 +11,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.min.css';
 import slugify from 'slugify';
+import InputMask from "react-input-mask";
 
 import {
   db,
@@ -267,11 +268,11 @@ export default function EditVehicle() {
           <HStack marginTop={2}>
             <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
             <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-            <Input value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+            <Input as={InputMask} mask="**/**/****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
           </HStack>
 
           <HStack marginTop={2}>
-            <Input value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+            <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
             <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
             <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
           </HStack>
