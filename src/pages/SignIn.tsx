@@ -18,7 +18,7 @@ export default function SignIn() {
     'auth/invalid-email': 'E-mail inválido',
     default: 'Senha ou E-mail incorreto.'
   }
-
+  
   function signIn() {
     const auth = getAuth();
 
@@ -41,7 +41,7 @@ export default function SignIn() {
       })
       .catch((error) => {
         toast({
-          title: `${errors[error.code]}`,
+          title: `${errors[error.code ? error.code : 'default']}`,
           status: 'error',
           position: 'top-right',
           isClosable: true,

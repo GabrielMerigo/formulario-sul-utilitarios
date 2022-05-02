@@ -3,6 +3,7 @@ import { FormControl, FormLabel, Input as ChakraInput, InputProps as ChakraInput
 interface InputProps extends ChakraInputProps {
   name: string;
   label?:string;
+  mask?: string | Array<(string | RegExp)>
 }
 
 export default function Input({name, label, ...rest}: InputProps){

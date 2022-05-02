@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Link from 'next/link';
 import cookie from 'js-cookie';
 import slugify from 'slugify';
-import InputMask from "react-input-mask";
+import InputMask from 'react-input-mask';
 
 import {
   db,
@@ -219,7 +219,7 @@ export default function RegisterVehiculo() {
                 </HStack>
 
                 <HStack marginTop={2}>
-                  <Input as={InputMask} mask="**/**/****" maskChar={null} value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                  <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
                   <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
                   <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
                 </HStack>

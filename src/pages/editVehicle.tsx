@@ -12,6 +12,8 @@ import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.min.css';
 import slugify from 'slugify';
 import InputMask from "react-input-mask";
+import cookie from 'js-cookie';
+
 
 import {
   db,
@@ -25,6 +27,7 @@ import {
 } from "../services/firebaseConnection";
 import { Files, getImage, MainImage, Vehicle } from './RegisterVehicle';
 import Link from 'next/link';
+import SignIn from './SignIn';
 
 export interface FileProps {
   file: string
@@ -149,7 +152,6 @@ export default function EditVehicle() {
       url
     }
 
-
     setUploadedMainImage(obj)
     delete obj.file
     updateDoc(vehicleRef, {
@@ -208,6 +210,10 @@ export default function EditVehicle() {
   }
 
   return (
+    <>
+   {!cookie.get('token-auth') ? (
+     <SignIn />
+   ) : (
     <>
       <Flex justifyContent="right" margin="20px">
         <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
@@ -311,5 +317,7 @@ export default function EditVehicle() {
         </Flex>
       </Flex>
     </>
+   )}
+   </>
   )
 }
