@@ -125,7 +125,7 @@ export default function EditVehicle() {
     Promise.all(filesUploaded).then((res: FileProps[]) => {
       setUploadedFiles(uploadedFiles.concat(res));
       const vehicleRef = doc(db, 'vehicles', idUrl);
-      res.forEach(item => delete item.file);
+      res.forEach((item: FileProps) => delete item.file);
 
       updateDoc(vehicleRef, {
         childImages: res
