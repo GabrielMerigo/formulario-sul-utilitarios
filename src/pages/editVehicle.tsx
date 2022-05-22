@@ -119,6 +119,7 @@ export default function EditVehicle() {
         url
       }
 
+      
       return obj;
     })
 
