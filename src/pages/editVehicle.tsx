@@ -14,7 +14,6 @@ import slugify from 'slugify';
 import InputMask from "react-input-mask";
 import cookie from 'js-cookie';
 
-
 import {
   db,
   storage,
@@ -25,11 +24,11 @@ import {
   getDoc,
   updateDoc
 } from "../services/firebaseConnection";
-import { Files, getImage, MainImage, Vehicle } from './RegisterVehicle';
+import { Files, getImage, MainImage } from './RegisterVehicle';
 import Link from 'next/link';
 import SignIn from './SignIn';
 
-export interface FileProps {
+export type FileProps  = {
   file: string
   id: number,
   name: string,
@@ -66,6 +65,7 @@ export default function EditVehicle() {
       await getDoc(docRef)
         .then((docSnap) => {
           const isTruck = docSnap.data().isTruck === true
+
           setUploadedMainImage(docSnap.data().mainImage);
           setUploadedFiles(docSnap.data().childImages)
           setPrice(docSnap.data().priceFormatted)
@@ -90,14 +90,15 @@ export default function EditVehicle() {
 
   function handleUpload(files) {
     const filesUploaded = files.map(async file => {
-      const storageRef = ref(storage, `vehicles/${file.name}`);
-      await uploadBytes(storageRef, files[0])
-      const url = await getImage(file.name)
       const timeStamp = new Date().getTime();
+      const nameFile = slugify(file.name) + timeStamp
+      const storageRef = ref(storage, `vehicles/${nameFile}`);
+      await uploadBytes(storageRef, files[0]);
+      const url = await getImage(nameFile);
 
       setFilesIds([
         {
-          name: slugify(file.name) + timeStamp,
+          name: nameFile,
           preview: URL.createObjectURL(file),
           readableSize: filesize(file.size),
           id: file.id,
@@ -109,7 +110,7 @@ export default function EditVehicle() {
       const obj = {
         file,
         id: uniqueId(),
-        name: slugify(file.name) + timeStamp,
+        name: nameFile,
         readableSize: filesize(file.size),
         preview: URL.createObjectURL(file),
         progress: 0,
@@ -162,6 +163,7 @@ export default function EditVehicle() {
   function handleDeleteFileMain() {
     const fileName = uploadedMainImage.name;
     const desertRef = ref(storage, `vehicles/${fileName}`);
+
     deleteObject(desertRef).then(res => {
       console.log('Excluído')
     }).catch((err) => {
@@ -187,15 +189,19 @@ export default function EditVehicle() {
       console.log(err)
     })
 
-    const filesFiltered = uploadedFiles.filter(file => file.id !== id)
-    console.log(filesFiltered)
+    const filesFiltered: FileProps[] = uploadedFiles.filter((file: FileProps) => file.id !== id)
     setUploadedFiles(filesFiltered)
 
-    filesFiltered.forEach(item => delete item.file)
-    const vehicleRef = doc(db, 'vehicles', idUrl);
-    updateDoc(vehicleRef, {
-      childImages: filesFiltered
-    });
+    try{
+      filesFiltered.forEach(item => delete item.file)
+
+      const vehicleRef = doc(db, 'vehicles', idUrl);
+      updateDoc(vehicleRef, {
+        childImages: filesFiltered
+      });
+    }catch(err){
+      console.log('ops... algo deu de errado!')
+    }
   }
 
   async function updateVehicle(payload) {
