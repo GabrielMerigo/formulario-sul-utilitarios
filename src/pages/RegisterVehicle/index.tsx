@@ -1,12 +1,12 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../../utils/Input';
-import FileList from './components/FileList';
-import Upload from './components/Upload';
+import FileList from '../../components/FileList';
+import Upload from '../../components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import React, { useState } from 'react';
-import UploadMainImage from './components/UploadMainImage';
-import FileListMain from './components/FileListMain';
+import UploadMainImage from '../../components/UploadMainImage';
+import FileListMain from '../../components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
 import { Flex, Button, Grid } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
 import { useState, useEffect } from 'react';
-import { BoxItem } from './EditVehicle/components/BoxItem';
+import { BoxItem } from '../components/BoxItem';
 import { MainImage } from './RegisterVehicle';
 import Link from 'next/link';
 

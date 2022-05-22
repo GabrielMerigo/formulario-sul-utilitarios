@@ -2,8 +2,8 @@ import { Box, Badge, Image, Button } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { deleteDoc, doc, db, getDoc, ref, storage, deleteObject } from '../../../../services/firebaseConnection';
-import { Files, MainImage } from '../../../RegisterVehicle';
+import { deleteDoc, doc, db, getDoc, ref, storage, deleteObject } from '../../services/firebaseConnection';
+import { Files, MainImage } from '../../pages/RegisterVehicle';
 
 export interface BoxItemProps {
   createdAt: string;

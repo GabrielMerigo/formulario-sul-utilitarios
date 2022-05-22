@@ -1,12 +1,12 @@
 import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../utils/Input';
-import FileList from './RegisterVehicle/components/FileList';
-import Upload from './RegisterVehicle/components/Upload';
+import FileList from '../components/FileList';
+import Upload from '../components/Upload';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import UploadMainImage from './RegisterVehicle/components/UploadMainImage';
-import FileListMain from './RegisterVehicle/components/FileListMain';
+import UploadMainImage from '../components/UploadMainImage';
+import FileListMain from '../components/FileListMain';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -119,7 +119,7 @@ export default function EditVehicle() {
         url
       }
 
-      
+
       return obj;
     })
 
