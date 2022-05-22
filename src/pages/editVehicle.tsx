@@ -122,7 +122,7 @@ export default function EditVehicle() {
       return obj;
     })
 
-    Promise.all(filesUploaded).then(res => {
+    Promise.all(filesUploaded).then((res: FileProps[]) => {
       setUploadedFiles(uploadedFiles.concat(res));
       const vehicleRef = doc(db, 'vehicles', idUrl);
       res.forEach(item => delete item.file);
