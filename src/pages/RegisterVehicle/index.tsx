@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, Text, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../../utils/Input';
 import FileList from '../../components/FileList';
 import Upload from '../../components/Upload';
@@ -164,12 +164,6 @@ export default function RegisterVehiculo() {
         <SignIn />
       ) : (
         <>
-          <Link href={`listVehicles`} as={`listVehicles`} passHref>
-            <Button marginLeft={1150} marginTop={5}  type="button" colorScheme="blue" >
-              Listar de Veículos
-            </Button>
-          </Link>
-
           <Flex justify="center">
             <Flex
               w="100%"
@@ -186,6 +180,14 @@ export default function RegisterVehiculo() {
                 borderRadius={8}
                 flexDir="column"
               >
+                <Flex marginTop={10} justifyContent="right" marginBottom="10px">
+                  <Link href={`listVehicles`} as={`listVehicles`} passHref>
+                    <Button marginTop={5}  type="button" colorScheme="blue" >
+                      Listar de Veículos
+                    </Button>
+                  </Link>
+                </Flex>
+
                 <ToastContainer />
                 <FormControl id='carOrTruck'>
                   <FormLabel>Veículo ou Caminhão?</FormLabel>
@@ -212,10 +214,10 @@ export default function RegisterVehiculo() {
                   </FormControl>
                 </HStack>
 
-                <HStack marginTop={2}>
+                <HStack>
                   <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
                   <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-                  <Input as={InputMask} mask="**/**/****"  value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+                  <Input as={InputMask} mask="**/**/****"  value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabrica" />
                 </HStack>
 
                 <HStack marginTop={2}>

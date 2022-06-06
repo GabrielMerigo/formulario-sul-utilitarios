@@ -1,9 +1,10 @@
-import { Flex, Button, Grid } from '@chakra-ui/react';
+import { Flex, Button } from '@chakra-ui/react';
 import { db, collection, getDocs } from "../services/firebaseConnection";
 import { useState, useEffect } from 'react';
 import { BoxItem } from '../components/BoxItem';
 import { MainImage } from './RegisterVehicle';
 import Link from 'next/link';
+import { CarList, WrapperBtn } from '../styles/CarList';
 
 export interface VehiclesTypes {
   createdAt: string;
@@ -14,7 +15,6 @@ export interface VehiclesTypes {
   priceFormatted: number;
   isTruck: boolean;
   id: string;
-
 }
 
 export default function EditVehicle() {
@@ -59,28 +59,32 @@ export default function EditVehicle() {
               borderRadius={8}
               flexDir="column"
             >
-              <Flex justifyContent="right" marginBottom="10px">
-                <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
-                  <Button colorScheme="blue">
-                    Cadastrar Veículo
-                  </Button>
-                </Link>
-              </Flex>
+              <WrapperBtn>
+                <Flex justifyContent="right" marginBottom="10px">
+                  <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
+                    <Button colorScheme="blue">
+                      Cadastrar Veículo
+                    </Button>
+                  </Link>
+                </Flex>
+              </WrapperBtn>
 
-              <Grid templateColumns='repeat(3, 1fr)' gap={2}>
-                {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
-                  <BoxItem
-                    isTruck={isTruck}
-                    createdAt={createdAt}
-                    id={id}
-                    mainImage={mainImage}
-                    title={title}
-                    key={id}
-                    description={description}
-                    priceFormatted={priceFormatted}
-                  />
-                 ))}
-              </Grid>
+              <CarList>
+                <div className="boxCars">
+                  {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
+                    <BoxItem
+                      isTruck={isTruck}
+                      createdAt={createdAt}
+                      id={id}
+                      mainImage={mainImage}
+                      title={title}
+                      key={id}
+                      description={description}
+                      priceFormatted={priceFormatted}
+                    />
+                  ))}
+                </div>
+              </CarList>
             </Flex>
           </Flex>
         </>
