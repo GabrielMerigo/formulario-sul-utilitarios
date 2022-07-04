@@ -17,10 +17,12 @@ export interface BoxItemProps {
 
 export function BoxItem({ mainImage, title, description, priceFormatted, id: idDb }: BoxItemProps) {
   const router = useRouter();
-  const formattedPrice = Number(priceFormatted).toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })
+  const formattedPrice: any = isNaN(priceFormatted)
+    ? priceFormatted
+    : Number(priceFormatted).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
 
   async function deleteVehicle(id) {
     const vehicleRef = doc(db, 'vehicles', id);

@@ -89,7 +89,7 @@ export default function RegisterVehiculo() {
   const [description, setDescription] = useState('');
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
-  const [anoFabricacao, setAnoFabricacao] = useState('');
+  const [anoFabricacao, setAnoFabricacao] = useState(0);
   const [anoModelo, setAnoModelo] = useState('');
   const [carroceria, setCarroceria] = useState('');
   const [tracao, setTracao] = useState('');
@@ -182,7 +182,7 @@ export default function RegisterVehiculo() {
               >
                 <Flex marginTop={10} justifyContent="right" marginBottom="10px">
                   <Link href={`listVehicles`} as={`listVehicles`} passHref>
-                    <Button marginTop={5}  type="button" colorScheme="blue" >
+                    <Button marginTop={5} type="button" colorScheme="blue" >
                       Listar de Veículos
                     </Button>
                   </Link>
@@ -202,22 +202,13 @@ export default function RegisterVehiculo() {
 
                 <HStack>
                   <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
-                  <FormControl mt={2}>
-                    <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-                    <NumberInput value={price} step={0.2}>
-                      <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </FormControl>
+                  <Input name="text" label="Preço do veículo" onInput={(e: any) => setPrice(e.target.value)} />
                 </HStack>
 
                 <HStack>
                   <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
                   <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-                  <Input as={InputMask} mask="**/**/****"  value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabrica" />
+                  <Input as={InputMask} mask="****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
                 </HStack>
 
                 <HStack marginTop={2}>
@@ -291,7 +282,7 @@ export default function RegisterVehiculo() {
                     setDescription('');
                     setMarca('');
                     setModelo('')
-                    setAnoFabricacao('');
+                    setAnoFabricacao(0);
                     setAnoModelo('')
                     setTracao('')
                     setCarroceria('')

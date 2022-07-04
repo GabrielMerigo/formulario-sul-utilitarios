@@ -28,7 +28,7 @@ import { Files, getImage, MainImage } from './RegisterVehicle';
 import Link from 'next/link';
 import SignIn from './SignIn';
 
-export type FileProps  = {
+export type FileProps = {
   file: string
   id: number,
   name: string,
@@ -48,7 +48,7 @@ export default function EditVehicle() {
   const [uploadedMainImage, setUploadedMainImage] = useState<MainImage>({} as MainImage);
   const [carOrTruck, setCarOrTruck] = useState('');
   const [vehicleName, setVehicleName] = useState('');
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
   const [anoFabricacao, setAnoFabricacao] = useState('');
@@ -193,14 +193,14 @@ export default function EditVehicle() {
     const filesFiltered: FileProps[] = uploadedFiles.filter((file: FileProps) => file.id !== id)
     setUploadedFiles(filesFiltered)
 
-    try{
+    try {
       filesFiltered.forEach(item => delete item.file)
 
       const vehicleRef = doc(db, 'vehicles', idUrl);
       updateDoc(vehicleRef, {
         childImages: filesFiltered
       });
-    }catch(err){
+    } catch (err) {
       console.log('ops... algo deu de errado!')
     }
   }
@@ -218,113 +218,104 @@ export default function EditVehicle() {
 
   return (
     <>
-   {!cookie.get('token-auth') ? (
-     <SignIn />
-   ) : (
-    <>
-      <Flex justifyContent="right" margin="20px">
-        <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
-          <Button marginRight="10px" type="button" color="blue.500" background="white">
-            Cadastrar Veículo
-          </Button>
-        </Link>
-        <Link href={`listVehicles`} as={`listVehicles`} passHref>
-          <Button type="button" colorScheme="blue" >
-            Listar de Veículos
-          </Button>
-        </Link>
-      </Flex>
-      <Flex
-        w="100%"
-        h="100%"
-        align="center"
-        justify="center"
-        marginTop={5}
-        marginBottom={5}
-      >
-        <Flex
-          as="form"
-          w="100%"
-          maxWidth="700"
-          bg="gray.800"
-          p="8"
-          borderRadius={8}
-          flexDir="column"
-        >
-          <Text as="b" align="center" fontSize='4xl'>Edite o Veículo</Text>
-          <FormControl id='carOrTruck'>
-            <FormLabel>Carro ou Caminhão?</FormLabel>
-            <Select value={carOrTruck} onChange={(e: any) => {
-              setCarOrTruck(e.target.value)
-            }} bgColor="white" color="black">
-              <option>Selecione</option>
-              <option>Carro</option>
-              <option>Caminhão</option>
-            </Select>
-          </FormControl>
-          <ToastContainer />
+      {!cookie.get('token-auth') ? (
+        <SignIn />
+      ) : (
+        <>
+          <Flex justifyContent="right" margin="20px">
+            <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
+              <Button marginRight="10px" type="button" color="blue.500" background="white">
+                Cadastrar Veículo
+              </Button>
+            </Link>
+            <Link href={`listVehicles`} as={`listVehicles`} passHref>
+              <Button type="button" colorScheme="blue" >
+                Listar de Veículos
+              </Button>
+            </Link>
+          </Flex>
+          <Flex
+            w="100%"
+            h="100%"
+            align="center"
+            justify="center"
+            marginTop={5}
+            marginBottom={5}
+          >
+            <Flex
+              as="form"
+              w="100%"
+              maxWidth="700"
+              bg="gray.800"
+              p="8"
+              borderRadius={8}
+              flexDir="column"
+            >
+              <Text as="b" align="center" fontSize='4xl'>Edite o Veículo</Text>
+              <FormControl id='carOrTruck'>
+                <FormLabel>Carro ou Caminhão?</FormLabel>
+                <Select value={carOrTruck} onChange={(e: any) => {
+                  setCarOrTruck(e.target.value)
+                }} bgColor="white" color="black">
+                  <option>Selecione</option>
+                  <option>Carro</option>
+                  <option>Caminhão</option>
+                </Select>
+              </FormControl>
+              <ToastContainer />
 
-          <HStack>
-            <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
-            <FormControl mt={2}>
-              <FormLabel style={{ margin: 0 }} htmlFor={'Preço do veículo'}>{'Preço do veículo'}</FormLabel>
-              <NumberInput value={price} precision={2} step={0.2}>
-                <NumberInputField onInput={(e: any) => setPrice(e.target.value)} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-          </HStack>
+              <HStack>
+                <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
+                <Input name="text" label="Preço do veículo" onInput={(e: any) => setPrice(e.target.value)} />
+              </HStack>
 
-          <HStack marginTop={2}>
-            <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
-            <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-            <Input as={InputMask} mask="**/**/****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
-          </HStack>
+              <HStack marginTop={2}>
+                <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
+                <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
+                <Input as={InputMask} mask="**/**/****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+              </HStack>
 
-          <HStack marginTop={2}>
-            <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
-            <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
-            <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
-          </HStack>
+              <HStack marginTop={2}>
+                <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
+                <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
+              </HStack>
 
-          <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
+              <Input value={description} onInput={(e: any) => setDescription(e.target.value)} name="text" label="Descrição do Veículo" />
 
-          <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
-          <HStack>
-            <UploadMainImage disabled={!!!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
+              <FormLabel style={{ marginTop: 10 }} htmlFor={'Foto Principal:'}>{'Foto Principal:'}</FormLabel>
+              <HStack>
+                <UploadMainImage disabled={!!!!uploadedMainImage.name} onUpload={handleUploadMainImage} />
 
-            {!!uploadedMainImage.name && (
-              <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
-            )}
-          </HStack>
+                {!!uploadedMainImage.name && (
+                  <FileListMain handleDelete={handleDeleteFileMain} files={uploadedMainImage} />
+                )}
+              </HStack>
 
-          <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
-          <Upload onUpload={handleUpload} />
+              <FormLabel style={{ marginTop: 10 }} htmlFor={'Fotos Adicionais:'}>{'Fotos Adicionais:'}</FormLabel>
+              <Upload onUpload={handleUpload} />
 
-          {!!uploadedFiles.length && (
-            <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
-          )}
-          <Button onClick={() => {
-            const obj = {
-              childImages: uploadedFiles,
-              createdAt: new Date(),
-              description,
-              title: vehicleName,
-              priceFormatted: price,
-              isTruck: carOrTruck === 'Carro' ? false : true,
-              mainImage: uploadedMainImage,
-            }
+              {!!uploadedFiles.length && (
+                <FileList files={uploadedFiles} handleDeleteOtherFiles={handleDeleteOtherFiles} />
+              )}
+              <Button onClick={() => {
+                const obj = {
+                  childImages: uploadedFiles,
+                  createdAt: new Date(),
+                  description,
+                  title: vehicleName,
+                  priceFormatted: price,
+                  isTruck: carOrTruck === 'Carro' ? false : true,
+                  mainImage: uploadedMainImage,
+                }
 
-            updateVehicle(obj)
+                updateVehicle(obj)
 
-          }} isLoading={loading} type="button" mt="6" colorScheme="blue" size="lg">Editar Veículo</Button>
-        </Flex>
-      </Flex>
+              }} isLoading={loading} type="button" mt="6" colorScheme="blue" size="lg">Editar Veículo</Button>
+            </Flex>
+          </Flex>
+        </>
+      )}
     </>
-   )}
-   </>
   )
 }
