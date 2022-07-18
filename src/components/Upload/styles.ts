@@ -14,7 +14,8 @@ const disabled = css`
   cursor: not-allowed;
 `;
 
-export const DropContainer = styled.div.attrs({
+
+export const DropContainer: any = styled.div.attrs<any>({
   className: 'dropzone'
 })`
   border: 1px dashed #ddd;
@@ -24,23 +25,27 @@ export const DropContainer = styled.div.attrs({
   
   transition: height 0.2s ease;
 
-  ${props => props.disabled && disabled}
-  ${props => props.isDragActive && dragActive}
-  ${props => props.isDragReject && dragReject}
+  ${(props: any) => props.disabled && disabled}
+  ${(props: any) => props.isDragActive && dragActive}
+  ${(props: any) => props.isDragReject && dragReject}
 `;
 
 const messageColors = {
   default: '#999',
   error: '#e57878',
   success: '#78e5d5'
-
 };
 
-export const UploadMessage = styled.p`
-  display: flex;
-  color: ${props => messageColors[props.type || 'default']};
-  justify-content: center;
-  align-items:center;
-  padding: 15px 0;
+type UploadMessageProps = {
+  type?: 'default' | 'error' | 'success'
+}
 
+export const UploadMessage = styled.p<UploadMessageProps>`
+  ${({ type }) => css`
+    display: flex;
+    color: ${messageColors[type || 'default']};
+    justify-content: center;
+    align-items:center;
+    padding: 15px 0;
+  `}
 `;
