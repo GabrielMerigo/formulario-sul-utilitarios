@@ -164,7 +164,7 @@ export default function RegisterVehiculo() {
         <SignIn />
       ) : (
         <>
-          <Flex justify="center">
+          <Flex w="100%" justify="center">
             <Flex
               w="100%"
               h="100%"

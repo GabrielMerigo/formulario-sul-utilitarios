@@ -27,10 +27,12 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id: idD
   async function deleteVehicle(id) {
     const vehicleRef = doc(db, 'vehicles', id);
     const docSnap = await getDoc(vehicleRef);
+
     docSnap.data().childImages.map((file: Files) => {
       const desertRef = ref(storage, `vehicles/${file.name}`);
       deleteObject(desertRef)
-    })
+    });
+
     const refMainImage = ref(storage, `vehicles/${docSnap.data().mainImage.name}`);
     deleteObject(refMainImage)
 
