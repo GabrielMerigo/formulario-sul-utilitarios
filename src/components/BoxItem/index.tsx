@@ -17,13 +17,12 @@ export interface BoxItemProps {
 
 export function BoxItem({ mainImage, title, description, priceFormatted, id: idDb }: BoxItemProps) {
   const router = useRouter();
-  const formattedPrice: any = isNaN(priceFormatted)
+  const formattedPrice: any = isNaN(Number(priceFormatted))
     ? priceFormatted
-    : Number(priceFormatted).toLocaleString('pt-BR', {
+    : `R$ ${Number(priceFormatted).toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    })
-
+    })}`
   async function deleteVehicle(id) {
     const vehicleRef = doc(db, 'vehicles', id);
     const docSnap = await getDoc(vehicleRef);
@@ -59,7 +58,7 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id: idD
         </Box>
 
         <Box style={{ marginTop: '3px' }}>
-          R$ {formattedPrice}
+          {formattedPrice}
         </Box>
 
         <Box

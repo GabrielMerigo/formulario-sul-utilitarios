@@ -89,7 +89,7 @@ export default function RegisterVehiculo() {
   const [description, setDescription] = useState('');
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
-  const [anoFabricacao, setAnoFabricacao] = useState(0);
+  const [anoFabricacao, setAnoFabricacao] = useState('');
   const [anoModelo, setAnoModelo] = useState('');
   const [carroceria, setCarroceria] = useState('');
   const [tracao, setTracao] = useState('');
@@ -212,7 +212,7 @@ export default function RegisterVehiculo() {
                 </HStack>
 
                 <HStack marginTop={2}>
-                  <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                  <Input as={InputMask} mask="****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
                   <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
                   <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
                 </HStack>
@@ -271,7 +271,7 @@ export default function RegisterVehiculo() {
                   }
 
                   obj.childImages.map(item => delete item.file);
-                  await addDoc(dbRef, obj).then((res) => {
+                  await addDoc(dbRef, obj).then(() => {
                     toast.success('O veículo foi cadastrado com sucesso!');
                     nameImages = []
                     setUploadedFiles([]);
@@ -282,7 +282,7 @@ export default function RegisterVehiculo() {
                     setDescription('');
                     setMarca('');
                     setModelo('')
-                    setAnoFabricacao(0);
+                    setAnoFabricacao('');
                     setAnoModelo('')
                     setTracao('')
                     setCarroceria('')

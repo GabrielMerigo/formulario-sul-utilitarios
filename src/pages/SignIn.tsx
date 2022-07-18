@@ -18,13 +18,13 @@ export default function SignIn() {
     'auth/invalid-email': 'E-mail inválido',
     default: 'Senha ou E-mail incorreto.'
   }
-  
+
   function signIn() {
     const auth = getAuth();
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user: any = userCredential.user;      
+        const user: any = userCredential.user;
         cookie.set('token-auth', user.accessToken, {
           expires: 1
         })
@@ -59,7 +59,6 @@ export default function SignIn() {
       <Flex
         as="form"
         w="100%"
-        maxWidth="360"
         bg="gray.800"
         p="8"
         borderRadius={8}
