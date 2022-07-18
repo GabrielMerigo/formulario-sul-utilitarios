@@ -37,7 +37,7 @@ export function BoxItem({ mainImage, title, description, priceFormatted, id: idD
     deleteObject(refMainImage)
 
     await deleteDoc(vehicleRef)
-    router.reload()
+    router.push('/RegisterVehicle')
   }
 
   return (

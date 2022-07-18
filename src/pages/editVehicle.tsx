@@ -222,25 +222,13 @@ export default function EditVehicle() {
         <SignIn />
       ) : (
         <>
-          <Flex justifyContent="right" margin="20px">
-            <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
-              <Button marginRight="10px" type="button" color="blue.500" background="white">
-                Cadastrar Veículo
-              </Button>
-            </Link>
-            <Link href={`listVehicles`} as={`listVehicles`} passHref>
-              <Button type="button" colorScheme="blue" >
-                Listar de Veículos
-              </Button>
-            </Link>
-          </Flex>
           <Flex
             w="100%"
             h="100%"
+
             align="center"
             justify="center"
-            marginTop={5}
-            marginBottom={5}
+            margin="0 auto"
           >
             <Flex
               as="form"
@@ -251,6 +239,18 @@ export default function EditVehicle() {
               borderRadius={8}
               flexDir="column"
             >
+              <Flex justifyContent="right" margin="20px">
+                <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
+                  <Button marginRight="10px" type="button" color="blue.500" background="white">
+                    Cadastrar Veículo
+                  </Button>
+                </Link>
+                <Link href={`listVehicles`} as={`listVehicles`} passHref>
+                  <Button type="button" colorScheme="blue" >
+                    Listar de Veículos
+                  </Button>
+                </Link>
+              </Flex>
               <Text as="b" align="center" fontSize='4xl'>Edite o Veículo</Text>
               <FormControl id='carOrTruck'>
                 <FormLabel>Carro ou Caminhão?</FormLabel>
