@@ -38,56 +38,55 @@ export default function EditVehicle() {
 
   return (
     <>
-        <>
+      <>
+        <Flex
+          isLoading={true}
+          w="100%"
+          h="100%"
+          align="center"
+          justify="center"
+          marginTop={5}
+          marginBottom={5}
+        >
           <Flex
-            isLoading={true}
+            as="form"
             w="100%"
-            h="100%"
-            align="center"
-            justify="center"
-            marginTop={5}
-            marginBottom={5}
+            maxWidth="1000"
+            minHeight="700"
+            bg="gray.800"
+            p="8"
+            borderRadius={8}
+            flexDir="column"
           >
-            <Flex
-              as="form"
-              w="100%"
-              maxWidth="1000"
-              minWidth="800"
-              minHeight="700"
-              bg="gray.800"
-              p="8"
-              borderRadius={8}
-              flexDir="column"
-            >
-              <WrapperBtn>
-                <Flex justifyContent="right" marginBottom="10px">
-                  <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
-                    <Button colorScheme="blue">
-                      Cadastrar Veículo
-                    </Button>
-                  </Link>
-                </Flex>
-              </WrapperBtn>
+            <WrapperBtn>
+              <Flex justifyContent="right" marginBottom="10px">
+                <Link href={`RegisterVehicle`} as={`RegisterVehicle`} passHref>
+                  <Button colorScheme="blue">
+                    Cadastrar Veículo
+                  </Button>
+                </Link>
+              </Flex>
+            </WrapperBtn>
 
-              <CarList>
-                <div className="boxCars">
-                  {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
-                    <BoxItem
-                      isTruck={isTruck}
-                      createdAt={createdAt}
-                      id={id}
-                      mainImage={mainImage}
-                      title={title}
-                      key={id}
-                      description={description}
-                      priceFormatted={priceFormatted}
-                    />
-                  ))}
-                </div>
-              </CarList>
-            </Flex>
+            <CarList>
+              <div className="boxCars">
+                {vehicles.map(({ mainImage, title, description, priceFormatted, id, createdAt, isTruck }) => (
+                  <BoxItem
+                    isTruck={isTruck}
+                    createdAt={createdAt}
+                    id={id}
+                    mainImage={mainImage}
+                    title={title}
+                    key={id}
+                    description={description}
+                    priceFormatted={priceFormatted}
+                  />
+                ))}
+              </div>
+            </CarList>
           </Flex>
-        </>
+        </Flex>
+      </>
     </>
   )
 }
