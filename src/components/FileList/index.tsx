@@ -1,5 +1,5 @@
-import { Container, FileInfo, Icons, Preview } from './styles.FileList';
-import { MdCheckCircle, MdError, MdLink } from 'react-icons/md'
+import { Container, FileInfo, Icons } from './styles.FileList';
+import { MdLink } from 'react-icons/md'
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { BsFillTrashFill } from 'react-icons/bs';
 import 'react-circular-progressbar/dist/styles.css';
