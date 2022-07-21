@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, Select, NumberInput, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
+import { Flex, Button, FormControl, FormLabel, Select, NumberInputField, HStack, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from '@chakra-ui/react';
 import Input from '../../../utils/Input';
 import FileList from '../../components/FileList';
 import Upload from '../../components/Upload';
@@ -208,11 +208,11 @@ export default function RegisterVehiculo() {
                 <HStack>
                   <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
                   <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-                  <Input as={InputMask} mask="****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+                  <Input as={InputMask} mask="****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(String(e.target.value).slice(0, 4))} name="text" label="Ano Fabricação" />
                 </HStack>
 
                 <HStack marginTop={2}>
-                  <Input as={InputMask} mask="****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                  <Input as={InputMask} mask="****" value={anoModelo} onInput={(e: any) => setAnoModelo(String(e.target.value).slice(0, 4))} name="text" label="Ano Modelo" />
                   <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
                   <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
                 </HStack>

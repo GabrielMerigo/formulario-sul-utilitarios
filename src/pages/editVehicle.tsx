@@ -65,6 +65,7 @@ export default function EditVehicle() {
       await getDoc(docRef)
         .then((docSnap) => {
           const isTruck = docSnap.data().isTruck === true
+          console.log(docSnap.data().anoFabricacao)
 
           setUploadedMainImage(docSnap.data().mainImage);
           setUploadedFiles(docSnap.data().childImages)
@@ -266,17 +267,17 @@ export default function EditVehicle() {
 
               <HStack>
                 <Input value={vehicleName} onInput={(e: any) => setVehicleName(e.target.value)} name="text" label="Nome do Veículo" />
-                <Input name="text" label="Preço do veículo" onInput={(e: any) => setPrice(e.target.value)} />
+                <Input value={price} name="text" label="Preço do veículo" onInput={(e: any) => setPrice(e.target.value)} />
               </HStack>
 
               <HStack marginTop={2}>
                 <Input value={marca} onInput={(e: any) => setMarca(e.target.value)} name="text" label="Marca" />
                 <Input value={modelo} onInput={(e: any) => setModelo(e.target.value)} name="text" label="Modelo" />
-                <Input as={InputMask} mask="**/**/****" value={anoFabricacao} onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
+                <Input value={anoFabricacao} as={InputMask} mask="****" onInput={(e: any) => setAnoFabricacao(e.target.value)} name="text" label="Ano Fabricação" />
               </HStack>
 
               <HStack marginTop={2}>
-                <Input as={InputMask} mask="**/**/****" value={anoModelo} onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
+                <Input value={anoModelo} as={InputMask} mask="****" onInput={(e: any) => setAnoModelo(e.target.value)} name="text" label="Ano Modelo" />
                 <Input value={tracao} onInput={(e: any) => setTracao(e.target.value)} name="text" label="Tração" />
                 <Input value={carroceria} onInput={(e: any) => setCarroceria(e.target.value)} name="text" label="Carroceria" />
               </HStack>
