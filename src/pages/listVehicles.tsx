@@ -28,7 +28,6 @@ export default function EditVehicle() {
 
   useEffect(() => {
     getVehicles().then(res => {
-      console.log(res)
       setVehicles(res)
     })
       .catch(err => {

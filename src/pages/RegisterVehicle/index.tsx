@@ -101,17 +101,6 @@ export default function RegisterVehiculo() {
       const id = uniqueId()
       const timeStamp = new Date().getTime();
 
-      setFilesIds([
-        {
-          name: slugify(file.name) + timeStamp,
-          preview: URL.createObjectURL(file),
-          readableSize: filesize(file.size),
-          id,
-          file
-        },
-        ...filesIds
-      ])
-
       const obj = {
         file,
         id,
@@ -126,7 +115,10 @@ export default function RegisterVehiculo() {
       return obj;
     })
 
+    setFilesIds(currentFiles => [...currentFiles, filesUploaded]);
+
     Promise.all(filesUploaded).then(res => {
+      setFilesIds(res);
       setUploadedFiles(uploadedFiles.concat(res));
     })
   }
@@ -245,7 +237,6 @@ export default function RegisterVehiculo() {
                   uploadedMainImage.url = mainImageUrl;
 
                   delete uploadedMainImage.file;
-
                   for (let child of filesIds) {
                     const vehicleRef = ref(storage, `vehicles/${child.name}`);
                     await uploadBytes(vehicleRef, child.file);
@@ -271,7 +262,8 @@ export default function RegisterVehiculo() {
                   }
 
                   obj.childImages.map(item => delete item.file);
-                  await addDoc(dbRef, obj).then(() => {
+
+                  await addDoc(dbRef, obj).then((res) => {
                     toast.success('O veículo foi cadastrado com sucesso!');
                     nameImages = []
                     setUploadedFiles([]);

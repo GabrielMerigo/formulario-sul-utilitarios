@@ -65,7 +65,6 @@ export default function EditVehicle() {
       await getDoc(docRef)
         .then((docSnap) => {
           const isTruck = docSnap.data().isTruck === true
-          console.log(docSnap.data().anoFabricacao)
 
           setUploadedMainImage(docSnap.data().mainImage);
           setUploadedFiles(docSnap.data().childImages)
@@ -132,7 +131,6 @@ export default function EditVehicle() {
       updateDoc(vehicleRef, {
         childImages: res
       });
-
     })
   }
 
