@@ -1,31 +1,45 @@
-import { useCallback, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import Image from 'next/image';
 import * as S from './styles';
-
-type FilesProps = {
-  path: string;
-  lastModified: number;
-  lastModifiedDate: Date;
-  name: string;
-  size: number;
-  type: string;
-};
-
-type UploadzoneProps = {
-  imageType: string;
-};
+import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
 
 export default function UploadZone({ imageType }: UploadzoneProps) {
-  const [files, setFiles] = useState<FilesProps[]>([]);
-  const onDrop = useCallback((acceptedFiles) => {
-    setFiles((state) => [...state, ...acceptedFiles]);
-  }, []);
+  const [files, setFiles] = useState<ImageFile[]>([]);
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
-    onDrop,
     accept: {
       'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
     },
+    onDrop: (acceptedFiles) => {
+      const propsToFile = (props: File) => props;
+
+      const transformedArray = acceptedFiles.map(propsToFile);
+      if (imageType === 'Main') {
+        setFiles(
+          transformedArray.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+        return;
+      }
+      setFiles((state) => [
+        ...state,
+        ...transformedArray.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        ),
+      ]);
+    },
   });
+
+  const thumbs = files.map((file) => (
+    <div key={file.name} style={{ display: 'inline-flex' }}>
+      <Image src={file.preview} alt={file.name} width={200} height={200} style={{ margin: 10 }} />
+    </div>
+  ));
 
   const handleDropzoneStatus = () => {
     if (isDragAccept) {
@@ -51,14 +65,7 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
       <h4>Lista de arquivos</h4>
       {files.length ? (
         <>
-          <ul>
-            {files?.map((file) => (
-              <li key={file.path}>
-                <strong>Nome do arquivo: </strong>
-                <span>{file.path}</span>
-              </li>
-            ))}
-          </ul>
+          <S.MainImageContainer>{files && thumbs}</S.MainImageContainer>
         </>
       ) : (
         <h4>Sem Arquivos</h4>

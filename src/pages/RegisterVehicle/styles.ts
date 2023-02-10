@@ -6,8 +6,7 @@ export const RegisterVehicleContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    padding: 30rem 0 0 0;
+    padding: 5rem 0 0 0;
     h2 {
       margin-bottom: 2.4rem;
       font-size: 2.4rem;

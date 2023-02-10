@@ -56,3 +56,16 @@ export const Container = styled.div`
     font-weight: bold;
   }
 `;
+
+export const MainImageContainer = styled.ul`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: wrap;
+
+    li {
+      list-style: none;
+    }
+  `}
+`;

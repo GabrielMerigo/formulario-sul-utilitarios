@@ -1,6 +1,7 @@
 import * as S from './styles';
 import Link from 'next/link';
 import UploadZone from '@/components/UploadZone';
+import { VehicleProps } from '@/types/VehiclesTypes';
 
 export default function RegisterVehicle() {
   return (
