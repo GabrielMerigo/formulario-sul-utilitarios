@@ -2,65 +2,14 @@ import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import VehicleDialog from '@/components/VehicleDialog';
-
-const testVehicles = [
-  {
-    vehicleType: 'Carro',
-    vehicleName: 'Civic',
-    vehiclePrice: 10000,
-    brand: 'Fiat',
-    model: 'compacto',
-    manufactureYear: 2022,
-    manufactureModel: 2021,
-    traction: 'Dianteira',
-    bodywork: 's16ad51a6s5d156as',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati esse fugit quia id nulla ab. Est earum officia pariatur magnam? Vitae ratione recusandae aliquid commodi velit minima at assumenda. Quis?',
-    File: [
-      {
-        path: 'Image1.png',
-        preview: 'blob:http://localhost:3000/95bc30c2-681e-4ce8-9ab9-2a97967d6f6d',
-        lastModified: 1675652489611,
-        lastModifiedDate: new Date(),
-        name: 'Image1.png',
-        size: 49728,
-        type: 'image/png',
-        webkitRelativePath: '',
-      },
-    ],
-  },
-  {
-    vehicleType: 'Caminhao',
-    vehicleName: 'DAF XF',
-    vehiclePrice: 10000,
-    brand: 'Fiat',
-    model: 'compacto',
-    manufactureYear: 2022,
-    manufactureModel: 2021,
-    traction: 'Dianteira',
-    bodywork: 's16ad51a6s5d156as',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati esse fugit quia id nulla ab. Est earum officia pariatur magnam? Vitae ratione recusandae aliquid commodi velit minima at assumenda. Quis?',
-    File: [
-      {
-        path: 'Image1.png',
-        preview: 'blob:http://localhost:3000/95bc30c2-681e-4ce8-9ab9-2a97967d6f6d',
-        lastModified: 1675652489611,
-        lastModifiedDate: new Date(),
-        name: 'Image1.png',
-        size: 49728,
-        type: 'image/png',
-        webkitRelativePath: '',
-      },
-    ],
-  },
-];
+import { api } from '@/utils/axios';
+import { VehiclesContext } from '@/contexts/VehiclesContext';
 
 export default function ListVehicles() {
-  const [vehicles, setVehicles] = useState<VehicleProps[]>(testVehicles);
+  const { vehicles } = useContext(VehiclesContext);
 
   const vehicleInfos = vehicles.map((vehicle, index) => {
     return (

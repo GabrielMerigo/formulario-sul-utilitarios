@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:server": "json-server db.json -p 3333 -w -d 500"
   },
   "dependencies": {
     "@next/font": "13.1.6",
