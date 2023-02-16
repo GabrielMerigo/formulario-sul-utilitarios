@@ -1,5 +1,5 @@
 import * as S from './styles';
-import Link from 'next/link';
+import * as P from 'phosphor-react';
 import UploadZone from '@/components/UploadZone';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,6 +15,14 @@ export default function RegisterVehicle() {
 
   return (
     <S.RegisterVehicleContainer>
+      <S.LinksContainer>
+        <S.LinkItem href="/">
+          <P.House size={32} />
+        </S.LinkItem>
+        <S.LinkItem href="/ListVehicles">
+          <P.Scroll size={32} />
+        </S.LinkItem>
+      </S.LinksContainer>
       <S.FormContainer>
         <h2>Registar Veiculo</h2>
         <S.ListVehiclesButton href="/">Listar veiculos</S.ListVehiclesButton>

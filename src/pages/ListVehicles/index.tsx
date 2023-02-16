@@ -1,5 +1,6 @@
 import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
+import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { useState } from 'react';
 import Image from 'next/image';
@@ -107,5 +108,17 @@ export default function ListVehicles() {
     );
   });
 
-  return <S.ListVehicleContainer>{vehicleInfos}</S.ListVehicleContainer>;
+  return (
+    <S.PageContainer>
+      <S.LinksContainer>
+        <S.LinkItem href="/">
+          <P.House size={32} />
+        </S.LinkItem>
+        <S.LinkItem href="/RegisterVehicle">
+          <P.Truck size={32} />
+        </S.LinkItem>
+      </S.LinksContainer>
+      <S.ListVehicleContainer>{vehicleInfos}</S.ListVehicleContainer>
+    </S.PageContainer>
+  );
 }

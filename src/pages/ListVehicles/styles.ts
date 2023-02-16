@@ -1,5 +1,9 @@
+import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import * as D from '@radix-ui/react-dialog';
+
+export const PageContainer = styled.div``;
+
+export const IconsContainer = styled.div``;
 
 export const ListVehicleContainer = styled.div`
   ${({ theme }) => css`
@@ -13,6 +17,45 @@ export const ListVehicleContainer = styled.div`
     background-color: ${theme['gray-800']};
     border-radius: 10px;
     gap: 2rem;
+  `}
+`;
+
+export const LinksContainer = styled.div`
+  ${({ theme }) => css`
+    position: fixed;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    top: 0;
+    right: 0;
+
+    gap: 2rem;
+    margin: 2rem 2rem 0 0;
+  `}
+`;
+
+export const LinkItem = styled(Link)`
+  ${({ theme }) => css`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+    padding: 2rem;
+    font-size: 2rem;
+    height: 7rem;
+    border-radius: 10px;
+
+    color: ${theme['gray-50']};
+    background-color: ${theme['gray-500']};
+
+    &:hover {
+      transition: background-color ease 0.3s;
+      background-color: ${theme['gray-200']};
+      color: ${theme['gray-900']};
+    }
   `}
 `;
 
