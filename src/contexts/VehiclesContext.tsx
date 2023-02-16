@@ -5,6 +5,7 @@ import { VehicleProps, ImageFile, UploadzoneProps } from '@/types/VehiclesTypes'
 type VehiclesContextType = {
   vehicles: VehicleProps[];
   postVehicles: (vehicleToPost: VehicleProps) => Promise<void>;
+  deleteVehicles: (vehicleToDeleteId: string) => Promise<void>;
 };
 
 type CyclesContextProviderProps = {
@@ -30,11 +31,18 @@ export function VehiclesContextProvider({ children }: CyclesContextProviderProps
     setVehicles((state) => [response.data, ...state]);
   };
 
+  const deleteVehicles = async (vehicleToDeleteId: string) => {
+    const response = await api.delete(`vehicles/${vehicleToDeleteId}`);
+    const remainingVehicles = vehicles.filter((vehicle) => vehicle.id !== vehicleToDeleteId);
+    setVehicles(remainingVehicles);
+  };
+
   return (
     <VehiclesContext.Provider
       value={{
         vehicles,
         postVehicles,
+        deleteVehicles,
       }}
     >
       {children}

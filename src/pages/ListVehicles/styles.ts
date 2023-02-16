@@ -80,6 +80,18 @@ export const VehiclesContainer = styled.div`
       font-weight: bolder;
       margin-bottom: 1rem;
     }
+
+    button.delete {
+      align-self: flex-end;
+      cursor: pointer;
+      background-color: transparent;
+      color: ${theme['gray-50']};
+      border: none;
+      &:hover {
+        transition: background ease 0.7s;
+        color: ${theme['red-400']};
+      }
+    }
   `}
 `;
 

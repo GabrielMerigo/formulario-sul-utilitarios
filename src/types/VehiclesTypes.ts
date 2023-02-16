@@ -1,4 +1,5 @@
 export type VehicleProps = {
+  id: string;
   vehicleType: string;
   vehicleName: string;
   vehiclePrice: number;

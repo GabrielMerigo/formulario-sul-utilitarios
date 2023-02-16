@@ -1,19 +1,25 @@
 import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
-import { VehicleProps } from '@/types/VehiclesTypes';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import Image from 'next/image';
 import VehicleDialog from '@/components/VehicleDialog';
-import { api } from '@/utils/axios';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 
 export default function ListVehicles() {
-  const { vehicles } = useContext(VehiclesContext);
+  const { vehicles, deleteVehicles } = useContext(VehiclesContext);
 
-  const vehicleInfos = vehicles.map((vehicle, index) => {
+  const deleteVehicle = (id: string) => {
+    // console.log(id);
+    deleteVehicles(id);
+  };
+
+  const vehicleInfos = vehicles.map((vehicle) => {
     return (
       <S.VehiclesContainer key={vehicle.File[0].path}>
+        <button onClick={() => deleteVehicle(vehicle.id)} className="delete">
+          <P.Trash size={32} />
+        </button>
         <Image
           src="/images/Image1.png"
           alt={vehicle.File[0].name}
