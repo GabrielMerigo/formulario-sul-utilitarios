@@ -20,12 +20,11 @@ export default function RegisterVehicle() {
           <P.House size={32} />
         </S.LinkItem>
         <S.LinkItem href="/ListVehicles">
-          <P.Scroll size={32} />
+          <P.Truck size={32} />
         </S.LinkItem>
       </S.LinksContainer>
       <S.FormContainer>
         <h2>Registar Veiculo</h2>
-        <S.ListVehiclesButton href="/">Listar veiculos</S.ListVehiclesButton>
         <form onSubmit={handleSubmit(onSubmit)}>
           <S.InputGroup>
             <legend>Selecione o tipo de Veículo</legend>

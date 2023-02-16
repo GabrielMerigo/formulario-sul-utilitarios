@@ -115,7 +115,7 @@ export default function ListVehicles() {
           <P.House size={32} />
         </S.LinkItem>
         <S.LinkItem href="/RegisterVehicle">
-          <P.Truck size={32} />
+          <P.Scroll size={32} />
         </S.LinkItem>
       </S.LinksContainer>
       <S.ListVehicleContainer>{vehicleInfos}</S.ListVehicleContainer>
