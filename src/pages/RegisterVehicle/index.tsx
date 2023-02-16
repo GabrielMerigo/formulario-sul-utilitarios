@@ -3,15 +3,21 @@ import * as P from 'phosphor-react';
 import UploadZone from '@/components/UploadZone';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useContext } from 'react';
+import { VehiclesContext } from '@/contexts/VehiclesContext';
 
 export default function RegisterVehicle() {
+  const { postVehicles } = useContext(VehiclesContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<VehicleProps>();
 
-  const onSubmit: SubmitHandler<VehicleProps> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<VehicleProps> = (data) => {
+    console.log(data);
+    // postVehicles(data);
+  };
 
   return (
     <S.RegisterVehicleContainer>
