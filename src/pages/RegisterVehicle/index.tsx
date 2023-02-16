@@ -2,70 +2,85 @@ import * as S from './styles';
 import Link from 'next/link';
 import UploadZone from '@/components/UploadZone';
 import { VehicleProps } from '@/types/VehiclesTypes';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function RegisterVehicle() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<VehicleProps>();
+
+  const onSubmit: SubmitHandler<VehicleProps> = (data) => console.log(data);
+
   return (
     <S.RegisterVehicleContainer>
       <S.FormContainer>
         <h2>Registar Veiculo</h2>
         <S.ListVehiclesButton href="/">Listar veiculos</S.ListVehiclesButton>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <S.InputGroup>
             <legend>Selecione o tipo de Veículo</legend>
             <S.RadioGroup>
-              <input type="radio" id="Veiculo" name="vehicleType" value="Veículo" />
+              <input
+                {...register('vehicleType')}
+                type="radio"
+                id="Veiculo"
+                name="vehicleType"
+                value="Veículo"
+              />
               <label htmlFor="Veiculo">Veículo</label>
-              <input type="radio" id="Caminhao" name="vehicleType" value="Caminhão" />
+              <input
+                {...register('vehicleType')}
+                type="radio"
+                id="Caminhao"
+                name="vehicleType"
+                value="Caminhão"
+              />
               <label htmlFor="Caminhao">Caminhão</label>
             </S.RadioGroup>
           </S.InputGroup>
           <S.FieldInputsContainer>
             <S.InputGroup>
               <label htmlFor="vehicleName">Nome do Veículo</label>
-              <input id="vehicleName" type="text" />
+              <input {...register('vehicleName')} id="vehicleName" type="text" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="vehiclePrice">Preço do veículo</label>
-              <input id="vehiclePrice" type="text" />
+              <input {...register('vehiclePrice')} id="vehiclePrice" type="text" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="brand">Marca</label>
-              <input id="brand" type="text" />
+              <input {...register('brand')} id="brand" type="text" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="model">Modelo</label>
-              <input id="model" type="text" />
+              <input {...register('model')} id="model" type="text" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="manufactureYear">Ano Fabricação</label>
-              <input id="manufactureYear" type="number" />
+              <input {...register('manufactureYear')} id="manufactureYear" type="number" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="manufactureModel">Ano Modelo</label>
-              <input id="manufactureModel" type="number" />
+              <input {...register('manufactureModel')} id="manufactureModel" type="number" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="traction">Tração</label>
-              <input id="traction" type="text" />
+              <input {...register('traction')} id="traction" type="text" />
             </S.InputGroup>
             <S.InputGroup>
               <label htmlFor="bodywork">Carroceria</label>
-              <input id="bodywork" type="text" />
+              <input {...register('bodywork')} id="bodywork" type="text" />
             </S.InputGroup>
           </S.FieldInputsContainer>
           <S.InputGroup>
             <label htmlFor="description">Descrição do Veículo</label>
-            <textarea id="description" />
+            <textarea {...register('description')} id="description" />
           </S.InputGroup>
-          <S.UploadZoneContainer>
-            <UploadZone imageType="Main" />
-          </S.UploadZoneContainer>
-          <S.UploadZoneContainer>
-            <UploadZone imageType="secondary" />
-          </S.UploadZoneContainer>
-          <Link href="/" type="submit">
-            Registrar Veiculo
-          </Link>
+          <UploadZone imageType="Main" />
+          <UploadZone imageType="secondary" />
+          <button type="submit">Registrar Veiculo</button>
         </form>
       </S.FormContainer>
     </S.RegisterVehicleContainer>

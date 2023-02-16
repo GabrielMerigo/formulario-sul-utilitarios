@@ -9,12 +9,19 @@ export type VehicleProps = {
   traction: string;
   bodywork: string;
   description: string;
-  File: ImageFile[];
+  File?: ImageFile[];
 };
 
 export type ImageFile = {
+  path: string;
   preview: string;
-} & File;
+  lastModified: number;
+  lastModifiedDate: Date;
+  name: string;
+  size: number;
+  type: string;
+  webkitRelativePath: string;
+};
 
 export type UploadzoneProps = {
   imageType: string;

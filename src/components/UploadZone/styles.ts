@@ -47,6 +47,8 @@ export const Container = styled.div`
     line-height: 4rem;
     border-bottom: 1px solid white;
     border-radius: 10px;
+    align-self: flex-start;
+    font-size: 2rem;
   }
 
   h4 {

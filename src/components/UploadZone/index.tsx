@@ -14,6 +14,9 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
       const propsToFile = (props: File) => props;
 
       const transformedArray = acceptedFiles.map(propsToFile);
+
+      console.log(transformedArray);
+
       if (imageType === 'Main') {
         setFiles(
           transformedArray.map((file) =>

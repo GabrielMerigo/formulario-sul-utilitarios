@@ -15,6 +15,7 @@ export const RegisterVehicleContainer = styled.div`
     }
   `}
 `;
+
 export const FormContainer = styled.div`
   ${({ theme }) => css`
     display: flex;
@@ -30,7 +31,7 @@ export const FormContainer = styled.div`
       flex-direction: column;
       gap: 2rem;
 
-      a[type='submit'] {
+      button[type='submit'] {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -56,6 +57,7 @@ export const FormContainer = styled.div`
     }
   `}
 `;
+
 export const ListVehiclesButton = styled(Link)`
   ${({ theme }) => css`
     display: flex;
@@ -150,18 +152,5 @@ export const FieldInputsContainer = styled.div`
     align-items: center;
     flex-wrap: wrap;
     gap: 2rem;
-  `}
-`;
-
-export const UploadZoneContainer = styled.div`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
-
-    h3 {
-      align-self: flex-start;
-      font-size: 2rem;
-    }
   `}
 `;
