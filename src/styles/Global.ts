@@ -19,7 +19,7 @@ export const GlobalStyle = createGlobalStyle`
         color:${(props) => props.theme['gray-50']};
         -webkit-font-smoothing:antialiased;
     }
-    border-style, input, textarea, button ,strong, span, td, h2,h3,h4,a,label,legend{
+    border-style, input, textarea, button ,strong, span, td, h1,h2,h3,h4,a,label,legend{
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
     }
