@@ -11,23 +11,11 @@
       "manufactureModel": 2021,
       "traction": "Dianteira",
       "bodywork": "s16ad51a6s5d156as",
-      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati esse fugit quia id nulla ab. Est earum officia pariatur magnam? Vitae ratione recusandae aliquid commodi velit minima at assumenda. Quis?",
-      "File": [
-        {
-          "path": "Image1.png",
-          "preview": "blob:http://localhost:3000/95bc30c2-681e-4ce8-9ab9-2a97967d6f6d",
-          "lastModified": 1675652489611,
-          "lastModifiedDate": "Wed Feb 15 2023 23:32:22 GMT-0300 (GMT-03:00)",
-          "name": "Image1.png",
-          "size": 49728,
-          "type": "image/png",
-          "webkitRelativePath": ""
-        }
-      ]
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati esse fugit quia id nulla ab. Est earum officia pariatur magnam? Vitae ratione recusandae aliquid commodi velit minima at assumenda. Quis?"
     },
     {
-      "vehicleType": "Veículo",
-      "vehicleName": "Corsa",
+      "vehicleType": "Caminhão",
+      "vehicleName": "Mazda",
       "vehiclePrice": "5000",
       "brand": "Chevrolet",
       "model": "Compacto",
@@ -36,19 +24,20 @@
       "traction": "Dianteira",
       "bodywork": "asdasd1223dsadas",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex debitis placeat ratione a facere quasi nostrum suscipit quae enim cumque quos voluptatum recusandae veritatis laborum natus sequi fugit, unde assumenda?",
-      "id": "3",
-      "File": [
-        {
-          "path": "Image1.png",
-          "preview": "blob:http://localhost:3000/95bc30c2-681e-4ce8-9ab9-2a97967d6f6d",
-          "lastModified": 1675652489611,
-          "lastModifiedDate": "Wed Feb 15 2023 23:32:22 GMT-0300 (GMT-03:00)",
-          "name": "Image1.png",
-          "size": 49728,
-          "type": "image/png",
-          "webkitRelativePath": ""
-        }
-      ]
+      "id": "3"
+    },
+    {
+      "vehicleType": "Carro",
+      "vehicleName": "Lancer",
+      "vehiclePrice": "50000",
+      "brand": "mitsubishi",
+      "model": "Comum",
+      "manufactureYear": "2004",
+      "manufactureModel": "2004",
+      "traction": "Dianteira",
+      "bodywork": "asd65as4d6as451d",
+      "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit perspiciatis delectus eaque ex! Minima, perferendis obcaecati quibusdam aliquid omnis vero ex ratione nemo cum unde quisquam odit magni possimus necessitatibus?",
+      "id": "kk_mO4P"
     }
   ]
 }

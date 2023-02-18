@@ -1,11 +1,12 @@
 import { api } from '@/utils/axios';
-import { ReactNode, createContext, useState, useEffect } from 'react';
+import { ReactNode, createContext, useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { VehicleProps, ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
 
 type VehiclesContextType = {
   vehicles: VehicleProps[];
   postVehicles: (vehicleToPost: VehicleProps) => Promise<void>;
   deleteVehicles: (vehicleToDeleteId: string) => Promise<void>;
+  updateVehicles: (vehicleToUpdateid: string, vehicleToUpdate: VehicleProps) => Promise<void>;
 };
 
 type CyclesContextProviderProps = {
@@ -37,12 +38,18 @@ export function VehiclesContextProvider({ children }: CyclesContextProviderProps
     setVehicles(remainingVehicles);
   };
 
+  const updateVehicles = async (vehicleToUpdateid: string, vehicleToUpdate: VehicleProps) => {
+    const response = await api.put(`vehicles/${vehicleToUpdateid}`, vehicleToUpdate);
+    fetchVehicles();
+  };
+
   return (
     <VehiclesContext.Provider
       value={{
         vehicles,
         postVehicles,
         deleteVehicles,
+        updateVehicles,
       }}
     >
       {children}

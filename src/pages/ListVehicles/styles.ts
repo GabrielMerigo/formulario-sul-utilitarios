@@ -1,10 +1,6 @@
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 
-export const PageContainer = styled.div``;
-
-export const IconsContainer = styled.div``;
-
 export const ListVehicleContainer = styled.div`
   ${({ theme }) => css`
     display: flex;

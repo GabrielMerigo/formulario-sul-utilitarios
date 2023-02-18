@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import * as D from '@radix-ui/react-dialog';
+import * as R from '@radix-ui/react-radio-group';
 
 export const Overlay = styled(D.Overlay)`
   ${({ theme }) => css`
@@ -21,6 +22,7 @@ export const Content = styled(D.Content)`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    overflow-y: auto;
 
     border-radius: 10px;
     position: fixed;
@@ -28,8 +30,8 @@ export const Content = styled(D.Content)`
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90vw;
-    max-width: 800px;
-    min-height: 600px;
+    max-width: 1100px;
+    max-height: 800px;
     padding: 50px;
     animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -47,12 +49,49 @@ export const Content = styled(D.Content)`
   `}
 `;
 
+export const ButtonsContainer = styled.div`
+  ${({ theme }) => css`
+    position: absolute;
+    top: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    padding: 2rem;
+
+    button.delete {
+      align-self: flex-end;
+      cursor: pointer;
+      background-color: transparent;
+      color: ${theme['gray-50']};
+      border: none;
+      margin-right: 2rem;
+      &:hover {
+        transition: background ease 0.7s;
+        color: ${theme['red-400']};
+      }
+    }
+
+    button.update {
+      align-self: flex-end;
+      cursor: pointer;
+      background-color: transparent;
+      color: ${theme['gray-50']};
+      border: none;
+      margin-right: 2rem;
+      &:hover {
+        transition: background ease 0.7s;
+        color: ${theme['blue-500']};
+      }
+    }
+  `}
+`;
+
 export const CloseDialogButton = styled(D.Close)`
   ${({ theme }) => css`
     cursor: pointer;
-    position: absolute;
-    right: 0;
-    top: 0;
 
     margin: 2rem 2rem 0 0;
 
