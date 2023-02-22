@@ -41,10 +41,19 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
   }
 
   const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
-    const mainImageStorageRef = ref(storage, `mainImage/${vehicleId}`);
+    const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
 
     uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
+      console.log('Images Uploaded');
+    });
+  };
+
+  const uploadImages = (vehicleId: string, Images: ImageFile[]) => {
+    Images.forEach((image, index) => {
+      const ImagesStorageRef = ref(storage, `${vehicleId}/${index}`);
+      uploadBytes(ImagesStorageRef, image).then((snapshot) => {
+        console.log('Images Uploaded');
+      });
     });
   };
 
@@ -55,6 +64,7 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
       return;
     }
     uploadMainImage(generateId, mainImage);
+    uploadImages(generateId, images);
     postVehicles({ ...data, vehicleId: generateId });
   };
 

@@ -6,7 +6,7 @@ import VehicleDialog from '@/components/VehicleDialog';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import { getDownloadURL, list, ref } from 'firebase/storage';
 import { storage } from 'firebaseEnv';
 
 type ComponentProps = {
@@ -20,7 +20,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
   const deleteVehicle = (id: string) => deleteVehicles(id);
 
   const fetchImagesUrl = async () => {
-    const response = await getDownloadURL(ref(storage, `mainImage/${vehicle.vehicleId}`));
+    const response = await getDownloadURL(ref(storage, `${vehicle.vehicleId}/mainImage`));
     setURLsImages(response);
   };
 

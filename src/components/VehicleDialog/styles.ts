@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import * as D from '@radix-ui/react-dialog';
 import * as R from '@radix-ui/react-radio-group';
+import { Carousel } from 'react-responsive-carousel';
 
 export const Overlay = styled(D.Overlay)`
   ${({ theme }) => css`
@@ -183,6 +184,45 @@ export const VehicleDescriptionContainer = styled.div`
     }
 
     strong {
+      font-size: 2rem;
+    }
+  `}
+`;
+
+export const ImagesCarousel = styled(Carousel)`
+  ${({ theme }) => css`
+    padding-top: 30px;
+
+    img {
+      margin: 0 !important;
+      border-radius: 10px;
+    }
+
+    .slider-wrapper {
+      width: 50%;
+    }
+
+    .thumb {
+      width: 5%;
+      height: 50px;
+    }
+
+    .carousel.carousel-slider .control-arrow {
+      width: 200px;
+      height: 200px;
+      top: 25%;
+      margin: 0 10px;
+      background-color: ${theme['gray-900']};
+      border-radius: 10px;
+
+      background-color: ;
+    }
+
+    .carousel .carousel-status {
+      top: initial;
+      bottom: 0;
+      right: 0;
+
       font-size: 2rem;
     }
   `}

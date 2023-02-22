@@ -2,21 +2,35 @@ import Image from 'next/image';
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import UploadZone from '../UploadZone';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import VehicleForm from '../VehicleForm';
+import { storage } from 'firebaseEnv';
+import { list, ref, StorageReference } from 'firebase/storage';
+import ImagesCarrousel from '../ImagesCarrousel';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 
-export default function VehicleDialog(props: VehicleProps) {
+export default function VehicleDialog(vehicle: VehicleProps) {
   const { deleteVehicles } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
+  const [cloudImages, setCloudImages] = useState<StorageReference[]>([]);
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<VehicleProps>();
+
+  useEffect(() => {
+    fetchImagesUrl();
+  }, []);
+
+  const fetchImagesUrl = async () => {
+    const response = await list(ref(storage, vehicle.vehicleId));
+    setCloudImages(response.items.reverse());
+  };
 
   const onSubmit: SubmitHandler<VehicleProps> = (data) => {
     console.log(data);
@@ -33,7 +47,7 @@ export default function VehicleDialog(props: VehicleProps) {
           <>
             <S.ButtonsContainer>
               <div>
-                <button onClick={() => deleteVehicle(props.vehicleId)} className="delete">
+                <button onClick={() => deleteVehicle(vehicle.vehicleId)} className="delete">
                   <P.Trash size={32} />
                 </button>
                 <button onClick={() => setUpdating(true)} className="update">
@@ -44,58 +58,62 @@ export default function VehicleDialog(props: VehicleProps) {
                 <P.X size={32} />
               </S.CloseDialogButton>
             </S.ButtonsContainer>
-            <Image
-              src="/images/Image1.png"
-              alt="vehicle"
-              width={200}
-              height={200}
-              style={{ margin: 10 }}
-            />
-            <h3>{props.vehicleName}</h3>
+            <S.ImagesCarousel>
+              {cloudImages.map((cloudImage) => {
+                return (
+                  <ImagesCarrousel
+                    key={cloudImage.name}
+                    cloudImage={cloudImage}
+                    vehicleId={vehicle.vehicleId}
+                  />
+                );
+              })}
+            </S.ImagesCarousel>
+            <h3>{vehicle.vehicleName}</h3>
             <S.VehicleInfos>
               <S.VehicleInfosGroup>
                 <strong>Tipo:</strong>
-                <span>{props.vehicleType}</span>
+                <span>{vehicle.vehicleType}</span>
               </S.VehicleInfosGroup>
               <S.VehicleInfosGroup>
                 <strong>Preço:</strong>
-                <span>{props.vehiclePrice}</span>
+                <span>{vehicle.vehiclePrice}</span>
               </S.VehicleInfosGroup>
               <label>Características do veículo:</label>
               <S.VehiclecharacteristicsContainer>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Marca:</strong>
-                  <span>{props.brand}</span>
+                  <span>{vehicle.brand}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Modelo:</strong>
-                  <span>{props.model}</span>
+                  <span>{vehicle.model}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Ano de fabricação:</strong>
-                  <span>{props.manufactureYear}</span>
+                  <span>{vehicle.manufactureYear}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Modelo de fabricação:</strong>
-                  <span>{props.manufactureYear}</span>
+                  <span>{vehicle.manufactureYear}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Tração:</strong>
-                  <span>{props.traction}</span>
+                  <span>{vehicle.traction}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Carroceria:</strong>
-                  <span>{props.bodywork}</span>
+                  <span>{vehicle.bodywork}</span>
                 </S.VehiclecharacteristicsGroup>
               </S.VehiclecharacteristicsContainer>
               <S.VehicleDescriptionContainer>
                 <strong>Descrição:</strong>
-                <span>{props.description}</span>
+                <span>{vehicle.description}</span>
               </S.VehicleDescriptionContainer>
             </S.VehicleInfos>
           </>
         ) : (
-          <VehicleForm setUpdating={setUpdating} vehicleData={props} />
+          <VehicleForm setUpdating={setUpdating} vehicleData={vehicle} />
         )}
       </S.Content>
     </>
