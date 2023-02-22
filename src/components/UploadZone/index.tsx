@@ -1,24 +1,28 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import * as S from './styles';
 import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
+import { VehiclesContext } from '@/contexts/VehiclesContext';
+
+const transformArrayType = (acceptedFiles: File[]) => {
+  const propsToFile = (props: File) => props;
+  return acceptedFiles.map(propsToFile);
+};
+
+const acceptedImages = {
+  'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
+};
 
 export default function UploadZone({ imageType }: UploadzoneProps) {
-  const [files, setFiles] = useState<ImageFile[]>([]);
+  const { setMainImage, setImages, mainImage, images } = useContext(VehiclesContext);
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
-    accept: {
-      'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
-    },
+    accept: acceptedImages,
     onDrop: (acceptedFiles) => {
-      const propsToFile = (props: File) => props;
-
-      const transformedArray = acceptedFiles.map(propsToFile);
-
-      console.log(transformedArray);
+      const transformedArray = transformArrayType(acceptedFiles);
 
       if (imageType === 'Main') {
-        setFiles(
+        setMainImage(
           transformedArray.map((file) =>
             Object.assign(file, {
               preview: URL.createObjectURL(file),
@@ -27,7 +31,7 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
         );
         return;
       }
-      setFiles((state) => [
+      setImages((state) => [
         ...state,
         ...transformedArray.map((file) =>
           Object.assign(file, {
@@ -38,7 +42,19 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
     },
   });
 
-  const thumbs = files.map((file) => (
+  const mainThumb = () => (
+    <div key={mainImage[0].name} style={{ display: 'inline-flex' }}>
+      <Image
+        src={mainImage[0].preview}
+        alt={mainImage[0].name}
+        width={200}
+        height={200}
+        style={{ margin: 10 }}
+      />
+    </div>
+  );
+
+  const imagesThumbs = images.map((file) => (
     <div key={file.name} style={{ display: 'inline-flex' }}>
       <Image src={file.preview} alt={file.name} width={200} height={200} style={{ margin: 10 }} />
     </div>
@@ -57,22 +73,44 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
   };
 
   return (
-    <S.Container>
-      <h3>{imageType === 'Main' ? 'Imagem principal' : 'Imagens Secundarias'}</h3>
-      <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          {handleDropzoneStatus()}
-        </div>
-      </S.ZoneContainer>
-      <h4>Lista de arquivos</h4>
-      {files.length ? (
-        <>
-          <S.MainImageContainer>{files && thumbs}</S.MainImageContainer>
-        </>
+    <>
+      {imageType === 'Main' ? (
+        <S.Container>
+          <h3>Imagem principal</h3>
+          <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {handleDropzoneStatus()}
+            </div>
+          </S.ZoneContainer>
+          <h4>Lista de arquivos</h4>
+          {mainImage.length ? (
+            <>
+              <S.MainImageContainer>{mainThumb()}</S.MainImageContainer>
+            </>
+          ) : (
+            <h4>Sem Arquivos</h4>
+          )}
+        </S.Container>
       ) : (
-        <h4>Sem Arquivos</h4>
+        <S.Container>
+          <h3>Imagem principal</h3>
+          <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {handleDropzoneStatus()}
+            </div>
+          </S.ZoneContainer>
+          <h4>Lista de arquivos</h4>
+          {images.length ? (
+            <>
+              <S.MainImageContainer>{imagesThumbs}</S.MainImageContainer>
+            </>
+          ) : (
+            <h4>Sem Arquivos</h4>
+          )}
+        </S.Container>
       )}
-    </S.Container>
+    </>
   );
 }

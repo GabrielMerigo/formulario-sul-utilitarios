@@ -1,16 +1,11 @@
 import * as S from './styles';
-import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
 import { useContext } from 'react';
-import Image from 'next/image';
-import VehicleDialog from '@/components/VehicleDialog';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { Vehicleitem } from '@/components/Vehicleitem';
 
 export default function ListVehicles() {
   const { vehicles, deleteVehicles } = useContext(VehiclesContext);
-
-  const deleteVehicle = (id: string) => deleteVehicles(id);
-
   return (
     <>
       <S.LinksContainer>
@@ -23,53 +18,7 @@ export default function ListVehicles() {
       </S.LinksContainer>
       <S.ListVehicleContainer>
         {vehicles.map((vehicle) => {
-          return (
-            <S.VehiclesContainer key={vehicle.id}>
-              <button onClick={() => deleteVehicle(vehicle.id)} className="delete">
-                <P.Trash size={32} />
-              </button>
-              <Image
-                src="/images/Image1.png"
-                alt={vehicle.id}
-                width={200}
-                height={200}
-                style={{ margin: 10 }}
-              />
-              <h3>{vehicle.vehicleName}</h3>
-              <S.VehicleInfosGroup>
-                <strong>Tipo:</strong>
-                <span>{vehicle.vehicleType}</span>
-              </S.VehicleInfosGroup>
-              <S.VehicleInfosGroup>
-                <strong>Preço:</strong>
-                <span>{vehicle.vehiclePrice}</span>
-              </S.VehicleInfosGroup>
-              <S.VehicleInfosGroup>
-                <strong>Marca:</strong>
-                <span>{vehicle.brand}</span>
-              </S.VehicleInfosGroup>
-              <D.Root>
-                <D.Trigger asChild>
-                  <S.VehicleDetailsButton>Detalhes</S.VehicleDetailsButton>
-                </D.Trigger>
-                <D.Portal>
-                  <VehicleDialog
-                    id={vehicle.id}
-                    vehicleType={vehicle.vehicleType}
-                    vehicleName={vehicle.vehicleName}
-                    vehiclePrice={vehicle.vehiclePrice}
-                    brand={vehicle.brand}
-                    model={vehicle.model}
-                    manufactureYear={vehicle.manufactureYear}
-                    manufactureModel={vehicle.manufactureModel}
-                    traction={vehicle.traction}
-                    bodywork={vehicle.bodywork}
-                    description={vehicle.description}
-                  />
-                </D.Portal>
-              </D.Root>
-            </S.VehiclesContainer>
-          );
+          return <Vehicleitem key={vehicle.vehicleId} vehicle={vehicle} />;
         })}
       </S.ListVehicleContainer>
     </>

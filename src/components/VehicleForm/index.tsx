@@ -1,10 +1,12 @@
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { ImageFile, VehicleProps } from '@/types/VehiclesTypes';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import UploadZone from '../UploadZone';
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { storage } from 'firebaseEnv';
+import { ref, uploadBytes } from 'firebase/storage';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
@@ -12,7 +14,7 @@ type VehicleFormProps = {
 };
 
 export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormProps) {
-  const { updateVehicles, postVehicles } = useContext(VehiclesContext);
+  const { updateVehicles, postVehicles, mainImage, images } = useContext(VehiclesContext);
   const {
     control,
     register,
@@ -20,6 +22,7 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
     formState: { errors },
   } = useForm<VehicleProps>({
     defaultValues: {
+      vehicleId: vehicleData?.vehicleId,
       vehicleType: vehicleData?.vehicleType,
       vehicleName: vehicleData?.vehicleName,
       vehiclePrice: vehicleData?.vehiclePrice,
@@ -33,13 +36,26 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
     },
   });
 
+  function generateUniqueId() {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+  const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
+    const mainImageStorageRef = ref(storage, `mainImage/${vehicleId}`);
+
+    uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    });
+  };
+
   const onSubmit: SubmitHandler<VehicleProps> = (data) => {
+    const generateId = generateUniqueId();
     if (vehicleData) {
-      console.log(data);
-      updateVehicles(vehicleData.id, data);
+      updateVehicles(data.vehicleId, data);
       return;
     }
-    postVehicles(data);
+    uploadMainImage(generateId, mainImage);
+    postVehicles({ ...data, vehicleId: generateId });
   };
 
   return (

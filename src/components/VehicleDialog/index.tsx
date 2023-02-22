@@ -33,7 +33,7 @@ export default function VehicleDialog(props: VehicleProps) {
           <>
             <S.ButtonsContainer>
               <div>
-                <button onClick={() => deleteVehicle(props.id)} className="delete">
+                <button onClick={() => deleteVehicle(props.vehicleId)} className="delete">
                   <P.Trash size={32} />
                 </button>
                 <button onClick={() => setUpdating(true)} className="update">

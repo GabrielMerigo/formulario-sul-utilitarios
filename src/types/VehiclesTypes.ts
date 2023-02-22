@@ -1,5 +1,7 @@
+import { Dispatch, SetStateAction } from 'react';
+
 export type VehicleProps = {
-  id: string;
+  vehicleId: string;
   vehicleType: string;
   vehicleName: string;
   vehiclePrice: number;
