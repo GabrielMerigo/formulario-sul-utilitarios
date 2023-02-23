@@ -13,9 +13,9 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 
 export default function VehicleDialog(vehicle: VehicleProps) {
-  const { deleteVehicles } = useContext(VehiclesContext);
+  const { cloudImages, fetchImagesUrlList, deleteVehicles } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
-  const [cloudImages, setCloudImages] = useState<StorageReference[]>([]);
+
   const {
     control,
     register,
@@ -24,13 +24,8 @@ export default function VehicleDialog(vehicle: VehicleProps) {
   } = useForm<VehicleProps>();
 
   useEffect(() => {
-    fetchImagesUrl();
+    fetchImagesUrlList(vehicle.vehicleId);
   }, []);
-
-  const fetchImagesUrl = async () => {
-    const response = await list(ref(storage, vehicle.vehicleId));
-    setCloudImages(response.items.reverse());
-  };
 
   const onSubmit: SubmitHandler<VehicleProps> = (data) => {
     console.log(data);
