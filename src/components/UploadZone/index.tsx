@@ -1,9 +1,10 @@
-import { SetStateAction, useContext, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import * as S from './styles';
-import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
+import { UploadzoneProps } from '@/types/VehiclesTypes';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { setManyImagesUrls, fetchMainImageUrl } from '@/utils/fireStorage';
 
 const transformArrayType = (acceptedFiles: File[]) => {
   const propsToFile = (props: File) => props;
@@ -14,8 +15,16 @@ const acceptedImages = {
   'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
 };
 
-export default function UploadZone({ imageType }: UploadzoneProps) {
+export default function UploadZone({
+  imageType,
+  setUpdating,
+  vehicleId,
+  cloudMainImage,
+  cloudImages,
+}: UploadzoneProps) {
   const { setMainImage, setImages, mainImage, images } = useContext(VehiclesContext);
+  const [URLCloudMainImage, setCloudMainImage] = useState('');
+  const [URLCloudImages, setCloudImages] = useState<string[]>([]);
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: acceptedImages,
     onDrop: (acceptedFiles) => {
@@ -42,23 +51,73 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
     },
   });
 
-  const mainThumb = () => (
-    <div key={mainImage[0].name} style={{ display: 'inline-flex' }}>
-      <Image
-        src={mainImage[0].preview}
-        alt={mainImage[0].name}
-        width={200}
-        height={200}
-        style={{ margin: 10 }}
-      />
-    </div>
-  );
+  useEffect(() => {
+    if (setUpdating && cloudMainImage) {
+      fetchMainImageUrl(vehicleId!, setCloudMainImage);
+    }
 
-  const imagesThumbs = images.map((file) => (
-    <div key={file.name} style={{ display: 'inline-flex' }}>
-      <Image src={file.preview} alt={file.name} width={200} height={200} style={{ margin: 10 }} />
-    </div>
-  ));
+    if (setUpdating && cloudImages) {
+      setManyImagesUrls(vehicleId!, cloudImages!, setCloudImages);
+    }
+  }, []);
+
+  const mainThumb = () => {
+    if (URLCloudMainImage) {
+      return (
+        <div key={URLCloudMainImage} style={{ display: 'inline-flex' }}>
+          <Image
+            src={URLCloudMainImage}
+            alt={URLCloudMainImage}
+            width={200}
+            height={200}
+            style={{ margin: 10 }}
+          />
+        </div>
+      );
+    }
+    if (mainImage.length) {
+      return (
+        <div key={mainImage[0].name} style={{ display: 'inline-flex' }}>
+          <Image
+            src={mainImage[0].preview}
+            alt={mainImage[0].name}
+            width={200}
+            height={200}
+            style={{ margin: 10 }}
+          />
+        </div>
+      );
+    }
+    return <h4>Sem Arquivos</h4>;
+  };
+
+  const imagesThumbs = () => {
+    if (URLCloudImages) {
+      return URLCloudImages.map((image) => {
+        return (
+          <div key={image} style={{ display: 'inline-flex' }}>
+            <Image src={image} alt={image} width={200} height={200} style={{ margin: 10 }} />
+          </div>
+        );
+      });
+    }
+    if (images.length) {
+      return images.map((image) => {
+        return (
+          <div key={image.name} style={{ display: 'inline-flex' }}>
+            <Image
+              src={image.preview}
+              alt={image.name}
+              width={200}
+              height={200}
+              style={{ margin: 10 }}
+            />
+          </div>
+        );
+      });
+    }
+    return <h4>Sem Arquivos</h4>;
+  };
 
   const handleDropzoneStatus = () => {
     if (isDragAccept) {
@@ -84,17 +143,11 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
             </div>
           </S.ZoneContainer>
           <h4>Lista de arquivos</h4>
-          {mainImage.length ? (
-            <>
-              <S.MainImageContainer>{mainThumb()}</S.MainImageContainer>
-            </>
-          ) : (
-            <h4>Sem Arquivos</h4>
-          )}
+          {mainThumb()}
         </S.Container>
       ) : (
         <S.Container>
-          <h3>Imagem principal</h3>
+          <h3>Imagens</h3>
           <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
@@ -102,13 +155,7 @@ export default function UploadZone({ imageType }: UploadzoneProps) {
             </div>
           </S.ZoneContainer>
           <h4>Lista de arquivos</h4>
-          {images.length ? (
-            <>
-              <S.MainImageContainer>{imagesThumbs}</S.MainImageContainer>
-            </>
-          ) : (
-            <h4>Sem Arquivos</h4>
-          )}
+          <S.MainImageContainer>{imagesThumbs()}</S.MainImageContainer>
         </S.Container>
       )}
     </>

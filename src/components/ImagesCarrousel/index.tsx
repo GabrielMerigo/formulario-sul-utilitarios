@@ -1,12 +1,11 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import Image from 'next/image';
-import { deleteObject, getDownloadURL, ref, StorageReference } from 'firebase/storage';
-import { storage } from 'firebaseEnv';
+import { StorageReference } from 'firebase/storage';
 import { useContext, useEffect, useState } from 'react';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { deleteImage, fetchImageUrl, fetchImagesReferenceList } from '@/utils/fireStorage';
 
 type ImagesCarrouselProps = {
   cloudImage: StorageReference;
@@ -15,19 +14,16 @@ type ImagesCarrouselProps = {
 
 export default function ImagesCarrousel({ cloudImage, vehicleId }: ImagesCarrouselProps) {
   const [imageUrl, setImageUrl] = useState('');
-  const { deleteImage, fetchImagesUrlList } = useContext(VehiclesContext);
+  const { setCloudImages, cloudImages } = useContext(VehiclesContext);
 
-  const fetchImagesUrl = async () => {
-    const response = await getDownloadURL(ref(storage, `${vehicleId}/${cloudImage.name}`));
-    setImageUrl(response);
-  };
+  fetchImageUrl(vehicleId, cloudImage, setImageUrl);
 
   const handleDeleteSingleImage = () => {
-    deleteImage(vehicleId, cloudImage.name);
+    deleteImage(vehicleId, cloudImage.name, cloudImages, setCloudImages);
   };
 
   useEffect(() => {
-    fetchImagesUrl();
+    fetchImageUrl(vehicleId, cloudImage, setImageUrl);
   }, []);
 
   return (

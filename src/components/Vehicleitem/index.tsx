@@ -4,33 +4,24 @@ import * as P from 'phosphor-react';
 import Image from 'next/image';
 import VehicleDialog from '@/components/VehicleDialog';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { useContext, useEffect, useState } from 'react';
-import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { getDownloadURL, list, ref } from 'firebase/storage';
-import { storage } from 'firebaseEnv';
+import { useEffect, useState } from 'react';
+import { deleteVehicles } from '@/utils/fireStoreDatabase';
+import { fetchMainImageUrl } from '@/utils/fireStorage';
 
 type ComponentProps = {
   vehicle: VehicleProps;
 };
 
 export function Vehicleitem({ vehicle }: ComponentProps) {
-  const { deleteVehicles } = useContext(VehiclesContext);
   const [URLsImages, setURLsImages] = useState('');
 
-  const deleteVehicle = (id: string) => deleteVehicles(id);
-
-  const fetchImagesUrl = async () => {
-    const response = await getDownloadURL(ref(storage, `${vehicle.vehicleId}/mainImage`));
-    setURLsImages(response);
-  };
-
   useEffect(() => {
-    fetchImagesUrl();
+    fetchMainImageUrl(vehicle.vehicleId, setURLsImages);
   }, []);
 
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
-      <button onClick={() => deleteVehicle(vehicle.vehicleId)} className="delete">
+      <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
         <P.Trash size={32} />
       </button>
       <Image

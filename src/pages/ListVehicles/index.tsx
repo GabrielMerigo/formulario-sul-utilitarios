@@ -5,7 +5,7 @@ import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { Vehicleitem } from '@/components/Vehicleitem';
 
 export default function ListVehicles() {
-  const { vehicles, deleteVehicles } = useContext(VehiclesContext);
+  const { vehicles } = useContext(VehiclesContext);
   return (
     <>
       <S.LinksContainer>

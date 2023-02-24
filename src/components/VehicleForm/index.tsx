@@ -5,16 +5,18 @@ import * as S from './styles';
 import * as P from 'phosphor-react';
 import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { storage } from 'firebaseEnv';
-import { ref, uploadBytes } from 'firebase/storage';
+import { StorageReference } from 'firebase/storage';
+import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase';
+import { uploadImages, uploadMainImage } from '@/utils/fireStorage';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
   vehicleData?: VehicleProps;
+  cloudImages?: StorageReference[];
 };
 
-export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormProps) {
-  const { updateVehicles, postVehicles, mainImage, images } = useContext(VehiclesContext);
+export default function VehicleForm({ setUpdating, cloudImages, vehicleData }: VehicleFormProps) {
+  const { mainImage, images } = useContext(VehiclesContext);
   const {
     control,
     register,
@@ -39,23 +41,6 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
   function generateUniqueId() {
     return Math.random().toString(36).substr(2, 9);
   }
-
-  const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
-    const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
-
-    uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {
-      console.log('Images Uploaded');
-    });
-  };
-
-  const uploadImages = (vehicleId: string, Images: ImageFile[]) => {
-    Images.forEach((image, index) => {
-      const ImagesStorageRef = ref(storage, `${vehicleId}/${index}`);
-      uploadBytes(ImagesStorageRef, image).then((snapshot) => {
-        console.log('Images Uploaded');
-      });
-    });
-  };
 
   const onSubmit: SubmitHandler<VehicleProps> = (data) => {
     const generateId = generateUniqueId();
@@ -140,8 +125,28 @@ export default function VehicleForm({ setUpdating, vehicleData }: VehicleFormPro
           <label htmlFor="description">Descrição do Veículo</label>
           <textarea {...register('description')} id="description" />
         </S.InputGroup>
-        <UploadZone imageType="Main" />
-        <UploadZone imageType="secondary" />
+        {setUpdating ? (
+          <>
+            <UploadZone
+              setUpdating={setUpdating}
+              cloudMainImage={cloudImages?.find((image) => image.name === 'mainImage')}
+              vehicleId={vehicleData?.vehicleId}
+              imageType="Main"
+            />
+            <UploadZone
+              setUpdating={setUpdating}
+              cloudImages={cloudImages?.filter((image) => image.name !== 'mainImage')}
+              vehicleId={vehicleData?.vehicleId}
+              imageType="secondary"
+            />
+          </>
+        ) : (
+          <>
+            <UploadZone imageType="Main" />
+            <UploadZone imageType="secondary" />
+          </>
+        )}
+
         <button type="submit">Atualizar Informações</button>
       </form>
     </S.FormContainer>

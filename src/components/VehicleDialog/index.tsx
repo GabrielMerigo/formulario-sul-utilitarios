@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
@@ -6,33 +5,18 @@ import { useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import VehicleForm from '../VehicleForm';
-import { storage } from 'firebaseEnv';
-import { list, ref, StorageReference } from 'firebase/storage';
 import ImagesCarrousel from '../ImagesCarrousel';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { fetchImagesReferenceList } from '@/utils/fireStorage';
+import { deleteVehicles } from '@/utils/fireStoreDatabase';
 
 export default function VehicleDialog(vehicle: VehicleProps) {
-  const { cloudImages, fetchImagesUrlList, deleteVehicles } = useContext(VehiclesContext);
+  const { cloudImages, setCloudImages } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<VehicleProps>();
-
   useEffect(() => {
-    fetchImagesUrlList(vehicle.vehicleId);
+    fetchImagesReferenceList(vehicle.vehicleId, setCloudImages);
   }, []);
-
-  const onSubmit: SubmitHandler<VehicleProps> = (data) => {
-    console.log(data);
-    // postVehicles(data);
-  };
-
-  const deleteVehicle = (id: string) => deleteVehicles(id);
 
   return (
     <>
@@ -42,7 +26,7 @@ export default function VehicleDialog(vehicle: VehicleProps) {
           <>
             <S.ButtonsContainer>
               <div>
-                <button onClick={() => deleteVehicle(vehicle.vehicleId)} className="delete">
+                <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
                   <P.Trash size={32} />
                 </button>
                 <button onClick={() => setUpdating(true)} className="update">
@@ -108,7 +92,7 @@ export default function VehicleDialog(vehicle: VehicleProps) {
             </S.VehicleInfos>
           </>
         ) : (
-          <VehicleForm setUpdating={setUpdating} vehicleData={vehicle} />
+          <VehicleForm setUpdating={setUpdating} vehicleData={vehicle} cloudImages={cloudImages} />
         )}
       </S.Content>
     </>

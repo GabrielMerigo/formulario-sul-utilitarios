@@ -1,3 +1,4 @@
+import { StorageReference } from 'firebase/storage';
 import { Dispatch, SetStateAction } from 'react';
 
 export type VehicleProps = {
@@ -21,4 +22,8 @@ export type ImageFile = {
 
 export type UploadzoneProps = {
   imageType: string;
+  setUpdating?: Dispatch<SetStateAction<boolean>>;
+  vehicleId?: string;
+  cloudMainImage?: StorageReference;
+  cloudImages?: StorageReference[];
 };
