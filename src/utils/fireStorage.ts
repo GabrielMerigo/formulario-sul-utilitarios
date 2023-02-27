@@ -34,7 +34,7 @@ export const setManyImagesUrls = (
 ) => {
   cloudImageArray.forEach((image) => {
     getDownloadURL(ref(storage, `${vehicleId}/${image.name}`)).then((url: string) => {
-      setState((state: string[]) => [...state, url]);
+      setState((state: string[]) => [...state, `${url}||${image.name}`]);
     });
   });
 };
@@ -47,7 +47,7 @@ export const fetchImagesReferenceList = async (
   setState((state) => response.items.reverse());
 };
 
-export const deleteImage = async (
+export const deleteImageByStorageReference = async (
   vehicleId: string,
   cloudImageName: string,
   cloudImages: StorageReference[],
@@ -56,21 +56,33 @@ export const deleteImage = async (
   const deleteFile = deleteObject(ref(storage, `${vehicleId}/${cloudImageName}`));
   const remainingImages = cloudImages.filter((image) => image.name !== cloudImageName);
   setState((state) => remainingImages);
+  console.log('Imagem Deletada!');
+};
+
+export const deleteImageByURL = async (
+  vehicleId: string,
+  URLCloudName: string[],
+  URLCloudImages: string[],
+  setState: Dispatch<SetStateAction<string[]>>
+) => {
+  const deleteFile = deleteObject(ref(storage, `${vehicleId}/${URLCloudName[1]}`));
+  const remainingUrls = URLCloudImages.filter((url) => url.split('||')[0] !== URLCloudName[0]);
+  setState((state) => remainingUrls);
+  console.log('Imagem Deletada!');
 };
 
 export const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
   const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
 
   uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {
-    console.log('Images Uploaded');
+    console.log('Imagem principal foi enviada!');
   });
 };
 
 export const uploadImages = (vehicleId: string, Images: ImageFile[]) => {
-  Images.forEach((image, index) => {
-    const ImagesStorageRef = ref(storage, `${vehicleId}/${index}`);
-    uploadBytes(ImagesStorageRef, image).then((snapshot) => {
-      console.log('Images Uploaded');
-    });
+  Images.forEach((image) => {
+    const ImagesStorageRef = ref(storage, `${vehicleId}/${image.name}`);
+    uploadBytes(ImagesStorageRef, image);
   });
+  console.log('Todas as imagens foram enviadas!');
 };

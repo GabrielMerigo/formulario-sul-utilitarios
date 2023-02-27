@@ -35,14 +35,13 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
   await deleteDoc(vehicleToDelete);
 };
 
-export const updateVehicles = async (vehicleToUpdateid: string, vehicleToUpdate: VehicleProps) => {
+export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: VehicleProps) => {
   const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToUpdateid));
   const querySnapshot = await getDocs(q);
   let docId = '';
   querySnapshot.forEach(async (doc) => {
     docId = doc.id;
   });
-  const taskDoc = doc(db, 'Vehicles', docId);
-  const updatedVehicleData = vehicleToUpdate;
-  await updateDoc(taskDoc, updatedVehicleData);
+  const vehicleDoc = doc(db, 'Vehicles', docId);
+  await updateDoc(vehicleDoc, UpdateData);
 };

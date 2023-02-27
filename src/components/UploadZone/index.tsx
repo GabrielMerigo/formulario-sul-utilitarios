@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import * as P from 'phosphor-react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import * as S from './styles';
-import { UploadzoneProps } from '@/types/VehiclesTypes';
+import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { setManyImagesUrls, fetchMainImageUrl } from '@/utils/fireStorage';
+import { setManyImagesUrls, fetchMainImageUrl, deleteImageByURL } from '@/utils/fireStorage';
 
 const transformArrayType = (acceptedFiles: File[]) => {
   const propsToFile = (props: File) => props;
@@ -23,8 +24,8 @@ export default function UploadZone({
   cloudImages,
 }: UploadzoneProps) {
   const { setMainImage, setImages, mainImage, images } = useContext(VehiclesContext);
-  const [URLCloudMainImage, setCloudMainImage] = useState('');
-  const [URLCloudImages, setCloudImages] = useState<string[]>([]);
+  const [URLCloudMainImage, setURLCloudMainImage] = useState('');
+  const [URLCloudImages, setURLCloudImages] = useState<string[]>([]);
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: acceptedImages,
     onDrop: (acceptedFiles) => {
@@ -52,17 +53,20 @@ export default function UploadZone({
   });
 
   useEffect(() => {
+    setURLCloudMainImage('');
+    setURLCloudImages([]);
+
     if (setUpdating && cloudMainImage) {
-      fetchMainImageUrl(vehicleId!, setCloudMainImage);
+      fetchMainImageUrl(vehicleId!, setURLCloudMainImage);
     }
 
     if (setUpdating && cloudImages) {
-      setManyImagesUrls(vehicleId!, cloudImages!, setCloudImages);
+      setManyImagesUrls(vehicleId!, cloudImages!, setURLCloudImages);
     }
-  }, [vehicleId, setUpdating]);
+  }, []);
 
   const mainThumb = () => {
-    if (URLCloudMainImage) {
+    if (URLCloudMainImage && !mainImage.length) {
       return (
         <div key={URLCloudMainImage} style={{ display: 'inline-flex' }}>
           <Image
@@ -91,35 +95,6 @@ export default function UploadZone({
     return <h4>Sem Arquivos</h4>;
   };
 
-  const imagesThumbs = () => {
-    if (URLCloudImages.length) {
-      return URLCloudImages.map((image) => {
-        return (
-          <div key={image} style={{ display: 'inline-flex' }}>
-            <Image src={image} alt={image} width={200} height={200} style={{ margin: 10 }} />
-          </div>
-        );
-      });
-    }
-    if (images.length) {
-      console.log(images);
-      return images.map((image, index) => {
-        return (
-          <div key={index} style={{ display: 'inline-flex' }}>
-            <Image
-              src={image.preview}
-              alt={image.name}
-              width={200}
-              height={200}
-              style={{ margin: 10 }}
-            />
-          </div>
-        );
-      });
-    }
-    return <h4>Sem Arquivos</h4>;
-  };
-
   const handleDropzoneStatus = () => {
     if (isDragAccept) {
       return <strong>Arquivo suportado!</strong>;
@@ -130,6 +105,15 @@ export default function UploadZone({
     }
 
     return <strong>Arraste ou clique aqui para Inserir as imagens!</strong>;
+  };
+
+  const handleDeleteRegistredSingleImage = (cloudImageName: string[]) => {
+    deleteImageByURL(vehicleId!, cloudImageName, URLCloudImages, setURLCloudImages);
+  };
+
+  const handleDeleteSingleImageToAdd = (imageToRemove: ImageFile) => {
+    const remainingImages = images.filter((image) => image.name !== imageToRemove.name);
+    setImages(remainingImages);
   };
 
   return (
@@ -143,20 +127,68 @@ export default function UploadZone({
               {handleDropzoneStatus()}
             </div>
           </S.ZoneContainer>
-          <h4>Lista de arquivos</h4>
           {mainThumb()}
         </S.Container>
       ) : (
         <S.Container>
           <h3>Imagens</h3>
+          <h4>Imagens Registradas:</h4>
+          <S.MainImageContainer>
+            {URLCloudImages.length ? (
+              URLCloudImages.map((image) => {
+                return (
+                  <div key={image} style={{ display: 'inline-flex' }}>
+                    <S.DeleteImageButton
+                      onClick={() => handleDeleteRegistredSingleImage(image.split('||'))}
+                    >
+                      <P.Trash size={32} />
+                    </S.DeleteImageButton>
+                    <Image
+                      src={image}
+                      alt={image}
+                      width={200}
+                      height={200}
+                      style={{ margin: 10 }}
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <h4>Nenhuma imagem registrada</h4>
+            )}
+          </S.MainImageContainer>
+          <h4>Adicionando Imagens:</h4>
           <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               {handleDropzoneStatus()}
             </div>
           </S.ZoneContainer>
-          <h4>Lista de arquivos</h4>
-          <S.MainImageContainer>{imagesThumbs()}</S.MainImageContainer>
+          <S.MainImageContainer>
+            {images.length ? (
+              images.map((image, index) => {
+                return (
+                  <div key={index} style={{ display: 'inline-flex' }}>
+                    <S.DeleteImageButton
+                      type="button"
+                      onClick={() => handleDeleteSingleImageToAdd(image)}
+                    >
+                      <P.Trash size={32} />
+                    </S.DeleteImageButton>
+                    <Image
+                      src={image.preview}
+                      alt={image.name}
+                      width={200}
+                      height={200}
+                      style={{ margin: 10 }}
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <h4>Nenhuma imagem nova sendo adicionada</h4>
+            )}
+          </S.MainImageContainer>
         </S.Container>
       )}
     </>

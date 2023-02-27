@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import Image from 'next/image';
 import { StorageReference } from 'firebase/storage';
 import { useContext, useEffect, useState } from 'react';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { deleteImage, fetchImageUrl } from '@/utils/fireStorage';
+import { deleteImageByStorageReference, fetchImageUrl } from '@/utils/fireStorage';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 
 type ImagesCarrouselProps = {
   cloudImage: StorageReference;
@@ -21,7 +20,7 @@ export default function ImagesCarrousel({ cloudImage, vehicleId, thumb }: Images
   fetchImageUrl(vehicleId, cloudImage, setImageUrl);
 
   const handleDeleteSingleImage = () => {
-    deleteImage(vehicleId, cloudImage.name, cloudImages, setCloudImages);
+    deleteImageByStorageReference(vehicleId, cloudImage.name, cloudImages, setCloudImages);
   };
 
   useEffect(() => {

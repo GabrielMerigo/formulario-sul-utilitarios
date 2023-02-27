@@ -1,13 +1,17 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { useContext, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { VehicleForm } from '../VehicleForm';
 import ImagesCarrousel from '../ImagesCarrousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { fetchImagesReferenceList } from '@/utils/fireStorage';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
+
+type DialogProps = {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+} & VehicleProps;
 
 export default function VehicleDialog({
   vehicleId,
@@ -21,7 +25,8 @@ export default function VehicleDialog({
   traction,
   bodywork,
   description,
-}: VehicleProps) {
+  setOpen,
+}: DialogProps) {
   const { cloudImages, setCloudImages } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
 
@@ -135,6 +140,7 @@ export default function VehicleDialog({
               description,
             }}
             cloudImages={cloudImages}
+            setOpen={setOpen}
           />
         )}
       </S.Content>

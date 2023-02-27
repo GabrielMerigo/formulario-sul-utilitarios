@@ -71,3 +71,21 @@ export const MainImageContainer = styled.ul`
     }
   `}
 `;
+export const DeleteImageButton = styled.button`
+  ${({ theme }) => css`
+    position: absolute;
+    cursor: pointer;
+
+    border: none;
+    border-radius: 50%;
+    padding: 4px;
+
+    background-color: ${theme['red-500']};
+    color: ${theme['gray-50']};
+
+    &:hover {
+      transition: all ease 0.3s;
+      background-color: ${theme['red-400']};
+    }
+  `}
+`;

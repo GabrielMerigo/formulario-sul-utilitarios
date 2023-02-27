@@ -14,6 +14,7 @@ type ComponentProps = {
 
 export function Vehicleitem({ vehicle }: ComponentProps) {
   const [URLsImages, setURLsImages] = useState('');
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     fetchMainImageUrl(vehicle.vehicleId, setURLsImages);
@@ -48,7 +49,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
         <strong>Marca:</strong>
         <span>{vehicle.brand}</span>
       </S.VehicleInfosGroup>
-      <D.Root>
+      <D.Root open={open} onOpenChange={setOpen}>
         <D.Trigger asChild>
           <S.VehicleDetailsButton>Detalhes</S.VehicleDetailsButton>
         </D.Trigger>
@@ -65,6 +66,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
             traction={vehicle.traction}
             bodywork={vehicle.bodywork}
             description={vehicle.description}
+            setOpen={setOpen}
           />
         </D.Portal>
       </D.Root>

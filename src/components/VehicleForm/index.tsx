@@ -1,9 +1,9 @@
-import { ImageFile, VehicleProps } from '@/types/VehiclesTypes';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import UploadZone from '../UploadZone';
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { VehicleProps } from '@/types/VehiclesTypes';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import UploadZone from '../UploadZone';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { StorageReference } from 'firebase/storage';
 import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase';
@@ -13,10 +13,16 @@ type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
   vehicleData?: VehicleProps;
   cloudImages?: StorageReference[];
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const VehicleForm = ({ setUpdating, cloudImages, vehicleData }: VehicleFormProps) => {
-  const { mainImage, images } = useContext(VehiclesContext);
+export const VehicleForm = ({
+  setUpdating,
+  cloudImages,
+  vehicleData,
+  setOpen,
+}: VehicleFormProps) => {
+  const { mainImage, images, setMainImage, setImages } = useContext(VehiclesContext);
   const {
     control,
     register,
@@ -38,6 +44,11 @@ export const VehicleForm = ({ setUpdating, cloudImages, vehicleData }: VehicleFo
     },
   });
 
+  useEffect(() => {
+    setMainImage([]);
+    setImages([]);
+  }, []);
+
   function generateUniqueId() {
     return Math.random().toString(36).substr(2, 9);
   }
@@ -46,6 +57,9 @@ export const VehicleForm = ({ setUpdating, cloudImages, vehicleData }: VehicleFo
     const generateId = generateUniqueId();
     if (vehicleData) {
       updateVehicles(data.vehicleId, data);
+      mainImage.length && uploadMainImage(data.vehicleId, mainImage);
+      images.length && uploadImages(data.vehicleId, images);
+      setOpen(false);
       return;
     }
     uploadMainImage(generateId, mainImage);
