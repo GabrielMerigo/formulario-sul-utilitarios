@@ -202,9 +202,19 @@ export const ImagesCarousel = styled(Carousel)`
       width: 50%;
     }
 
-    .thumb {
-      width: 5%;
-      height: 50px;
+    .carousel .thumbs {
+      display: flex;
+      justify-content: center;
+    }
+
+    .carousel .thumb {
+      border: 3px solid ${theme['gray-50']};
+      border-radius: 10px;
+    }
+
+    .carousel .thumb.selected,
+    .carousel .thumb:hover {
+      border: 3px solid ${theme['gray-900']};
     }
 
     .carousel.carousel-slider .control-arrow {
@@ -224,6 +234,31 @@ export const ImagesCarousel = styled(Carousel)`
       right: 0;
 
       font-size: 2rem;
+    }
+  `}
+`;
+
+export const CarrouselContainer = styled.div`
+  width: 100%;
+`;
+
+export const DeleteImageButton = styled.button`
+  ${({ theme }) => css`
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+
+    border: none;
+    border-radius: 50%;
+    padding: 4px;
+
+    background-color: ${theme['red-500']};
+    color: ${theme['gray-50']};
+
+    &:hover {
+      transition: all ease 0.3s;
+      background-color: ${theme['red-400']};
     }
   `}
 `;

@@ -3,20 +3,31 @@ import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import VehicleForm from '../VehicleForm';
+import { VehicleForm } from '../VehicleForm';
 import ImagesCarrousel from '../ImagesCarrousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { fetchImagesReferenceList } from '@/utils/fireStorage';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
 
-export default function VehicleDialog(vehicle: VehicleProps) {
+export default function VehicleDialog({
+  vehicleId,
+  vehicleType,
+  vehicleName,
+  vehiclePrice,
+  brand,
+  model,
+  manufactureYear,
+  manufactureModel,
+  traction,
+  bodywork,
+  description,
+}: VehicleProps) {
   const { cloudImages, setCloudImages } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    fetchImagesReferenceList(vehicle.vehicleId, setCloudImages);
-  }, []);
+    fetchImagesReferenceList(vehicleId, setCloudImages);
+  }, [vehicleId, setCloudImages]);
 
   return (
     <>
@@ -26,7 +37,7 @@ export default function VehicleDialog(vehicle: VehicleProps) {
           <>
             <S.ButtonsContainer>
               <div>
-                <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
+                <button onClick={() => deleteVehicles(vehicleId)} className="delete">
                   <P.Trash size={32} />
                 </button>
                 <button onClick={() => setUpdating(true)} className="update">
@@ -37,62 +48,94 @@ export default function VehicleDialog(vehicle: VehicleProps) {
                 <P.X size={32} />
               </S.CloseDialogButton>
             </S.ButtonsContainer>
-            <S.ImagesCarousel>
-              {cloudImages.map((cloudImage) => {
-                return (
-                  <ImagesCarrousel
-                    key={cloudImage.name}
-                    cloudImage={cloudImage}
-                    vehicleId={vehicle.vehicleId}
-                  />
-                );
-              })}
-            </S.ImagesCarousel>
-            <h3>{vehicle.vehicleName}</h3>
+            {cloudImages ? (
+              <S.ImagesCarousel
+                renderThumbs={() =>
+                  cloudImages.map((cloudImage) => (
+                    <ImagesCarrousel
+                      key={cloudImage.name}
+                      cloudImage={cloudImage}
+                      vehicleId={vehicleId}
+                      thumb={true}
+                    />
+                  ))
+                }
+              >
+                {cloudImages.map((cloudImage) => {
+                  return (
+                    <ImagesCarrousel
+                      key={cloudImage.name}
+                      cloudImage={cloudImage}
+                      vehicleId={vehicleId}
+                      thumb={false}
+                    />
+                  );
+                })}
+              </S.ImagesCarousel>
+            ) : (
+              <h3>Sem imagens</h3>
+            )}
+            <h3>{vehicleName}</h3>
             <S.VehicleInfos>
               <S.VehicleInfosGroup>
                 <strong>Tipo:</strong>
-                <span>{vehicle.vehicleType}</span>
+                <span>{vehicleType}</span>
               </S.VehicleInfosGroup>
               <S.VehicleInfosGroup>
                 <strong>Preço:</strong>
-                <span>{vehicle.vehiclePrice}</span>
+                <span>{vehiclePrice}</span>
               </S.VehicleInfosGroup>
               <label>Características do veículo:</label>
               <S.VehiclecharacteristicsContainer>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Marca:</strong>
-                  <span>{vehicle.brand}</span>
+                  <span>{brand}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Modelo:</strong>
-                  <span>{vehicle.model}</span>
+                  <span>{model}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Ano de fabricação:</strong>
-                  <span>{vehicle.manufactureYear}</span>
+                  <span>{manufactureYear}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Modelo de fabricação:</strong>
-                  <span>{vehicle.manufactureYear}</span>
+                  <span>{manufactureModel}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Tração:</strong>
-                  <span>{vehicle.traction}</span>
+                  <span>{traction}</span>
                 </S.VehiclecharacteristicsGroup>
                 <S.VehiclecharacteristicsGroup>
                   <strong>Carroceria:</strong>
-                  <span>{vehicle.bodywork}</span>
+                  <span>{bodywork}</span>
                 </S.VehiclecharacteristicsGroup>
               </S.VehiclecharacteristicsContainer>
               <S.VehicleDescriptionContainer>
                 <strong>Descrição:</strong>
-                <span>{vehicle.description}</span>
+                <span>{description}</span>
               </S.VehicleDescriptionContainer>
             </S.VehicleInfos>
           </>
         ) : (
-          <VehicleForm setUpdating={setUpdating} vehicleData={vehicle} cloudImages={cloudImages} />
+          <VehicleForm
+            setUpdating={setUpdating}
+            vehicleData={{
+              vehicleId,
+              vehicleType,
+              vehicleName,
+              vehiclePrice,
+              brand,
+              model,
+              manufactureYear,
+              manufactureModel,
+              traction,
+              bodywork,
+              description,
+            }}
+            cloudImages={cloudImages}
+          />
         )}
       </S.Content>
     </>

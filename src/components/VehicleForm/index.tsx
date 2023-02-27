@@ -15,7 +15,7 @@ type VehicleFormProps = {
   cloudImages?: StorageReference[];
 };
 
-export default function VehicleForm({ setUpdating, cloudImages, vehicleData }: VehicleFormProps) {
+export const VehicleForm = ({ setUpdating, cloudImages, vehicleData }: VehicleFormProps) => {
   const { mainImage, images } = useContext(VehiclesContext);
   const {
     control,
@@ -151,4 +151,4 @@ export default function VehicleForm({ setUpdating, cloudImages, vehicleData }: V
       </form>
     </S.FormContainer>
   );
-}
+};

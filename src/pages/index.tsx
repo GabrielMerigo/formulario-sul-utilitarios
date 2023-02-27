@@ -1,7 +1,7 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 
-export default function VehicleDialog() {
+export default function Home() {
   return (
     <S.IndexContainer>
       <h1>SUL UTILITARIOS</h1>

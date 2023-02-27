@@ -1,11 +1,22 @@
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+  query,
+  where,
+  collection,
+  getDocs,
+} from 'firebase/firestore';
 import { db, vehiclesCollection } from 'firebaseEnv';
 import { Dispatch, SetStateAction } from 'react';
 
 export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<VehicleProps[]>>) => {
   onSnapshot(vehiclesCollection, (snapshot) => {
-    setVehicles(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const vehicles = snapshot.docs.map((doc) => doc.data() as VehicleProps);
+    setVehicles(vehicles);
   });
 };
 
@@ -14,12 +25,24 @@ export const postVehicles = async (vehicleToPost: VehicleProps) => {
 };
 
 export const deleteVehicles = async (vehicleToDeleteId: string) => {
-  const taskDoc = doc(db, 'Vehicles', vehicleToDeleteId);
-  await deleteDoc(taskDoc);
+  const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToDeleteId));
+  const querySnapshot = await getDocs(q);
+  let docId = '';
+  querySnapshot.forEach(async (doc) => {
+    docId = doc.id;
+  });
+  const vehicleToDelete = doc(db, 'Vehicles', docId);
+  await deleteDoc(vehicleToDelete);
 };
 
 export const updateVehicles = async (vehicleToUpdateid: string, vehicleToUpdate: VehicleProps) => {
-  const taskDoc = doc(db, 'Vehicles', vehicleToUpdateid);
-  const newTaskText = vehicleToUpdate;
-  await updateDoc(taskDoc, newTaskText);
+  const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToUpdateid));
+  const querySnapshot = await getDocs(q);
+  let docId = '';
+  querySnapshot.forEach(async (doc) => {
+    docId = doc.id;
+  });
+  const taskDoc = doc(db, 'Vehicles', docId);
+  const updatedVehicleData = vehicleToUpdate;
+  await updateDoc(taskDoc, updatedVehicleData);
 };

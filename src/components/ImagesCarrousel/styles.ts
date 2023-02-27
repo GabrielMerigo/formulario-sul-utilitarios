@@ -1,5 +1,12 @@
 import styled, { css } from 'styled-components';
 
+export const ThumbContainer = styled.div`
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+`;
+
 export const CarrouselContainer = styled.div`
   width: 100%;
 `;

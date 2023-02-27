@@ -59,7 +59,7 @@ export default function UploadZone({
     if (setUpdating && cloudImages) {
       setManyImagesUrls(vehicleId!, cloudImages!, setCloudImages);
     }
-  }, []);
+  }, [vehicleId, setUpdating]);
 
   const mainThumb = () => {
     if (URLCloudMainImage) {
@@ -92,7 +92,7 @@ export default function UploadZone({
   };
 
   const imagesThumbs = () => {
-    if (URLCloudImages) {
+    if (URLCloudImages.length) {
       return URLCloudImages.map((image) => {
         return (
           <div key={image} style={{ display: 'inline-flex' }}>
@@ -102,9 +102,10 @@ export default function UploadZone({
       });
     }
     if (images.length) {
-      return images.map((image) => {
+      console.log(images);
+      return images.map((image, index) => {
         return (
-          <div key={image.name} style={{ display: 'inline-flex' }}>
+          <div key={index} style={{ display: 'inline-flex' }}>
             <Image
               src={image.preview}
               alt={image.name}

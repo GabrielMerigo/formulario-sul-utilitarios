@@ -17,20 +17,24 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
 
   useEffect(() => {
     fetchMainImageUrl(vehicle.vehicleId, setURLsImages);
-  }, []);
+  }, [vehicle.vehicleId]);
 
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
       <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
         <P.Trash size={32} />
       </button>
-      <Image
-        src={URLsImages}
-        alt={vehicle.vehicleName}
-        width={200}
-        height={200}
-        style={{ margin: 10 }}
-      />
+      {URLsImages ? (
+        <Image
+          src={URLsImages}
+          alt={vehicle.vehicleName}
+          width={200}
+          height={200}
+          style={{ margin: 10 }}
+        />
+      ) : (
+        <h3>Sem imagem</h3>
+      )}
       <h3>{vehicle.vehicleName}</h3>
       <S.VehicleInfosGroup>
         <strong>Tipo:</strong>

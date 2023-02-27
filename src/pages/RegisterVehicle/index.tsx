@@ -1,6 +1,6 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import VehicleForm from '@/components/VehicleForm';
+import { VehicleForm } from '@/components/VehicleForm';
 
 export default function RegisterVehicle() {
   return (
