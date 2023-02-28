@@ -10,6 +10,7 @@ import { uploadImages, uploadMainImage } from '@/utils/fireStorage';
 import { formatValue } from '@/utils/FormatNumberValue';
 import { VehicleData } from './VehicleData';
 import { VehicleImages } from './VehicleImages';
+import router from 'next/router';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
@@ -86,11 +87,13 @@ export const VehicleForm = ({
       mainImage.length && uploadMainImage(data.vehicleId, mainImage);
       images.length && uploadImages(data.vehicleId, images);
       setOpen!(false);
+      router.push('ListVehicles/');
       return;
     }
-    uploadMainImage(generateId, mainImage);
-    uploadImages(generateId, images);
+    mainImage.length && uploadMainImage(generateId, mainImage);
+    images.length && uploadImages(generateId, images);
     postVehicles({ ...data, vehicleId: generateId });
+    router.push('ListVehicles/');
   };
 
   return (
