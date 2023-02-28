@@ -1,7 +1,8 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import { Control, Controller, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
 import { VehicleProps } from '@/types/VehiclesTypes';
+import CurrencyInput from 'react-currency-input-field';
 
 type VehicleDataFormProps = {
   control: Control<VehicleProps, any>;
@@ -33,35 +34,53 @@ export const VehicleData = ({ control, register }: VehicleDataFormProps) => {
       <S.FieldInputsContainer>
         <S.InputGroup>
           <label htmlFor="vehicleName">Nome do Veículo</label>
-          <input {...register('vehicleName')} id="vehicleName" type="text" />
+          <input autoComplete="off" {...register('vehicleName')} id="vehicleName" type="text" />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="vehiclePrice">Preço do veículo</label>
-          <input {...register('vehiclePrice')} id="vehiclePrice" type="text" />
+          <CurrencyInput
+            prefix="R$"
+            fixedDecimalLength={2}
+            decimalsLimit={2}
+            placeholder="R$ 000,00"
+            autoComplete="off"
+            {...register('vehiclePrice')}
+            id="vehiclePrice"
+          />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="brand">Marca</label>
-          <input {...register('brand')} id="brand" type="text" />
+          <input autoComplete="off" {...register('brand')} id="brand" type="text" />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="model">Modelo</label>
-          <input {...register('model')} id="model" type="text" />
+          <input autoComplete="off" {...register('model')} id="model" type="text" />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="manufactureYear">Ano Fabricação</label>
-          <input {...register('manufactureYear')} id="manufactureYear" type="number" />
+          <input
+            autoComplete="off"
+            {...register('manufactureYear')}
+            id="manufactureYear"
+            type="number"
+          />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="manufactureModel">Ano Modelo</label>
-          <input {...register('manufactureModel')} id="manufactureModel" type="number" />
+          <input
+            autoComplete="off"
+            {...register('manufactureModel')}
+            id="manufactureModel"
+            type="number"
+          />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="traction">Tração</label>
-          <input {...register('traction')} id="traction" type="text" />
+          <input autoComplete="off" {...register('traction')} id="traction" type="text" />
         </S.InputGroup>
         <S.InputGroup>
           <label htmlFor="bodywork">Carroceria</label>
-          <input {...register('bodywork')} id="bodywork" type="text" />
+          <input autoComplete="off" {...register('bodywork')} id="bodywork" type="text" />
         </S.InputGroup>
       </S.FieldInputsContainer>
       <S.InputGroup>

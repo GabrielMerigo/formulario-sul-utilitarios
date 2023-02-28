@@ -1,13 +1,13 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import UploadZone from '../UploadZone';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { StorageReference } from 'firebase/storage';
 import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase';
 import { uploadImages, uploadMainImage } from '@/utils/fireStorage';
+import { formatValue } from '@/utils/FormatNumberValue';
 import { VehicleData } from './VehicleData';
 import { VehicleImages } from './VehicleImages';
 
@@ -78,6 +78,9 @@ export const VehicleForm = ({
 
   const onSubmit: SubmitHandler<VehicleProps> = (data) => {
     const generateId = generateUniqueId();
+    const formattedValue = formatValue(String(data.vehiclePrice));
+    data.vehiclePrice = formattedValue;
+
     if (vehicleData) {
       updateVehicles(data.vehicleId, data);
       mainImage.length && uploadMainImage(data.vehicleId, mainImage);

@@ -195,31 +195,33 @@ export default function UploadZone({
             </div>
           </S.ZoneContainer>
           <S.ImageContainer>
-            {images.length ? (
-              images.map((image, index) => {
-                return (
-                  <S.ThumbContainer key={index} style={{ display: 'inline-flex' }}>
-                    <S.DeleteImageButton
-                      type="button"
-                      onClick={() => handleDeleteSingleImageToAdd(image)}
-                    >
-                      <P.Trash size={32} />
-                    </S.DeleteImageButton>
-                    <Image
-                      src={image.preview}
-                      alt={image.name}
-                      width={200}
-                      height={200}
-                      style={{ margin: 10 }}
-                    />
-                  </S.ThumbContainer>
-                );
-              })
-            ) : (
-              <S.ThumbContainer>
-                <h4>Nenhuma imagem nova sendo adicionada</h4>
-              </S.ThumbContainer>
-            )}
+            <S.ThumbContainer>
+              {images.length ? (
+                images.map((image, index) => {
+                  return (
+                    <div key={index} style={{ display: 'inline-flex' }}>
+                      <S.DeleteImageButton
+                        type="button"
+                        onClick={() => handleDeleteSingleImageToAdd(image)}
+                      >
+                        <P.Trash size={32} />
+                      </S.DeleteImageButton>
+                      <Image
+                        src={image.preview}
+                        alt={image.name}
+                        width={200}
+                        height={200}
+                        style={{ margin: 10 }}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <S.ThumbContainer>
+                  <h4>Nenhuma imagem nova sendo adicionada</h4>
+                </S.ThumbContainer>
+              )}
+            </S.ThumbContainer>
           </S.ImageContainer>
         </S.Container>
       )}
