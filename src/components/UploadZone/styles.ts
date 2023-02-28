@@ -59,7 +59,7 @@ export const Container = styled.div`
   }
 `;
 
-export const MainImageContainer = styled.ul`
+export const ImageContainer = styled.ul`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
@@ -71,17 +71,45 @@ export const MainImageContainer = styled.ul`
     }
   `}
 `;
+
+export const ThumbContainer = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: ${theme['gray-600']};
+  `}
+
+  h4 {
+    margin: 0;
+  }
+
+  img {
+    border-radius: 10px;
+  }
+`;
+
 export const DeleteImageButton = styled.button`
   ${({ theme }) => css`
     position: absolute;
     cursor: pointer;
 
+    height: 4rem;
+    width: 4rem;
     border: none;
     border-radius: 50%;
     padding: 4px;
 
     background-color: ${theme['red-500']};
     color: ${theme['gray-50']};
+
+    svg {
+      height: 32px;
+    }
 
     &:hover {
       transition: all ease 0.3s;

@@ -1,18 +1,22 @@
+/* eslint-disable @next/next/no-img-element */
 import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
 import Image from 'next/image';
 import VehicleDialog from '@/components/VehicleDialog';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
 import { fetchMainImageUrl } from '@/utils/fireStorage';
+import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { FormatToCurrency } from '@/utils/FormatNumber';
 
 type ComponentProps = {
   vehicle: VehicleProps;
 };
 
 export function Vehicleitem({ vehicle }: ComponentProps) {
+  const { setCloudImages } = useContext(VehiclesContext);
   const [URLsImages, setURLsImages] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -20,13 +24,17 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
     fetchMainImageUrl(vehicle.vehicleId, setURLsImages);
   }, [vehicle.vehicleId]);
 
+  const HandleOpenModal = () => {
+    setCloudImages([]);
+  };
+
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
       <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
         <P.Trash size={32} />
       </button>
       {URLsImages ? (
-        <Image
+        <img
           src={URLsImages}
           alt={vehicle.vehicleName}
           width={200}
@@ -43,7 +51,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
       </S.VehicleInfosGroup>
       <S.VehicleInfosGroup>
         <strong>Preço:</strong>
-        <span>{vehicle.vehiclePrice}</span>
+        <span>{FormatToCurrency(vehicle.vehiclePrice)}</span>
       </S.VehicleInfosGroup>
       <S.VehicleInfosGroup>
         <strong>Marca:</strong>
@@ -51,7 +59,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
       </S.VehicleInfosGroup>
       <D.Root open={open} onOpenChange={setOpen}>
         <D.Trigger asChild>
-          <S.VehicleDetailsButton>Detalhes</S.VehicleDetailsButton>
+          <S.VehicleDetailsButton onClick={HandleOpenModal}>Detalhes</S.VehicleDetailsButton>
         </D.Trigger>
         <D.Portal>
           <VehicleDialog

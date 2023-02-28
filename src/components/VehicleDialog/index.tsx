@@ -8,6 +8,7 @@ import ImagesCarrousel from '../ImagesCarrousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { fetchImagesReferenceList } from '@/utils/fireStorage';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
+import { FormatToCurrency } from '@/utils/FormatNumber';
 
 type DialogProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -31,8 +32,9 @@ export default function VehicleDialog({
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
+    setCloudImages((state) => []);
     fetchImagesReferenceList(vehicleId, setCloudImages);
-  }, [vehicleId, setCloudImages]);
+  }, []);
 
   return (
     <>
@@ -88,7 +90,7 @@ export default function VehicleDialog({
               </S.VehicleInfosGroup>
               <S.VehicleInfosGroup>
                 <strong>Preço:</strong>
-                <span>{vehiclePrice}</span>
+                <span>{FormatToCurrency(vehiclePrice)}</span>
               </S.VehicleInfosGroup>
               <label>Características do veículo:</label>
               <S.VehiclecharacteristicsContainer>

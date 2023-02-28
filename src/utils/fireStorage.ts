@@ -23,8 +23,12 @@ export const fetchImageUrl = async (
   cloudImage: StorageReference,
   setState: Dispatch<SetStateAction<string>>
 ) => {
-  const response = await getDownloadURL(ref(storage, `${vehicleId}/${cloudImage.name}`));
-  setState(response);
+  try {
+    const response = await getDownloadURL(ref(storage, `${vehicleId}/${cloudImage.name}`));
+    setState(response);
+  } catch ({ name, message }) {
+    alert(`Erro ao obter imagem do firebase:\n ${name}:${message}`);
+  }
 };
 
 export const setManyImagesUrls = (

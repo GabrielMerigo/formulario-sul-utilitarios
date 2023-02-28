@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import * as D from '@radix-ui/react-dialog';
 import * as R from '@radix-ui/react-radio-group';
+import * as M from '@mui/material';
 
 export const FieldInputsContainer = styled.div`
   ${({ theme }) => css`
@@ -70,7 +71,8 @@ export const FormContainer = styled.div`
         font-size: 1.5rem;
       }
 
-      button[type='submit'] {
+      button[type='submit'],
+      button.step {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -84,12 +86,24 @@ export const FormContainer = styled.div`
         font-weight: bold;
         cursor: pointer;
         text-decoration: none;
+      }
 
+      button[type='submit'] {
         background-color: ${theme['green-500']};
         color: ${theme['white']};
 
         &:hover {
           background-color: ${theme['green-400']};
+          transition: background-color 0.2s;
+        }
+      }
+
+      button.step {
+        background-color: ${theme['blue-500']};
+        color: ${theme['white']};
+
+        &:hover {
+          background-color: ${theme['blue-400']};
           transition: background-color 0.2s;
         }
       }
@@ -192,4 +206,33 @@ export const CloseDialogButton = styled(D.Close)`
 
     color: ${theme['gray-900']};
   `}
+`;
+
+export const StepperBox = styled(M.Box)``;
+
+export const StepperComponent = styled(M.Stepper)``;
+
+export const StepComponent = styled(M.Step)``;
+
+export const StepLabelComponent = styled(M.StepLabel)`
+  ${({ theme }) => css`
+    svg {
+      height: 4rem;
+      width: 2.5rem;
+    }
+
+    text {
+      font-size: 1.1rem;
+    }
+
+    .MuiStepLabel-label {
+      color: ${theme['gray-50']} !important;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+  `}
+`;
+
+export const StepContentComponent = styled(M.StepContent)`
+  width: 1000px;
 `;

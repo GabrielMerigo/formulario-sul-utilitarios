@@ -7,6 +7,7 @@ export const RegisterVehicleContainer = styled.div`
     align-items: center;
     justify-content: center;
     padding: 5rem 0 0 0;
+
     h2 {
       margin-bottom: 2.4rem;
       font-size: 2.4rem;
@@ -64,6 +65,10 @@ export const FormContainer = styled.div`
     text-align: center;
     max-width: 1140px;
     flex: 1;
+    padding: 2rem;
+
+    background-color: ${theme['gray-700']};
+    border-radius: 10px;
 
     form {
       display: flex;

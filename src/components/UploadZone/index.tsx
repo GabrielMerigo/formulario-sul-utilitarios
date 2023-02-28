@@ -68,7 +68,7 @@ export default function UploadZone({
   const mainThumb = () => {
     if (URLCloudMainImage && !mainImage.length) {
       return (
-        <div key={URLCloudMainImage} style={{ display: 'inline-flex' }}>
+        <S.ThumbContainer key={URLCloudMainImage} style={{ display: 'inline-flex' }}>
           <Image
             src={URLCloudMainImage}
             alt={URLCloudMainImage}
@@ -76,12 +76,12 @@ export default function UploadZone({
             height={200}
             style={{ margin: 10 }}
           />
-        </div>
+        </S.ThumbContainer>
       );
     }
     if (mainImage.length) {
       return (
-        <div key={mainImage[0].name} style={{ display: 'inline-flex' }}>
+        <S.ThumbContainer key={mainImage[0].name} style={{ display: 'inline-flex' }}>
           <Image
             src={mainImage[0].preview}
             alt={mainImage[0].name}
@@ -89,19 +89,43 @@ export default function UploadZone({
             height={200}
             style={{ margin: 10 }}
           />
-        </div>
+        </S.ThumbContainer>
       );
     }
-    return <h4>Sem Arquivos</h4>;
+    return (
+      <S.ThumbContainer>
+        <h4>Nenhuma imagem principal adicionada</h4>
+      </S.ThumbContainer>
+    );
   };
 
-  const handleDropzoneStatus = () => {
+  const handleMainImageDropzoneStatus = () => {
     if (isDragAccept) {
       return <strong>Arquivo suportado!</strong>;
     }
 
     if (isDragReject) {
       return <strong>Arquivo não suportado!</strong>;
+    }
+
+    if (setUpdating) {
+      return <strong>Arraste ou clique aqui para subistituir a imagem principal</strong>;
+    }
+
+    return <strong>Arraste ou clique aqui para inserir a imagem principal</strong>;
+  };
+
+  const handleImagesDropzoneStatus = () => {
+    if (isDragAccept) {
+      return <strong>Arquivo suportado!</strong>;
+    }
+
+    if (isDragReject) {
+      return <strong>Arquivo não suportado!</strong>;
+    }
+
+    if (setUpdating) {
+      return <strong>Arraste ou clique aqui para adicionar mais imagens</strong>;
     }
 
     return <strong>Arraste ou clique aqui para Inserir as imagens!</strong>;
@@ -124,7 +148,7 @@ export default function UploadZone({
           <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              {handleDropzoneStatus()}
+              {handleMainImageDropzoneStatus()}
             </div>
           </S.ZoneContainer>
           {mainThumb()}
@@ -132,43 +156,49 @@ export default function UploadZone({
       ) : (
         <S.Container>
           <h3>Imagens</h3>
-          <h4>Imagens Registradas:</h4>
-          <S.MainImageContainer>
-            {URLCloudImages.length ? (
-              URLCloudImages.map((image) => {
-                return (
-                  <div key={image} style={{ display: 'inline-flex' }}>
-                    <S.DeleteImageButton
-                      onClick={() => handleDeleteRegistredSingleImage(image.split('||'))}
-                    >
-                      <P.Trash size={32} />
-                    </S.DeleteImageButton>
-                    <Image
-                      src={image}
-                      alt={image}
-                      width={200}
-                      height={200}
-                      style={{ margin: 10 }}
-                    />
-                  </div>
-                );
-              })
-            ) : (
-              <h4>Nenhuma imagem registrada</h4>
-            )}
-          </S.MainImageContainer>
+          {setUpdating && (
+            <>
+              <h4>Imagens Registradas:</h4>
+              <S.ImageContainer>
+                <S.ThumbContainer>
+                  {URLCloudImages.length ? (
+                    URLCloudImages.map((image) => {
+                      return (
+                        <div key={image} style={{ display: 'inline-flex' }}>
+                          <S.DeleteImageButton
+                            onClick={() => handleDeleteRegistredSingleImage(image.split('||'))}
+                          >
+                            <P.Trash size={32} />
+                          </S.DeleteImageButton>
+                          <Image
+                            src={image}
+                            alt={image}
+                            width={200}
+                            height={200}
+                            style={{ margin: 10 }}
+                          />
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <h4>Nenhuma imagem registrada</h4>
+                  )}
+                </S.ThumbContainer>
+              </S.ImageContainer>
+            </>
+          )}
           <h4>Adicionando Imagens:</h4>
           <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              {handleDropzoneStatus()}
+              {handleImagesDropzoneStatus()}
             </div>
           </S.ZoneContainer>
-          <S.MainImageContainer>
+          <S.ImageContainer>
             {images.length ? (
               images.map((image, index) => {
                 return (
-                  <div key={index} style={{ display: 'inline-flex' }}>
+                  <S.ThumbContainer key={index} style={{ display: 'inline-flex' }}>
                     <S.DeleteImageButton
                       type="button"
                       onClick={() => handleDeleteSingleImageToAdd(image)}
@@ -182,13 +212,15 @@ export default function UploadZone({
                       height={200}
                       style={{ margin: 10 }}
                     />
-                  </div>
+                  </S.ThumbContainer>
                 );
               })
             ) : (
-              <h4>Nenhuma imagem nova sendo adicionada</h4>
+              <S.ThumbContainer>
+                <h4>Nenhuma imagem nova sendo adicionada</h4>
+              </S.ThumbContainer>
             )}
-          </S.MainImageContainer>
+          </S.ImageContainer>
         </S.Container>
       )}
     </>

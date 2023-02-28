@@ -17,8 +17,6 @@ export default function ImagesCarrousel({ cloudImage, vehicleId, thumb }: Images
   const [imageUrl, setImageUrl] = useState('');
   const { setCloudImages, cloudImages } = useContext(VehiclesContext);
 
-  fetchImageUrl(vehicleId, cloudImage, setImageUrl);
-
   const handleDeleteSingleImage = () => {
     deleteImageByStorageReference(vehicleId, cloudImage.name, cloudImages, setCloudImages);
   };

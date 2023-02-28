@@ -88,6 +88,10 @@ export const VehiclesContainer = styled.div`
         color: ${theme['red-400']};
       }
     }
+
+    img {
+      border-radius: 10px;
+    }
   `}
 `;
 

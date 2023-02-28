@@ -1,11 +1,12 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { Vehicleitem } from '@/components/Vehicleitem';
 
 export default function ListVehicles() {
-  const { vehicles } = useContext(VehiclesContext);
+  const { vehicles, setCloudImages } = useContext(VehiclesContext);
+
   return (
     <>
       <S.LinksContainer>
