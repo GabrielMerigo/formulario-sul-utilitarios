@@ -240,6 +240,17 @@ export const ImagesCarousel = styled(Carousel)`
 
 export const CarrouselContainer = styled.div`
   width: 100%;
+  height: 100rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h4 {
+    padding: 20rem;
+    font-size: 2rem;
+    font-weight: bold;
+  }
 `;
 
 export const DeleteImageButton = styled.button`

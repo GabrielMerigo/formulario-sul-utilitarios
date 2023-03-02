@@ -15,6 +15,7 @@ type ImagesCarrouselProps = {
 
 export default function ImagesCarrousel({ cloudImage, vehicleId, thumb }: ImagesCarrouselProps) {
   const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setCloudImages, cloudImages } = useContext(VehiclesContext);
 
   const handleDeleteSingleImage = () => {

@@ -95,6 +95,21 @@ export const VehiclesContainer = styled.div`
   `}
 `;
 
+export const MainImageContainer = styled.div`
+  height: 200px;
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h4 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+`;
+
 export const VehicleInfosGroup = styled.div`
   ${({ theme }) => css`
     display: flex;

@@ -19,9 +19,10 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
   const { setCloudImages } = useContext(VehiclesContext);
   const [URLsImages, setURLsImages] = useState('');
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchMainImageUrl(vehicle.vehicleId, setURLsImages);
+    fetchMainImageUrl(vehicle.vehicleId, setURLsImages, setLoading);
   }, [vehicle.vehicleId]);
 
   const HandleOpenModal = () => {
@@ -33,17 +34,19 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
       <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">
         <P.Trash size={32} />
       </button>
-      {URLsImages ? (
-        <img
-          src={URLsImages}
-          alt={vehicle.vehicleName}
-          width={200}
-          height={200}
-          style={{ margin: 10 }}
-        />
-      ) : (
-        <h3>Sem imagem</h3>
-      )}
+      <S.MainImageContainer>
+        {URLsImages && (
+          <img
+            src={URLsImages}
+            alt={vehicle.vehicleName}
+            width={200}
+            height={200}
+            style={{ margin: 10 }}
+          />
+        )}
+        {!loading && !URLsImages && <h4>Imagem principal não encontrada</h4>}
+        {loading && <h4>Carregando...</h4>}
+      </S.MainImageContainer>
       <h3>{vehicle.vehicleName}</h3>
       <S.VehicleInfosGroup>
         <strong>Tipo:</strong>

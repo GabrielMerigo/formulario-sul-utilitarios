@@ -9,12 +9,16 @@ import {
 } from 'firebase/storage';
 import { storage } from 'firebaseEnv';
 import { Dispatch, SetStateAction } from 'react';
+import { setTimeout } from 'timers/promises';
 
 export const fetchMainImageUrl = async (
   vehicleId: string,
-  setState: Dispatch<SetStateAction<string>>
+  setState: Dispatch<SetStateAction<string>>,
+  setLoadingState: Dispatch<SetStateAction<boolean>>
 ) => {
+  setLoadingState(true);
   const response = await getDownloadURL(ref(storage, `${vehicleId}/mainImage`));
+  setLoadingState(false);
   setState(response);
 };
 
@@ -45,9 +49,13 @@ export const setManyImagesUrls = (
 
 export const fetchImagesReferenceList = async (
   vehicleId: string,
-  setState: Dispatch<SetStateAction<StorageReference[]>>
+  setState: Dispatch<SetStateAction<StorageReference[]>>,
+  setLoadingState: Dispatch<SetStateAction<boolean>>
 ) => {
+  setLoadingState(true);
   const response = await list(ref(storage, vehicleId));
+
+  setLoadingState(false);
   setState((state) => response.items.reverse());
 };
 

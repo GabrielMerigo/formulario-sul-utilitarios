@@ -30,11 +30,14 @@ export default function VehicleDialog({
 }: DialogProps) {
   const { cloudImages, setCloudImages } = useContext(VehiclesContext);
   const [updating, setUpdating] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setCloudImages((state) => []);
-    fetchImagesReferenceList(vehicleId, setCloudImages);
+    fetchImagesReferenceList(vehicleId, setCloudImages, setLoading);
   }, []);
+
+  console.log(loading, cloudImages);
 
   return (
     <>
@@ -55,33 +58,35 @@ export default function VehicleDialog({
                 <P.X size={32} />
               </S.CloseDialogButton>
             </S.ButtonsContainer>
-            {cloudImages ? (
-              <S.ImagesCarousel
-                renderThumbs={() =>
-                  cloudImages.map((cloudImage) => (
-                    <ImagesCarrousel
-                      key={cloudImage.name}
-                      cloudImage={cloudImage}
-                      vehicleId={vehicleId}
-                      thumb={true}
-                    />
-                  ))
-                }
-              >
-                {cloudImages.map((cloudImage) => {
-                  return (
-                    <ImagesCarrousel
-                      key={cloudImage.name}
-                      cloudImage={cloudImage}
-                      vehicleId={vehicleId}
-                      thumb={false}
-                    />
-                  );
-                })}
-              </S.ImagesCarousel>
-            ) : (
-              <h3>Sem imagens</h3>
-            )}
+            <S.CarrouselContainer>
+              {cloudImages && (
+                <S.ImagesCarousel
+                  renderThumbs={() =>
+                    cloudImages.map((cloudImage) => (
+                      <ImagesCarrousel
+                        key={cloudImage.name}
+                        cloudImage={cloudImage}
+                        vehicleId={vehicleId}
+                        thumb={true}
+                      />
+                    ))
+                  }
+                >
+                  {cloudImages.map((cloudImage) => {
+                    return (
+                      <ImagesCarrousel
+                        key={cloudImage.name}
+                        cloudImage={cloudImage}
+                        vehicleId={vehicleId}
+                        thumb={false}
+                      />
+                    );
+                  })}
+                </S.ImagesCarousel>
+              )}
+              {loading && <h4>Carregando...</h4>}
+              {!loading && !cloudImages.length && <h4>Imagens não encontradas</h4>}
+            </S.CarrouselContainer>
             <h3>{vehicleName}</h3>
             <S.VehicleInfos>
               <S.VehicleInfosGroup>

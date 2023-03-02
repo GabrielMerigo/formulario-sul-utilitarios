@@ -1,7 +1,9 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
+import * as Z from 'zod';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { StorageReference } from 'firebase/storage';
@@ -19,6 +21,19 @@ type VehicleFormProps = {
   setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
+const newVehicleFormValidationSchema = Z.object({
+  vehicleType: Z.string().min(1, { message: 'Informe o tipo do veículo' }),
+  vehicleName: Z.string().min(1, { message: 'Informe O nome do veículo' }),
+  vehiclePrice: Z.string().min(1, { message: 'Informe o valor do veículo' }),
+  brand: Z.string().min(1, { message: 'Informe a marca' }),
+  model: Z.string().min(1, { message: 'Informe o modelo' }),
+  manufactureYear: Z.string().min(1, { message: 'Informe o ano de fabricação' }),
+  manufactureModel: Z.string().min(1, 'Informe o ano do modelo'),
+  traction: Z.string().min(1, { message: 'Informe o tipo de tração' }),
+  bodywork: Z.string().min(1, { message: 'Informe o chassi' }),
+  description: Z.string(),
+});
+
 export const VehicleForm = ({
   setUpdating,
   cloudImages,
@@ -33,6 +48,7 @@ export const VehicleForm = ({
     handleSubmit,
     formState: { errors },
   } = useForm<VehicleProps>({
+    resolver: zodResolver(newVehicleFormValidationSchema),
     defaultValues: {
       vehicleId: vehicleData?.vehicleId,
       vehicleType: vehicleData?.vehicleType,
@@ -51,7 +67,7 @@ export const VehicleForm = ({
   const steps = [
     {
       label: 'DADOS DO VEICULO',
-      description: <VehicleData control={control} register={register} />,
+      description: <VehicleData control={control} register={register} errors={errors} />,
     },
     {
       label: 'IMAGENS DO VEICULO',
@@ -124,12 +140,6 @@ export const VehicleForm = ({
             })}
           </S.StepperComponent>
         </S.StepperBox>
-        {/* <VehicleData control={control} register={register} />
-        <VehicleImages
-          setUpdating={setUpdating}
-          cloudImages={cloudImages}
-          vehicleData={vehicleData}
-        /> */}
         {activeStep === 1 ? (
           <>
             <button className="step" type="button" onClick={handleBack}>

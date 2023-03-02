@@ -1,6 +1,11 @@
 import styled, { css } from 'styled-components';
-import * as D from '@radix-ui/react-dialog';
 import * as R from '@radix-ui/react-radio-group';
+
+export const VehicleTypeLabel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 export const VehicleType = styled(R.Root)`
   display: grid;
@@ -57,7 +62,7 @@ export const InputGroup = styled.div`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     flex-direction: column;
 
     label,
@@ -94,5 +99,14 @@ export const InputGroup = styled.div`
       background-color: ${theme['gray-200']};
       color: ${theme['gray-900']};
     }
+  `}
+`;
+
+export const ErrorMessage = styled.span`
+  ${({ theme }) => css`
+    font-size: 1.1rem;
+
+    color: ${theme['red-500']};
+    font-weight: bold;
   `}
 `;
