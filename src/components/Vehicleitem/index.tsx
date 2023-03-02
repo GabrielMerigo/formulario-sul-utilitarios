@@ -2,7 +2,6 @@
 import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
-import Image from 'next/image';
 import VehicleDialog from '@/components/VehicleDialog';
 import { VehicleProps } from '@/types/VehiclesTypes';
 import { useContext, useEffect, useState } from 'react';
@@ -10,6 +9,7 @@ import { deleteVehicles } from '@/utils/fireStoreDatabase';
 import { fetchMainImageUrl } from '@/utils/fireStorage';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { FormatToCurrency } from '@/utils/FormatNumber';
+import { Loading } from '../Loading';
 
 type ComponentProps = {
   vehicle: VehicleProps;
@@ -45,7 +45,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
           />
         )}
         {!loading && !URLsImages && <h4>Imagem principal não encontrada</h4>}
-        {loading && <h4>Carregando...</h4>}
+        {loading && <Loading />}
       </S.MainImageContainer>
       <h3>{vehicle.vehicleName}</h3>
       <S.VehicleInfosGroup>

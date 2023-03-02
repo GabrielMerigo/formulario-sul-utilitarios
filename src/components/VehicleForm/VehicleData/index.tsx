@@ -2,15 +2,16 @@ import * as S from './styles';
 import * as P from 'phosphor-react';
 import { Control, Controller, FieldErrors, UseFormRegister } from 'react-hook-form';
 import { VehicleProps } from '@/types/VehiclesTypes';
-import CurrencyInput from 'react-currency-input-field';
+import CurrencyInput, { formatValue } from 'react-currency-input-field';
 
 type VehicleDataFormProps = {
   control: Control<VehicleProps, any>;
   register: UseFormRegister<VehicleProps>;
   errors: FieldErrors<VehicleProps>;
+  vehiclePrice?: number;
 };
 
-export const VehicleData = ({ control, register, errors }: VehicleDataFormProps) => {
+export const VehicleData = ({ control, register, errors, vehiclePrice }: VehicleDataFormProps) => {
   return (
     <>
       <S.VehicleTypeLabel>
@@ -53,6 +54,7 @@ export const VehicleData = ({ control, register, errors }: VehicleDataFormProps)
           <label htmlFor="vehiclePrice">Preço do veículo</label>
           <CurrencyInput
             required
+            defaultValue={vehiclePrice}
             prefix="R$"
             decimalsLimit={2}
             placeholder="R$ 0.000,00"

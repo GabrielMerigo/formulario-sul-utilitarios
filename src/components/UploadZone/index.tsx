@@ -6,6 +6,7 @@ import * as S from './styles';
 import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { setManyImagesUrls, fetchMainImageUrl, deleteImageByURL } from '@/utils/fireStorage';
+import { Loading } from '../Loading';
 
 const transformArrayType = (acceptedFiles: File[]) => {
   const propsToFile = (props: File) => props;
@@ -26,7 +27,9 @@ export default function UploadZone({
   const { setMainImage, setImages, mainImage, images } = useContext(VehiclesContext);
   const [URLCloudMainImage, setURLCloudMainImage] = useState('');
   const [URLCloudImages, setURLCloudImages] = useState<string[]>([]);
-  const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+  const [loadingMainImage, setLoadingMainImage] = useState(false);
+  const [loadingImages, setLoadingImages] = useState(false);
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     accept: acceptedImages,
     onDrop: (acceptedFiles) => {
       const transformedArray = transformArrayType(acceptedFiles);
@@ -57,11 +60,11 @@ export default function UploadZone({
     setURLCloudImages([]);
 
     if (setUpdating && cloudMainImage) {
-      fetchMainImageUrl(vehicleId!, setURLCloudMainImage);
+      fetchMainImageUrl(vehicleId!, setURLCloudMainImage, setLoadingMainImage);
     }
 
     if (setUpdating && cloudImages) {
-      setManyImagesUrls(vehicleId!, cloudImages!, setURLCloudImages);
+      setManyImagesUrls(vehicleId!, cloudImages!, setURLCloudImages, setLoadingImages);
     }
   }, []);
 
@@ -94,7 +97,8 @@ export default function UploadZone({
     }
     return (
       <S.ThumbContainer>
-        <h4>Nenhuma imagem principal adicionada</h4>
+        {!loadingMainImage && !mainImage && <h4>Nenhuma imagem principal adicionada</h4>}
+        {loadingMainImage && <Loading />}
       </S.ThumbContainer>
     );
   };
@@ -161,7 +165,7 @@ export default function UploadZone({
               <h4>Imagens Registradas:</h4>
               <S.ImageContainer>
                 <S.ThumbContainer>
-                  {URLCloudImages.length ? (
+                  {URLCloudImages.length &&
                     URLCloudImages.map((image) => {
                       return (
                         <div key={image} style={{ display: 'inline-flex' }}>
@@ -179,10 +183,9 @@ export default function UploadZone({
                           />
                         </div>
                       );
-                    })
-                  ) : (
-                    <h4>Nenhuma imagem registrada</h4>
-                  )}
+                    })}
+                  {loadingImages && <Loading />}
+                  {!loadingImages && !URLCloudImages.length && <h4>Sem imagens registradas</h4>}
                 </S.ThumbContainer>
               </S.ImageContainer>
             </>

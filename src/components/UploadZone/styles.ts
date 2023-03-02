@@ -81,15 +81,20 @@ export const ThumbContainer = styled.div`
     padding: 1rem;
     border-radius: 10px;
     background-color: ${theme['gray-600']};
+    width: 100%;
+
+    h4 {
+      margin: 0;
+    }
+
+    img {
+      border-radius: 10px;
+    }
+
+    .lds-ring {
+      margin: 0 auto;
+    }
   `}
-
-  h4 {
-    margin: 0;
-  }
-
-  img {
-    border-radius: 10px;
-  }
 `;
 
 export const DeleteImageButton = styled.button`

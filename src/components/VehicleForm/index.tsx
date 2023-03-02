@@ -24,7 +24,7 @@ type VehicleFormProps = {
 const newVehicleFormValidationSchema = Z.object({
   vehicleType: Z.string().min(1, { message: 'Informe o tipo do veículo' }),
   vehicleName: Z.string().min(1, { message: 'Informe O nome do veículo' }),
-  vehiclePrice: Z.string().min(1, { message: 'Informe o valor do veículo' }),
+  vehiclePrice: Z.coerce.string().min(1, { message: 'Informe O nome do veículo' }),
   brand: Z.string().min(1, { message: 'Informe a marca' }),
   model: Z.string().min(1, { message: 'Informe o modelo' }),
   manufactureYear: Z.string().min(1, { message: 'Informe o ano de fabricação' }),
@@ -67,7 +67,14 @@ export const VehicleForm = ({
   const steps = [
     {
       label: 'DADOS DO VEICULO',
-      description: <VehicleData control={control} register={register} errors={errors} />,
+      description: (
+        <VehicleData
+          control={control}
+          register={register}
+          errors={errors}
+          vehiclePrice={vehicleData?.vehiclePrice}
+        />
+      ),
     },
     {
       label: 'IMAGENS DO VEICULO',
@@ -99,7 +106,7 @@ export const VehicleForm = ({
     data.vehiclePrice = formattedValue;
 
     if (vehicleData) {
-      updateVehicles(data.vehicleId, data);
+      updateVehicles(vehicleData.vehicleId, { ...data, vehicleId: vehicleData.vehicleId });
       mainImage.length && uploadMainImage(data.vehicleId, mainImage);
       images.length && uploadImages(data.vehicleId, images);
       setOpen!(false);

@@ -9,6 +9,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { fetchImagesReferenceList } from '@/utils/fireStorage';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
 import { FormatToCurrency } from '@/utils/FormatNumber';
+import { Loading } from '../Loading';
 
 type DialogProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -36,8 +37,6 @@ export default function VehicleDialog({
     setCloudImages((state) => []);
     fetchImagesReferenceList(vehicleId, setCloudImages, setLoading);
   }, []);
-
-  console.log(loading, cloudImages);
 
   return (
     <>
@@ -84,7 +83,7 @@ export default function VehicleDialog({
                   })}
                 </S.ImagesCarousel>
               )}
-              {loading && <h4>Carregando...</h4>}
+              {loading && <Loading />}
               {!loading && !cloudImages.length && <h4>Imagens não encontradas</h4>}
             </S.CarrouselContainer>
             <h3>{vehicleName}</h3>
