@@ -124,8 +124,9 @@ export const VehicleForm = ({
       {setUpdating && (
         <S.ButtonsContainer>
           <div>
-            <button onClick={() => setUpdating(false)} className="update">
+            <button onClick={() => setUpdating(false)} className="leftUpdate">
               <P.ArrowBendDoubleUpLeft size={32} />
+              Sair da edição
             </button>
           </div>
           <S.CloseDialogButton aria-label="CloseDialogButton">
@@ -148,16 +149,23 @@ export const VehicleForm = ({
           </S.StepperComponent>
         </S.StepperBox>
         {activeStep === 1 ? (
-          <>
+          <S.FormButtonsContainer>
             <button className="step" type="button" onClick={handleBack}>
+              <P.ArrowFatLeft size={32} />
               Voltar etapa
             </button>
-            <button type="submit">Atualizar Informações</button>
-          </>
+            <button type="submit">
+              <P.Check size={32} />
+              Atualizar Informações
+            </button>
+          </S.FormButtonsContainer>
         ) : (
-          <button className="step" type="button" onClick={handleNext}>
-            Próxima etapa
-          </button>
+          <S.FormButtonsContainer className="next">
+            <button className="step" type="button" onClick={handleNext}>
+              Próxima etapa
+              <P.ArrowFatRight size={32} />
+            </button>
+          </S.FormButtonsContainer>
         )}
       </form>
     </S.FormContainer>

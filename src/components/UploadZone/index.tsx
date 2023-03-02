@@ -97,7 +97,7 @@ export default function UploadZone({
     }
     return (
       <S.ThumbContainer>
-        {!loadingMainImage && !mainImage && <h4>Nenhuma imagem principal adicionada</h4>}
+        {!loadingMainImage && !mainImage.length && <h4>Nenhuma imagem principal adicionada</h4>}
         {loadingMainImage && <Loading />}
       </S.ThumbContainer>
     );
@@ -148,22 +148,29 @@ export default function UploadZone({
     <>
       {imageType === 'Main' ? (
         <S.Container>
-          <h3>Imagem principal</h3>
+          <S.ImageContainer>
+            <S.TitleContainer>
+              <P.Star size={32} />
+              <h4>Imagem Principal:</h4>
+            </S.TitleContainer>
+            {mainThumb()}
+          </S.ImageContainer>
           <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               {handleMainImageDropzoneStatus()}
             </div>
           </S.ZoneContainer>
-          {mainThumb()}
         </S.Container>
       ) : (
         <S.Container>
-          <h3>Imagens</h3>
           {setUpdating && (
             <>
-              <h4>Imagens Registradas:</h4>
               <S.ImageContainer>
+                <S.TitleContainer>
+                  <P.Scroll size={32} />
+                  <h4>Imagens Registradas:</h4>
+                </S.TitleContainer>
                 <S.ThumbContainer>
                   {URLCloudImages.length &&
                     URLCloudImages.map((image) => {
@@ -190,14 +197,11 @@ export default function UploadZone({
               </S.ImageContainer>
             </>
           )}
-          <h4>Adicionando Imagens:</h4>
-          <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {handleImagesDropzoneStatus()}
-            </div>
-          </S.ZoneContainer>
           <S.ImageContainer>
+            <S.TitleContainer>
+              <P.PlusCircle size={32} />
+              <h4>Adicionando imagens:</h4>
+            </S.TitleContainer>
             <S.ThumbContainer>
               {images.length ? (
                 images.map((image, index) => {
@@ -226,6 +230,12 @@ export default function UploadZone({
               )}
             </S.ThumbContainer>
           </S.ImageContainer>
+          <S.ZoneContainer {...getRootProps({ isDragAccept, isDragReject })}>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {handleImagesDropzoneStatus()}
+            </div>
+          </S.ZoneContainer>
         </S.Container>
       )}
     </>

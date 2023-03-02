@@ -13,6 +13,7 @@ import {
 import { db, vehiclesCollection } from 'firebaseEnv';
 import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'react-toastify';
+import { deleteVehicleImagesFolder } from './fireStorage';
 
 export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<VehicleProps[]>>) => {
   try {
@@ -44,7 +45,8 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
     });
     const vehicleToDelete = doc(db, 'Vehicles', docId);
     await deleteDoc(vehicleToDelete);
-    toast('Veiculo excluído!');
+    await deleteVehicleImagesFolder(vehicleToDeleteId);
+    toast('O veiculo e todas as suas imagens foram excluídas!');
   } catch ({ message, name }) {
     toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`);
   }

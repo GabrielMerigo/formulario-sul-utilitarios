@@ -8,6 +8,7 @@ type VehiclesContextType = {
   mainImage: ImageFile[];
   images: ImageFile[];
   cloudImages: StorageReference[];
+  setVehicles: Dispatch<SetStateAction<VehicleProps[]>>;
   setMainImage: Dispatch<SetStateAction<ImageFile[]>>;
   setImages: Dispatch<SetStateAction<ImageFile[]>>;
   setCloudImages: Dispatch<SetStateAction<StorageReference[]>>;
@@ -36,6 +37,7 @@ export function VehiclesContextProvider({ children }: CyclesContextProviderProps
         mainImage,
         images,
         cloudImages,
+        setVehicles,
         setMainImage,
         setImages,
         setCloudImages,

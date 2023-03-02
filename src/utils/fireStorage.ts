@@ -57,10 +57,10 @@ export const setManyImagesUrls = (
       });
     });
     setLoadingState(false);
-  } catch ({ message, error }) {
+  } catch ({ message, name }) {
     toast(
       'Houve um erro ao carregar a lista de URL das imagens de todos os veiculos:\n' +
-        `${message}:${error}`
+        `${message}:${name}`
     );
   }
 };
@@ -75,10 +75,10 @@ export const fetchImagesReferenceList = async (
     const response = await list(ref(storage, vehicleId));
     setLoadingState(false);
     setState((state) => response.items.reverse());
-  } catch ({ message, error }) {
+  } catch ({ message, name }) {
     toast(
       'Houve um erro ao carregar a lista de referencia das imagens de todos os veiculos:\n' +
-        `${message}:${error}`
+        `${message}:${name}`
     );
   }
 };
@@ -94,8 +94,8 @@ export const deleteImageByStorageReference = async (
     const remainingImages = cloudImages.filter((image) => image.name !== cloudImageName);
     setState((state) => remainingImages);
     toast('Imagem deletada!');
-  } catch ({ message, error }) {
-    toast('Houve um erro com a exclusão da imagem:\n' + `${message}:${error}`);
+  } catch ({ message, name }) {
+    toast('Houve um erro com a exclusão da imagem:\n' + `${message}:${name}`);
   }
 };
 
@@ -110,8 +110,19 @@ export const deleteImageByURL = async (
     const remainingUrls = URLCloudImages.filter((url) => url.split('||')[0] !== URLCloudName[0]);
     setState((state) => remainingUrls);
     toast('Imagem Deletada!');
-  } catch ({ message, error }) {
-    toast('Houve um erro com a exclusão da imagem:\n' + `${message}:${error}`);
+  } catch ({ message, name }) {
+    toast('Houve um erro com a exclusão da imagem:\n' + `${message}:${name}`);
+  }
+};
+
+export const deleteVehicleImagesFolder = async (vehicleId: string) => {
+  try {
+    const imagesList = await list(ref(storage, vehicleId));
+    imagesList.items.forEach((image) => {
+      const deleteFile = deleteObject(ref(storage, `${vehicleId}/${image.name}`));
+    });
+  } catch ({ message, name }) {
+    toast('Houve um erro com a exclusão da pasta de imagem do veiculo:\n\n' + `${message}:${name}`);
   }
 };
 
@@ -120,8 +131,8 @@ export const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
     const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
     uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {});
     toast('Imagem principal Salva!');
-  } catch ({ message, error }) {
-    toast('Houve um erro com ao registrar a imagem principal:\n' + `${message}:${error}`);
+  } catch ({ message, name }) {
+    toast('Houve um erro com ao registrar a imagem principal:\n' + `${message}:${name}`);
   }
 };
 
@@ -132,7 +143,7 @@ export const uploadImages = (vehicleId: string, Images: ImageFile[]) => {
       uploadBytes(ImagesStorageRef, image);
     });
     toast('Imagens Registradas!');
-  } catch ({ message, error }) {
-    toast('Houve um erro com ao registrar as imagens:\n' + `${message}:${error}`);
+  } catch ({ message, name }) {
+    toast('Houve um erro com ao registrar as imagens:\n' + `${message}:${name}`);
   }
 };

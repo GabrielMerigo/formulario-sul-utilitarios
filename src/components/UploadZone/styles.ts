@@ -40,6 +40,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-bottom: 2rem;
 
   h3 {
     width: 100%;
@@ -66,8 +67,34 @@ export const ImageContainer = styled.ul`
     justify-content: start;
     flex-wrap: wrap;
 
+    background-color: ${theme['gray-600']};
+
+    border-radius: 10px;
+    margin-bottom: 2rem;
+
     li {
       list-style: none;
+    }
+  `}
+`;
+
+export const TitleContainer = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    width: 100%;
+    border-radius: 10px;
+    border-bottom: 1px solid ${theme['gray-50']};
+
+    h4 {
+      width: initial;
+      justify-self: flex-start;
+      padding-bottom: 10px;
+      margin: 0;
+      padding: 0;
     }
   `}
 `;
@@ -79,8 +106,7 @@ export const ThumbContainer = styled.div`
     text-align: center;
     margin: 1rem 0;
     padding: 1rem;
-    border-radius: 10px;
-    background-color: ${theme['gray-600']};
+
     width: 100%;
 
     h4 {

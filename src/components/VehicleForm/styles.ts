@@ -167,29 +167,24 @@ export const ButtonsContainer = styled.div`
     width: 100%;
     padding: 2rem;
 
-    button.delete {
+    button.leftUpdate {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       align-self: flex-end;
       cursor: pointer;
-      background-color: transparent;
-      color: ${theme['gray-50']};
-      border: none;
-      margin-right: 2rem;
-      &:hover {
-        transition: background ease 0.7s;
-        color: ${theme['red-400']};
-      }
-    }
 
-    button.update {
-      align-self: flex-end;
-      cursor: pointer;
-      background-color: transparent;
+      padding: 1rem;
+      border-radius: 10px;
+
+      background-color: ${theme['red-500']};
       color: ${theme['gray-50']};
       border: none;
       margin-right: 2rem;
+
       &:hover {
         transition: background ease 0.7s;
-        color: ${theme['blue-500']};
+        background-color: ${theme['red-400']};
       }
     }
   `}
@@ -235,4 +230,21 @@ export const StepLabelComponent = styled(M.StepLabel)`
 
 export const StepContentComponent = styled(M.StepContent)`
   width: 1000px;
+`;
+export const FormButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 3.2rem;
+
+  &.next {
+    justify-content: flex-end;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+  }
 `;
