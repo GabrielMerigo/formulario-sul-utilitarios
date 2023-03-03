@@ -29,7 +29,6 @@ export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<Vehicle
 export const postVehicles = async (vehicleToPost: VehicleProps) => {
   try {
     await addDoc(vehiclesCollection, vehicleToPost);
-    toast('Veiculo adicionado!');
   } catch ({ message, name }) {
     toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`);
   }
@@ -62,7 +61,6 @@ export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: Vehi
     });
     const vehicleDoc = doc(db, 'Vehicles', docId);
     await updateDoc(vehicleDoc, UpdateData);
-    toast('Dados do veiculo Atualizados!');
   } catch ({ message, name }) {
     toast('Houve um erro com a atualização de dados do veiculo:\n' + `${message}:${name}`);
   }

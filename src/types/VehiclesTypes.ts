@@ -13,6 +13,7 @@ export type VehicleProps = {
   traction: string;
   bodywork: string;
   description: string;
+  created_at: Date;
   File?: ImageFile[];
 };
 

@@ -88,6 +88,7 @@ export const TitleContainer = styled.div`
     width: 100%;
     border-radius: 10px;
     border-bottom: 1px solid ${theme['gray-50']};
+    box-shadow: 0 2px 5px ${theme['gray-900']};
 
     h4 {
       width: initial;

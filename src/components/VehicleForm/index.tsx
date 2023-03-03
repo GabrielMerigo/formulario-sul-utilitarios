@@ -13,6 +13,7 @@ import { formatValue } from '@/utils/FormatNumberValue';
 import { VehicleData } from './VehicleData';
 import { VehicleImages } from './VehicleImages';
 import router from 'next/router';
+import { toast } from 'react-toastify';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
@@ -27,11 +28,12 @@ const newVehicleFormValidationSchema = Z.object({
   vehiclePrice: Z.coerce.string().min(1, { message: 'Informe O nome do veículo' }),
   brand: Z.string().min(1, { message: 'Informe a marca' }),
   model: Z.string().min(1, { message: 'Informe o modelo' }),
-  manufactureYear: Z.string().min(1, { message: 'Informe o ano de fabricação' }),
-  manufactureModel: Z.string().min(1, 'Informe o ano do modelo'),
+  manufactureYear: Z.string().min(4, { message: 'Informe o ano de fabricação' }),
+  manufactureModel: Z.string().min(4, 'Informe o ano do modelo'),
   traction: Z.string().min(1, { message: 'Informe o tipo de tração' }),
   bodywork: Z.string().min(1, { message: 'Informe o chassi' }),
-  description: Z.string(),
+  description: Z.coerce.string(),
+  // created_at: Z.coerce.date(),
 });
 
 export const VehicleForm = ({
@@ -42,6 +44,7 @@ export const VehicleForm = ({
 }: VehicleFormProps) => {
   const { mainImage, images, setMainImage, setImages } = useContext(VehiclesContext);
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [sedingData, setSendingData] = useState(false);
   const {
     control,
     register,
@@ -63,7 +66,7 @@ export const VehicleForm = ({
       description: vehicleData?.description,
     },
   });
-
+  console.log(errors);
   const steps = [
     {
       label: 'DADOS DO VEICULO',
@@ -100,23 +103,29 @@ export const VehicleForm = ({
     return Math.random().toString(36).substr(2, 9);
   }
 
-  const onSubmit: SubmitHandler<VehicleProps> = (data) => {
+  const onSubmit: SubmitHandler<VehicleProps> = async (data) => {
     const generateId = generateUniqueId();
     const formattedValue = formatValue(String(data.vehiclePrice));
     data.vehiclePrice = formattedValue;
 
     if (vehicleData) {
-      updateVehicles(vehicleData.vehicleId, { ...data, vehicleId: vehicleData.vehicleId });
-      mainImage.length && uploadMainImage(data.vehicleId, mainImage);
-      images.length && uploadImages(data.vehicleId, images);
+      updateVehicles(vehicleData.vehicleId, {
+        ...data,
+        vehicleId: vehicleData.vehicleId,
+        // created_at: new Date(),
+      });
+      mainImage.length && uploadMainImage(data.vehicleId, mainImage, setSendingData);
+      images.length && uploadImages(data.vehicleId, images, setSendingData);
       setOpen!(false);
-      router.push('ListVehicles/');
+      toast('Os dados do veiculo foram atualizados');
+      !sedingData && router.push('ListVehicles/');
       return;
     }
-    mainImage.length && uploadMainImage(generateId, mainImage);
-    images.length && uploadImages(generateId, images);
+    mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
+    images.length && (await uploadImages(generateId, images, setSendingData));
     postVehicles({ ...data, vehicleId: generateId });
-    router.push('ListVehicles/');
+    toast('Veiculo registrado!');
+    !sedingData && router.push('ListVehicles/');
   };
 
   return (

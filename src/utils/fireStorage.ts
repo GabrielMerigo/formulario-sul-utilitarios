@@ -10,7 +10,6 @@ import {
 import { storage } from 'firebaseEnv';
 import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'react-toastify';
-import { setTimeout } from 'timers/promises';
 
 export const fetchMainImageUrl = async (
   vehicleId: string,
@@ -51,8 +50,8 @@ export const setManyImagesUrls = (
 ) => {
   try {
     setLoadingState(true);
-    cloudImageArray.forEach((image) => {
-      getDownloadURL(ref(storage, `${vehicleId}/${image.name}`)).then((url: string) => {
+    cloudImageArray.forEach(async (image) => {
+      await getDownloadURL(ref(storage, `${vehicleId}/${image.name}`)).then((url: string) => {
         setState((state: string[]) => [...state, `${url}||${image.name}`]);
       });
     });
@@ -126,24 +125,36 @@ export const deleteVehicleImagesFolder = async (vehicleId: string) => {
   }
 };
 
-export const uploadMainImage = (vehicleId: string, mainImage: ImageFile[]) => {
+export const uploadMainImage = async (
+  vehicleId: string,
+  mainImage: ImageFile[],
+  setSendingDataState: Dispatch<SetStateAction<boolean>>
+) => {
   try {
+    setSendingDataState(true);
     const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
-    uploadBytes(mainImageStorageRef, mainImage[0]).then((snapshot) => {});
-    toast('Imagem principal Salva!');
+    await uploadBytes(mainImageStorageRef, mainImage[0]);
+    setSendingDataState(false);
   } catch ({ message, name }) {
+    setSendingDataState(false);
     toast('Houve um erro com ao registrar a imagem principal:\n' + `${message}:${name}`);
   }
 };
 
-export const uploadImages = (vehicleId: string, Images: ImageFile[]) => {
+export const uploadImages = async (
+  vehicleId: string,
+  Images: ImageFile[],
+  setSendingDataState: Dispatch<SetStateAction<boolean>>
+) => {
   try {
-    Images.forEach((image) => {
+    setSendingDataState(true);
+    Images.forEach(async (image) => {
       const ImagesStorageRef = ref(storage, `${vehicleId}/${image.name}`);
-      uploadBytes(ImagesStorageRef, image);
+      await uploadBytes(ImagesStorageRef, image);
     });
-    toast('Imagens Registradas!');
+    setSendingDataState(false);
   } catch ({ message, name }) {
+    setSendingDataState(false);
     toast('Houve um erro com ao registrar as imagens:\n' + `${message}:${name}`);
   }
 };
