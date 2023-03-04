@@ -7,7 +7,6 @@ export const ListVehicleContainer = styled.div`
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-    padding: 5rem 4rem 5rem 4rem;
     margin: 5rem auto 0 auto;
     width: calc(100vw - 20rem);
     background-color: ${theme['gray-800']};
@@ -39,7 +38,6 @@ export const LinkItem = styled(Link)`
     justify-content: center;
     text-decoration: none;
 
-    padding: 2rem;
     font-size: 2rem;
     height: 7rem;
     border-radius: 10px;
@@ -57,6 +55,7 @@ export const LinkItem = styled(Link)`
 
 export const VehiclesContainer = styled.div`
   ${({ theme }) => css`
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -64,8 +63,6 @@ export const VehiclesContainer = styled.div`
     text-align: center;
     flex-wrap: wrap;
     gap: 1rem;
-
-    padding: 2rem;
 
     border-radius: 10px;
     border: 1px solid ${theme['gray-500']};
@@ -78,11 +75,18 @@ export const VehiclesContainer = styled.div`
     }
 
     button.delete {
+      position: absolute;
+      z-index: 2;
+      top: -10px;
+      right: -10px;
       align-self: flex-end;
       cursor: pointer;
-      background-color: transparent;
       color: ${theme['gray-50']};
       border: none;
+      background-color: ${theme['red-500']};
+      border-radius: 50%;
+      padding: 0.5rem;
+
       &:hover {
         transition: background ease 0.7s;
         color: ${theme['red-400']};
@@ -90,14 +94,15 @@ export const VehiclesContainer = styled.div`
     }
 
     img {
-      border-radius: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
     }
   `}
 `;
 
 export const MainImageContainer = styled.div`
-  height: 200px;
-  width: 200px;
+  height: 100%;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -110,20 +115,27 @@ export const MainImageContainer = styled.div`
   }
 `;
 
+export const CardDataContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+`;
+
 export const VehicleInfosGroup = styled.div`
   ${({ theme }) => css`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-
-    width: 100%;
+    margin: 0 1rem;
 
     span {
-      font-size: 2rem;
+      font-size: 1.7rem;
     }
 
     strong {
-      font-size: 2rem;
+      font-size: 1.7rem;
     }
   `}
 `;
@@ -135,18 +147,18 @@ export const VehicleDetailsButton = styled.button`
 
     font-size: 1.5rem;
     margin-top: 1rem;
-    padding: 2rem 0;
-    width: 100%;
+    padding: 2rem 1rem;
 
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 
-    color: ${theme['gray-900']};
-    background-color: ${theme['gray-400']};
-    border: 1px solid ${theme['gray-300']};
+    color: ${theme['gray-50']};
+    background-color: ${theme['blue-500']};
+    border: none;
 
     &:hover {
       transition: background-color ease 0.3s;
-      background-color: ${theme['gray-200']};
+      background-color: ${theme['blue-400']};
     }
   `}
 `;

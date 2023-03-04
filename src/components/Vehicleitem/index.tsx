@@ -35,52 +35,46 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
         <P.Trash size={32} />
       </button>
       <S.MainImageContainer>
-        {URLsImages && (
-          <img
-            src={URLsImages}
-            alt={vehicle.vehicleName}
-            width={200}
-            height={200}
-            style={{ margin: 10 }}
-          />
-        )}
+        {URLsImages && <img src={URLsImages} alt={vehicle.vehicleName} width={250} height={250} />}
         {!loading && !URLsImages && <h4>Imagem principal não encontrada</h4>}
         {loading && <Loading />}
       </S.MainImageContainer>
-      <h3>{vehicle.vehicleName}</h3>
-      <S.VehicleInfosGroup>
-        <strong>Tipo:</strong>
-        <span>{vehicle.vehicleType}</span>
-      </S.VehicleInfosGroup>
-      <S.VehicleInfosGroup>
-        <strong>Preço:</strong>
-        <span>{FormatToCurrency(vehicle.vehiclePrice)}</span>
-      </S.VehicleInfosGroup>
-      <S.VehicleInfosGroup>
-        <strong>Marca:</strong>
-        <span>{vehicle.brand}</span>
-      </S.VehicleInfosGroup>
-      <D.Root open={open} onOpenChange={setOpen}>
-        <D.Trigger asChild>
-          <S.VehicleDetailsButton onClick={HandleOpenModal}>Detalhes</S.VehicleDetailsButton>
-        </D.Trigger>
-        <D.Portal>
-          <VehicleDialog
-            vehicleId={vehicle.vehicleId}
-            vehicleType={vehicle.vehicleType}
-            vehicleName={vehicle.vehicleName}
-            vehiclePrice={vehicle.vehiclePrice}
-            brand={vehicle.brand}
-            model={vehicle.model}
-            manufactureYear={vehicle.manufactureYear}
-            manufactureModel={vehicle.manufactureModel}
-            traction={vehicle.traction}
-            bodywork={vehicle.bodywork}
-            description={vehicle.description}
-            setOpen={setOpen}
-          />
-        </D.Portal>
-      </D.Root>
+      <S.CardDataContainer>
+        <h3>{vehicle.vehicleName}</h3>
+        <S.VehicleInfosGroup>
+          <strong>Tipo:</strong>
+          <span>{vehicle.vehicleType}</span>
+        </S.VehicleInfosGroup>
+        <S.VehicleInfosGroup>
+          <strong>Preço:</strong>
+          <span>{FormatToCurrency(vehicle.vehiclePrice)}</span>
+        </S.VehicleInfosGroup>
+        <S.VehicleInfosGroup>
+          <strong>Marca:</strong>
+          <span>{vehicle.brand}</span>
+        </S.VehicleInfosGroup>
+        <D.Root open={open} onOpenChange={setOpen}>
+          <D.Trigger asChild>
+            <S.VehicleDetailsButton onClick={HandleOpenModal}>Detalhes</S.VehicleDetailsButton>
+          </D.Trigger>
+          <D.Portal>
+            <VehicleDialog
+              vehicleId={vehicle.vehicleId}
+              vehicleType={vehicle.vehicleType}
+              vehicleName={vehicle.vehicleName}
+              vehiclePrice={vehicle.vehiclePrice}
+              brand={vehicle.brand}
+              model={vehicle.model}
+              manufactureYear={vehicle.manufactureYear}
+              manufactureModel={vehicle.manufactureModel}
+              traction={vehicle.traction}
+              bodywork={vehicle.bodywork}
+              description={vehicle.description}
+              setOpen={setOpen}
+            />
+          </D.Portal>
+        </D.Root>
+      </S.CardDataContainer>
     </S.VehiclesContainer>
   );
 }
