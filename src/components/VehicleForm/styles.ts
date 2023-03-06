@@ -246,5 +246,14 @@ export const FormButtonsContainer = styled.div`
     align-items: center;
     gap: 1rem;
     padding: 2rem;
+
+    .lds-ring {
+      width: 46px;
+      height: 56px;
+      div {
+        width: 40px;
+        height: 40px;
+      }
+    }
   }
 `;

@@ -14,6 +14,7 @@ import { VehicleData } from './VehicleData';
 import { VehicleImages } from './VehicleImages';
 import router from 'next/router';
 import { toast } from 'react-toastify';
+import { Loading } from '../Loading';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
@@ -45,6 +46,7 @@ export const VehicleForm = ({
   const { mainImage, images, setMainImage, setImages } = useContext(VehiclesContext);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [sedingData, setSendingData] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {
     control,
     register,
@@ -123,7 +125,7 @@ export const VehicleForm = ({
     }
     mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
     images.length && (await uploadImages(generateId, images, setSendingData));
-    postVehicles({ ...data, vehicleId: generateId, created_at: new Date() });
+    postVehicles({ ...data, vehicleId: generateId, created_at: new Date() }, setLoading);
     toast('Veiculo registrado!', { theme: 'dark' });
     !sedingData && router.push('ListVehicles/');
   };
@@ -164,7 +166,7 @@ export const VehicleForm = ({
               Voltar etapa
             </button>
             <button type="submit">
-              <P.Check size={32} />
+              {loading ? <Loading /> : <P.Check size={32} />}
               Atualizar Informações
             </button>
           </S.FormButtonsContainer>

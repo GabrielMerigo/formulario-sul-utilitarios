@@ -33,10 +33,16 @@ export const fetchVehicles = async (
   }
 };
 
-export const postVehicles = async (vehicleToPost: CreateVehicleProps) => {
+export const postVehicles = async (
+  vehicleToPost: CreateVehicleProps,
+  setLoadingState: Dispatch<SetStateAction<boolean>>
+) => {
   try {
+    setLoadingState(true);
     await addDoc(vehiclesCollection, vehicleToPost);
+    setLoadingState(false);
   } catch ({ message, name }) {
+    setLoadingState(false);
     toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, { theme: 'dark' });
   }
 };
