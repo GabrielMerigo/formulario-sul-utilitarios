@@ -119,14 +119,14 @@ export const VehicleForm = ({
       mainImage.length && uploadMainImage(data.vehicleId, mainImage, setSendingData);
       images.length && uploadImages(data.vehicleId, images, setSendingData);
       setOpen!(false);
-      toast('Os dados do veiculo foram atualizados', { theme: 'dark' });
+      toast('Os dados do veiculo foram atualizados', { className: 'success' });
       !sedingData && router.push('ListVehicles/');
       return;
     }
     mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
     images.length && (await uploadImages(generateId, images, setSendingData));
     postVehicles({ ...data, vehicleId: generateId, created_at: new Date() }, setLoading);
-    toast('Veiculo registrado!', { theme: 'dark' });
+    toast('Veiculo registrado!', { className: 'success' });
     !sedingData && router.push('ListVehicles/');
   };
 

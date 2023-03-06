@@ -26,8 +26,6 @@ export function Vehicleitem(vehicle: FirebaseVehicleProps) {
     setCloudImages([]);
   };
 
-  console.log(vehicle.created_at);
-
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
       <button onClick={() => deleteVehicles(vehicle.vehicleId)} className="delete">

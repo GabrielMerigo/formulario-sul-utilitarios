@@ -28,7 +28,7 @@ export const fetchVehicles = async (
     });
   } catch ({ message, name }) {
     toast('Houve um erro ao carregar os dados veiculos:\n' + `${message}:${name}`, {
-      theme: 'dark',
+      className: 'error',
     });
   }
 };
@@ -43,7 +43,9 @@ export const postVehicles = async (
     setLoadingState(false);
   } catch ({ message, name }) {
     setLoadingState(false);
-    toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, { theme: 'dark' });
+    toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, {
+      className: 'error',
+    });
   }
 };
 
@@ -58,9 +60,11 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
     const vehicleToDelete = doc(db, 'Vehicles', docId);
     await deleteDoc(vehicleToDelete);
     await deleteVehicleImagesFolder(vehicleToDeleteId);
-    toast('O veiculo e todas as suas imagens foram excluídas!', { theme: 'dark' });
+    toast('O veiculo e todas as suas imagens foram excluídas!', { className: 'success' });
   } catch ({ message, name }) {
-    toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`, { theme: 'dark' });
+    toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`, {
+      className: 'error',
+    });
   }
 };
 
@@ -76,7 +80,7 @@ export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: Crea
     await updateDoc(vehicleDoc, UpdateData);
   } catch ({ message, name }) {
     toast('Houve um erro com a atualização de dados do veiculo:\n' + `${message}:${name}`, {
-      theme: 'dark',
+      className: 'error',
     });
   }
 };
