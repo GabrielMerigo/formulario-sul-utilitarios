@@ -26,6 +26,7 @@ export const Content = styled(D.Content)`
     align-items: center;
     justify-content: space-between;
     overflow-y: auto;
+    overflow-x: hidden;
 
     border-radius: 10px;
     position: fixed;

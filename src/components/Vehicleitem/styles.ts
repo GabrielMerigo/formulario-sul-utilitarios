@@ -114,13 +114,14 @@ export const VehiclesContainer = styled.div`
 `;
 
 export const MainImageContainer = styled.div`
-  height: 100%;
-  width: 100%;
+  height: 250px;
+  width: 250px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
 
   h4 {
     font-size: 2rem;

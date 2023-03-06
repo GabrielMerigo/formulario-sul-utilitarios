@@ -116,18 +116,22 @@ export const VehicleForm = ({
         vehicleId: vehicleData.vehicleId,
         created_at: vehicleData.created_at,
       });
-      mainImage.length && uploadMainImage(data.vehicleId, mainImage, setSendingData);
-      images.length && uploadImages(data.vehicleId, images, setSendingData);
+      mainImage.length > 0 &&
+        (await uploadMainImage(vehicleData.vehicleId, mainImage, setSendingData));
+      images.length > 0 && (await uploadImages(vehicleData.vehicleId, images, setSendingData));
       setOpen!(false);
       toast('Os dados do veiculo foram atualizados', { className: 'success' });
-      !sedingData && router.push('ListVehicles/');
       return;
     }
-    mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
-    images.length && (await uploadImages(generateId, images, setSendingData));
-    postVehicles({ ...data, vehicleId: generateId, created_at: new Date() }, setLoading);
-    toast('Veiculo registrado!', { className: 'success' });
-    !sedingData && router.push('ListVehicles/');
+
+    mainImage.length > 0 && (await uploadMainImage(generateId, mainImage, setSendingData));
+    images.length > 0 && (await uploadImages(generateId, images, setSendingData));
+    await postVehicles({ ...data, vehicleId: generateId, created_at: new Date() }, setLoading);
+    toast('Veiculo registrado!', { className: 'success', autoClose: 5000 });
+    !sedingData &&
+      setTimeout(() => {
+        router.push('ListVehicles/');
+      }, 3000);
   };
 
   return (

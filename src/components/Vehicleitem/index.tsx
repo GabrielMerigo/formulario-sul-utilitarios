@@ -20,7 +20,7 @@ export function Vehicleitem(vehicle: FirebaseVehicleProps) {
 
   useEffect(() => {
     fetchMainImageUrl(vehicle.vehicleId, setURLsImages, setLoading);
-  }, [vehicle.vehicleId]);
+  }, [vehicle.vehicleId, open]);
 
   const HandleOpenModal = () => {
     setCloudImages([]);
@@ -33,7 +33,12 @@ export function Vehicleitem(vehicle: FirebaseVehicleProps) {
       </button>
       <S.MainImageContainer>
         {URLsImages && <img src={URLsImages} alt={vehicle.vehicleName} />}
-        {!loading && !URLsImages && <h4>Imagem principal não encontrada</h4>}
+        {!loading && !URLsImages && (
+          <>
+            <P.FileDotted size={50} />
+            <h4>Imagem principal não encontrada</h4>
+          </>
+        )}
         {loading && <Loading />}
       </S.MainImageContainer>
       <S.CardDataContainer>

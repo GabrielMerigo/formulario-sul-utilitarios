@@ -22,6 +22,7 @@ export const fetchMainImageUrl = async (
     setLoadingState(false);
     setState(response);
   } catch ({ message, name }) {
+    setLoadingState(false);
     toast(
       'Houve um erro ao carregar a(s) imagem(s) principal(ais) do(s) veiculo(s):\n' +
         `${message}:${name}`,

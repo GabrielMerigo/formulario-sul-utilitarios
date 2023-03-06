@@ -4,6 +4,7 @@ export const ThumbContainer = styled.div`
   img {
     max-width: 100%;
     height: auto;
+    aspect-ratio: 3/2;
   }
 `;
 
