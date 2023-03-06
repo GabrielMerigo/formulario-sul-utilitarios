@@ -35,7 +35,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
         <P.Trash size={32} />
       </button>
       <S.MainImageContainer>
-        {URLsImages && <img src={URLsImages} alt={vehicle.vehicleName} width={250} height={250} />}
+        {URLsImages && <img src={URLsImages} alt={vehicle.vehicleName} />}
         {!loading && !URLsImages && <h4>Imagem principal não encontrada</h4>}
         {loading && <Loading />}
       </S.MainImageContainer>

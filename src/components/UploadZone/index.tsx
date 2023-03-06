@@ -113,7 +113,7 @@ export default function UploadZone({
     }
 
     if (setUpdating) {
-      return <strong>Arraste ou clique aqui para subistituir a imagem principal</strong>;
+      return <strong>Arraste ou clique aqui para substituir a imagem principal</strong>;
     }
 
     return <strong>Arraste ou clique aqui para inserir a imagem principal</strong>;

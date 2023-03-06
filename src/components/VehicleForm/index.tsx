@@ -24,8 +24,8 @@ type VehicleFormProps = {
 
 const newVehicleFormValidationSchema = Z.object({
   vehicleType: Z.string().min(1, { message: 'Informe o tipo do veículo' }),
-  vehicleName: Z.string().min(1, { message: 'Informe O nome do veículo' }),
-  vehiclePrice: Z.coerce.string().min(1, { message: 'Informe O nome do veículo' }),
+  vehicleName: Z.string().min(1, { message: 'Informe o nome do veículo' }),
+  vehiclePrice: Z.coerce.string().min(1, { message: 'Informe o valor do veículo' }),
   brand: Z.string().min(1, { message: 'Informe a marca' }),
   model: Z.string().min(1, { message: 'Informe o modelo' }),
   manufactureYear: Z.string().min(4, { message: 'Informe o ano de fabricação' }),
@@ -117,14 +117,14 @@ export const VehicleForm = ({
       mainImage.length && uploadMainImage(data.vehicleId, mainImage, setSendingData);
       images.length && uploadImages(data.vehicleId, images, setSendingData);
       setOpen!(false);
-      toast('Os dados do veiculo foram atualizados');
+      toast('Os dados do veiculo foram atualizados', { theme: 'dark' });
       !sedingData && router.push('ListVehicles/');
       return;
     }
     mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
     images.length && (await uploadImages(generateId, images, setSendingData));
     postVehicles({ ...data, vehicleId: generateId });
-    toast('Veiculo registrado!');
+    toast('Veiculo registrado!', { theme: 'dark' });
     !sedingData && router.push('ListVehicles/');
   };
 

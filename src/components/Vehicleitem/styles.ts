@@ -1,3 +1,4 @@
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 
@@ -76,7 +77,7 @@ export const VehiclesContainer = styled.div`
 
     button.delete {
       position: absolute;
-      z-index: 2;
+      z-index: 1;
       top: -10px;
       right: -10px;
       align-self: flex-end;
@@ -94,9 +95,21 @@ export const VehiclesContainer = styled.div`
     }
 
     img {
+      width: 250px;
+      height: 250px;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+    img {
+      width: 150px;
+      height: 150px;
+    }
+    `)}
   `}
 `;
 

@@ -22,7 +22,9 @@ export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<Vehicle
       setVehicles(vehicles);
     });
   } catch ({ message, name }) {
-    toast('Houve um erro ao carregar os dados veiculos:\n' + `${message}:${name}`);
+    toast('Houve um erro ao carregar os dados veiculos:\n' + `${message}:${name}`, {
+      theme: 'dark',
+    });
   }
 };
 
@@ -30,7 +32,7 @@ export const postVehicles = async (vehicleToPost: VehicleProps) => {
   try {
     await addDoc(vehiclesCollection, vehicleToPost);
   } catch ({ message, name }) {
-    toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`);
+    toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, { theme: 'dark' });
   }
 };
 
@@ -45,9 +47,9 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
     const vehicleToDelete = doc(db, 'Vehicles', docId);
     await deleteDoc(vehicleToDelete);
     await deleteVehicleImagesFolder(vehicleToDeleteId);
-    toast('O veiculo e todas as suas imagens foram excluídas!');
+    toast('O veiculo e todas as suas imagens foram excluídas!', { theme: 'dark' });
   } catch ({ message, name }) {
-    toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`);
+    toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`, { theme: 'dark' });
   }
 };
 
@@ -62,6 +64,8 @@ export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: Vehi
     const vehicleDoc = doc(db, 'Vehicles', docId);
     await updateDoc(vehicleDoc, UpdateData);
   } catch ({ message, name }) {
-    toast('Houve um erro com a atualização de dados do veiculo:\n' + `${message}:${name}`);
+    toast('Houve um erro com a atualização de dados do veiculo:\n' + `${message}:${name}`, {
+      theme: 'dark',
+    });
   }
 };

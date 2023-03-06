@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 
 export const Overlay = styled(D.Overlay)`
   ${({ theme }) => css`
+    z-index: 2;
     background: rgba(0 0 0 / 0.5);
     position: fixed;
     top: 0;
@@ -19,6 +20,7 @@ export const Overlay = styled(D.Overlay)`
 
 export const Content = styled(D.Content)`
   ${({ theme }) => css`
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,7 +138,7 @@ export const VehiclecharacteristicsContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     gap: 1.5rem;
     padding: 1rem;
 
@@ -151,6 +153,7 @@ export const VehiclecharacteristicsGroup = styled.div`
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    gap: 0.5rem;
 
     background-color: ${theme['gray-900']};
     border-radius: 30px;

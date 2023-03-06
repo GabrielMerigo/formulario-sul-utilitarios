@@ -14,7 +14,7 @@ export default function RegisterVehicle() {
         </S.LinkItem>
       </S.LinksContainer>
       <S.FormContainer>
-        <h2>Registar Veiculo</h2>
+        <h2>Registrar Veiculo</h2>
         <VehicleForm />
       </S.FormContainer>
     </S.RegisterVehicleContainer>
