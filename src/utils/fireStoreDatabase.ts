@@ -1,4 +1,4 @@
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { CreateVehicleProps, FirebaseVehicleProps } from '@/types/VehiclesTypes';
 import {
   addDoc,
   deleteDoc,
@@ -15,11 +15,16 @@ import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'react-toastify';
 import { deleteVehicleImagesFolder } from './fireStorage';
 
-export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<VehicleProps[]>>) => {
+export const fetchVehicles = async (
+  setVehicles: Dispatch<SetStateAction<FirebaseVehicleProps[]>>
+) => {
   try {
     onSnapshot(vehiclesCollection, (snapshot) => {
-      const vehicles = snapshot.docs.map((doc) => doc.data() as VehicleProps);
-      setVehicles(vehicles);
+      const vehicles = snapshot.docs.map((doc) => doc.data() as FirebaseVehicleProps);
+      const orderedVehicles = vehicles.sort((a, b) => {
+        return b.created_at.toDate().getTime() - a.created_at.toDate().getTime();
+      });
+      setVehicles(orderedVehicles);
     });
   } catch ({ message, name }) {
     toast('Houve um erro ao carregar os dados veiculos:\n' + `${message}:${name}`, {
@@ -28,7 +33,7 @@ export const fetchVehicles = async (setVehicles: Dispatch<SetStateAction<Vehicle
   }
 };
 
-export const postVehicles = async (vehicleToPost: VehicleProps) => {
+export const postVehicles = async (vehicleToPost: CreateVehicleProps) => {
   try {
     await addDoc(vehiclesCollection, vehicleToPost);
   } catch ({ message, name }) {
@@ -53,7 +58,7 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
   }
 };
 
-export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: VehicleProps) => {
+export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: CreateVehicleProps) => {
   try {
     const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToUpdateid));
     const querySnapshot = await getDocs(q);

@@ -1,5 +1,5 @@
 import UploadZone from '@/components/UploadZone';
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { CreateVehicleProps } from '@/types/VehiclesTypes';
 import { StorageReference } from 'firebase/storage';
 import { Dispatch, SetStateAction } from 'react';
 import * as S from './styles';
@@ -7,7 +7,7 @@ import * as S from './styles';
 type VehicleImagesFormProps = {
   setUpdating: Dispatch<SetStateAction<boolean>> | undefined;
   cloudImages: StorageReference[] | undefined;
-  vehicleData: VehicleProps | undefined;
+  vehicleData: CreateVehicleProps | undefined;
 };
 
 export const VehicleImages = ({

@@ -1,13 +1,13 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import { Control, Controller, FieldErrors, UseFormRegister } from 'react-hook-form';
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { CreateVehicleProps } from '@/types/VehiclesTypes';
 import CurrencyInput, { formatValue } from 'react-currency-input-field';
 
 type VehicleDataFormProps = {
-  control: Control<VehicleProps, any>;
-  register: UseFormRegister<VehicleProps>;
-  errors: FieldErrors<VehicleProps>;
+  control: Control<CreateVehicleProps, any>;
+  register: UseFormRegister<CreateVehicleProps>;
+  errors: FieldErrors<CreateVehicleProps>;
   vehiclePrice?: number;
 };
 

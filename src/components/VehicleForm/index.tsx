@@ -1,7 +1,7 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import * as Z from 'zod';
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { CreateVehicleProps } from '@/types/VehiclesTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
-  vehicleData?: VehicleProps;
+  vehicleData?: CreateVehicleProps;
   cloudImages?: StorageReference[];
   setOpen?: Dispatch<SetStateAction<boolean>>;
 };
@@ -33,7 +33,7 @@ const newVehicleFormValidationSchema = Z.object({
   traction: Z.string().min(1, { message: 'Informe o tipo de tração' }),
   bodywork: Z.string().min(1, { message: 'Informe o chassi' }),
   description: Z.coerce.string(),
-  // created_at: Z.coerce.date(),
+  created_at: Z.coerce.string(),
 });
 
 export const VehicleForm = ({
@@ -50,7 +50,7 @@ export const VehicleForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<VehicleProps>({
+  } = useForm<CreateVehicleProps>({
     resolver: zodResolver(newVehicleFormValidationSchema),
     defaultValues: {
       vehicleId: vehicleData?.vehicleId,
@@ -103,7 +103,7 @@ export const VehicleForm = ({
     return Math.random().toString(36).substr(2, 9);
   }
 
-  const onSubmit: SubmitHandler<VehicleProps> = async (data) => {
+  const onSubmit: SubmitHandler<CreateVehicleProps> = async (data) => {
     const generateId = generateUniqueId();
     const formattedValue = formatValue(String(data.vehiclePrice));
     data.vehiclePrice = formattedValue;
@@ -112,7 +112,7 @@ export const VehicleForm = ({
       updateVehicles(vehicleData.vehicleId, {
         ...data,
         vehicleId: vehicleData.vehicleId,
-        // created_at: new Date(),
+        created_at: vehicleData.created_at,
       });
       mainImage.length && uploadMainImage(data.vehicleId, mainImage, setSendingData);
       images.length && uploadImages(data.vehicleId, images, setSendingData);
@@ -123,7 +123,7 @@ export const VehicleForm = ({
     }
     mainImage.length && (await uploadMainImage(generateId, mainImage, setSendingData));
     images.length && (await uploadImages(generateId, images, setSendingData));
-    postVehicles({ ...data, vehicleId: generateId });
+    postVehicles({ ...data, vehicleId: generateId, created_at: new Date() });
     toast('Veiculo registrado!', { theme: 'dark' });
     !sedingData && router.push('ListVehicles/');
   };

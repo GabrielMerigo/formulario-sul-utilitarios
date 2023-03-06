@@ -1,14 +1,14 @@
 import { ReactNode, createContext, useState, useEffect, SetStateAction, Dispatch } from 'react';
-import { VehicleProps, ImageFile } from '@/types/VehiclesTypes';
+import { CreateVehicleProps, FirebaseVehicleProps, ImageFile } from '@/types/VehiclesTypes';
 import { StorageReference } from 'firebase/storage';
 import { fetchVehicles } from '@/utils/fireStoreDatabase';
 
 type VehiclesContextType = {
-  vehicles: VehicleProps[];
+  vehicles: FirebaseVehicleProps[];
   mainImage: ImageFile[];
   images: ImageFile[];
   cloudImages: StorageReference[];
-  setVehicles: Dispatch<SetStateAction<VehicleProps[]>>;
+  setVehicles: Dispatch<SetStateAction<FirebaseVehicleProps[]>>;
   setMainImage: Dispatch<SetStateAction<ImageFile[]>>;
   setImages: Dispatch<SetStateAction<ImageFile[]>>;
   setCloudImages: Dispatch<SetStateAction<StorageReference[]>>;
@@ -21,7 +21,7 @@ type CyclesContextProviderProps = {
 export const VehiclesContext = createContext({} as VehiclesContextType);
 
 export function VehiclesContextProvider({ children }: CyclesContextProviderProps) {
-  const [vehicles, setVehicles] = useState<VehicleProps[]>([]);
+  const [vehicles, setVehicles] = useState<FirebaseVehicleProps[]>([]);
   const [mainImage, setMainImage] = useState<ImageFile[]>([]);
   const [images, setImages] = useState<ImageFile[]>([]);
   const [cloudImages, setCloudImages] = useState<StorageReference[]>([]);

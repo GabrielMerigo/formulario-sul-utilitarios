@@ -1,6 +1,6 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { CreateVehicleProps } from '@/types/VehiclesTypes';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { VehicleForm } from '../VehicleForm';
@@ -13,7 +13,7 @@ import { Loading } from '../Loading';
 
 type DialogProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
-} & VehicleProps;
+} & CreateVehicleProps;
 
 export default function VehicleDialog({
   vehicleId,
@@ -27,6 +27,7 @@ export default function VehicleDialog({
   traction,
   bodywork,
   description,
+  created_at,
   setOpen,
 }: DialogProps) {
   const { cloudImages, setCloudImages } = useContext(VehiclesContext);
@@ -144,6 +145,7 @@ export default function VehicleDialog({
               traction,
               bodywork,
               description,
+              created_at,
             }}
             cloudImages={cloudImages}
             setOpen={setOpen}

@@ -3,19 +3,16 @@ import * as S from './styles';
 import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
 import VehicleDialog from '@/components/VehicleDialog';
-import { VehicleProps } from '@/types/VehiclesTypes';
+import { FirebaseVehicleProps } from '@/types/VehiclesTypes';
 import { useContext, useEffect, useState } from 'react';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
 import { fetchMainImageUrl } from '@/utils/fireStorage';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { FormatToCurrency } from '@/utils/FormatNumber';
 import { Loading } from '../Loading';
+import { format } from 'date-fns';
 
-type ComponentProps = {
-  vehicle: VehicleProps;
-};
-
-export function Vehicleitem({ vehicle }: ComponentProps) {
+export function Vehicleitem(vehicle: FirebaseVehicleProps) {
   const { setCloudImages } = useContext(VehiclesContext);
   const [URLsImages, setURLsImages] = useState('');
   const [open, setOpen] = useState(false);
@@ -28,6 +25,8 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
   const HandleOpenModal = () => {
     setCloudImages([]);
   };
+
+  console.log(vehicle.created_at);
 
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
@@ -53,6 +52,10 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
           <strong>Marca:</strong>
           <span>{vehicle.brand}</span>
         </S.VehicleInfosGroup>
+        <S.VehicleInfosGroup>
+          <strong>Registrado em:</strong>
+          <span>{format(vehicle.created_at.toDate(), 'dd/MM/yyyy')}</span>
+        </S.VehicleInfosGroup>
         <D.Root open={open} onOpenChange={setOpen}>
           <D.Trigger asChild>
             <S.VehicleDetailsButton onClick={HandleOpenModal}>Detalhes</S.VehicleDetailsButton>
@@ -70,6 +73,7 @@ export function Vehicleitem({ vehicle }: ComponentProps) {
               traction={vehicle.traction}
               bodywork={vehicle.bodywork}
               description={vehicle.description}
+              created_at={vehicle.created_at.toDate()}
               setOpen={setOpen}
             />
           </D.Portal>
