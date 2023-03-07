@@ -1,3 +1,4 @@
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 import styled, { css } from 'styled-components';
 
 type getColorsProps = {
@@ -105,6 +106,7 @@ export const ThumbContainer = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
+    flex-wrap: wrap;
     margin: 1rem 0;
     padding: 1rem;
 

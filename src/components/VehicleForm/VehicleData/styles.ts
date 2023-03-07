@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import * as R from '@radix-ui/react-radio-group';
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 
 export const VehicleTypeLabel = styled.div`
   display: flex;
@@ -99,6 +100,32 @@ export const InputGroup = styled.div`
       background-color: ${theme['gray-200']};
       color: ${theme['gray-900']};
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+
+      label,
+      legend {
+        font-size: 1.1rem;
+      }
+    
+      input {
+        height: 4rem;
+        font-size: 1rem;
+
+        &::placeholder {
+          font-size: 1.2rem;
+        }
+      }
+
+        textarea {
+          height: 10rem;
+          font-size: 1.2rem;
+          padding: 2rem;
+        }
+    `)}
   `}
 `;
 

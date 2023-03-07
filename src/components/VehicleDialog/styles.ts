@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import * as D from '@radix-ui/react-dialog';
 import * as R from '@radix-ui/react-radio-group';
 import { Carousel } from 'react-responsive-carousel';
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 
 export const Overlay = styled(D.Overlay)`
   ${({ theme }) => css`
@@ -50,6 +51,19 @@ export const Content = styled(D.Content)`
       font-weight: bolder;
       margin-bottom: 1rem;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+      max-width: 748px;
+      max-height: 500px;
+      padding: 50px;
+
+      h3 {
+        font-size: 2rem;
+      }
+    `)}
   `}
 `;
 
@@ -116,6 +130,15 @@ export const VehicleInfos = styled.div`
   label {
     font-size: 2rem;
   }
+
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+      label {
+        font-size: 1.5rem;
+      }
+    `)}
 `;
 
 export const VehicleInfosGroup = styled.div`
@@ -132,6 +155,19 @@ export const VehicleInfosGroup = styled.div`
   strong {
     font-size: 2rem;
   }
+
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+      span {
+        font-size: 1.5rem;
+      }
+
+      strong {
+        font-size: 1.5rem;
+      }
+    `)}
 `;
 
 export const VehiclecharacteristicsContainer = styled.div`
@@ -166,6 +202,19 @@ export const VehiclecharacteristicsGroup = styled.div`
     strong {
       font-size: 2rem;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+      span {
+        font-size: 1.5rem;
+      }
+
+      strong {
+        font-size: 1.5rem;
+      }
+    `)}
   `}
 `;
 
@@ -239,6 +288,17 @@ export const ImagesCarousel = styled(Carousel)`
 
       font-size: 2rem;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+      .carousel.carousel-slider .control-arrow {
+        width: 100px;
+        height: 100px;
+        margin: 0 10px;
+      }
+    `)}
   `}
 `;
 

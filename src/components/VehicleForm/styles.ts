@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import * as D from '@radix-ui/react-dialog';
 import * as R from '@radix-ui/react-radio-group';
 import * as M from '@mui/material';
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 
 export const FieldInputsContainer = styled.div`
   ${({ theme }) => css`
@@ -67,10 +68,6 @@ export const FormContainer = styled.div`
       flex-direction: column;
       gap: 2rem;
 
-      label {
-        font-size: 1.5rem;
-      }
-
       button[type='submit'],
       button.step {
         display: flex;
@@ -108,6 +105,13 @@ export const FormContainer = styled.div`
         }
       }
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+        max-width: 748px;
+    `)}
   `}
 `;
 
@@ -115,6 +119,7 @@ export const InputGroup = styled.div`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 2rem;
     flex-direction: column;
 
@@ -203,11 +208,32 @@ export const CloseDialogButton = styled(D.Close)`
   `}
 `;
 
-export const StepperBox = styled(M.Box)``;
+export const StepperBox = styled(M.Box)`
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+        max-width: 650px;
+    `)}
+`;
 
-export const StepperComponent = styled(M.Stepper)``;
+export const StepperComponent = styled(M.Stepper)`
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+        max-width: 650px;
+    `)}
+`;
 
-export const StepComponent = styled(M.Step)``;
+export const StepComponent = styled(M.Step)`
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+        max-width: 650px;
+    `)}
+`;
 
 export const StepLabelComponent = styled(M.StepLabel)`
   ${({ theme }) => css`
@@ -225,11 +251,29 @@ export const StepLabelComponent = styled(M.StepLabel)`
       font-size: 2rem;
       font-weight: bold;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+        max-width: 650px;
+    
+        .MuiStepLabel-label {
+          font-size: 1.2rem;
+        }
+    `)}
   `}
 `;
 
 export const StepContentComponent = styled(M.StepContent)`
   width: 1000px;
+
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+        max-width: 600px;
+    `)}
 `;
 export const FormButtonsContainer = styled.div`
   display: flex;

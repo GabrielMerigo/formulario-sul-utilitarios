@@ -1,3 +1,4 @@
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 import styled, { css } from 'styled-components';
 
 export const ThumbContainer = styled.div`
@@ -10,6 +11,21 @@ export const ThumbContainer = styled.div`
 
 export const CarrouselContainer = styled.div`
   width: 100%;
+
+  img {
+    height: 400px;
+    width: 200px;
+  }
+
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+      img {
+        height: 250px;
+        width: 100px;
+      }
+    `)}
 `;
 
 export const DeleteImageButton = styled.button`

@@ -94,27 +94,19 @@ export const VehiclesContainer = styled.div`
       }
     }
 
-    img {
-      width: 250px;
-      height: 250px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-
     ${mediaQuery(
       'lg',
       'max'
     )(`
-    img {
-      width: 150px;
-      height: 150px;
-    }
+        width: 200px;
+        h3 {
+          font-size: 1.5rem;
+        }
     `)}
   `}
 `;
 
 export const MainImageContainer = styled.div`
-  height: 250px;
   width: 250px;
 
   display: flex;
@@ -127,6 +119,24 @@ export const MainImageContainer = styled.div`
     font-size: 2rem;
     font-weight: bold;
   }
+
+  img {
+    width: 250px;
+    height: 250px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  ${mediaQuery(
+    'lg',
+    'max'
+  )(`
+    width: 150px;
+      img {
+        width: 200px;
+        height: 200px;
+      }
+    `)}
 `;
 
 export const CardDataContainer = styled.div`
@@ -151,6 +161,19 @@ export const VehicleInfosGroup = styled.div`
     strong {
       font-size: 1.7rem;
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+      span {
+        font-size: 1rem;
+      }
+
+      strong {
+        font-size: 1rem;
+      }
+    `)}
   `}
 `;
 

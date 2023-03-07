@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import Link from 'next/link';
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 
 export const RegisterVehicleContainer = styled.div`
   ${({ theme }) => css`
@@ -7,6 +8,7 @@ export const RegisterVehicleContainer = styled.div`
     align-items: center;
     justify-content: center;
     padding: 5rem 0 0 0;
+    margin: 0 auto;
 
     h2 {
       margin-bottom: 2.4rem;
@@ -99,5 +101,12 @@ export const FormContainer = styled.div`
         }
       }
     }
+
+    ${mediaQuery(
+      'lg',
+      'max'
+    )(`
+        max-width: 748px;
+    `)}
   `}
 `;

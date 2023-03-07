@@ -30,11 +30,7 @@ export default function ImagesCarrousel({ cloudImage, vehicleId, thumb }: Images
     <>
       {thumb ? (
         <S.ThumbContainer>
-          {imageUrl ? (
-            <img src={imageUrl} alt="vehicle" width={200} height={400} style={{ margin: 10 }} />
-          ) : (
-            <></>
-          )}
+          {imageUrl ? <img src={imageUrl} alt="vehicle" style={{ margin: 10 }} /> : <></>}
         </S.ThumbContainer>
       ) : (
         <S.CarrouselContainer>
@@ -42,7 +38,7 @@ export default function ImagesCarrousel({ cloudImage, vehicleId, thumb }: Images
             <P.Trash size={32} />
           </S.DeleteImageButton>
           {imageUrl ? (
-            <img src={imageUrl} alt="vehicle" width={200} height={400} style={{ margin: 10 }} />
+            <img src={imageUrl} alt="vehicle" style={{ margin: 10 }} />
           ) : (
             <h3>Sem imagem</h3>
           )}
