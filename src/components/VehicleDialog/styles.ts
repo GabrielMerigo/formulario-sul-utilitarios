@@ -53,11 +53,36 @@ export const Content = styled(D.Content)`
     }
 
     ${mediaQuery(
+      'xxl',
+      'max'
+    )(`
+      max-width: 1024px;
+      max-height: 800px;
+      padding: 50px;
+
+      h3 {
+        font-size: 2rem;
+      }
+    `)}
+
+    ${mediaQuery(
       'lg',
       'max'
     )(`
       max-width: 748px;
       max-height: 500px;
+      padding: 50px;
+
+      h3 {
+        font-size: 2rem;
+      }
+    `)}
+
+${mediaQuery(
+      'sm',
+      'max'
+    )(`
+      max-height: 700px;
       padding: 50px;
 
       h3 {
@@ -271,7 +296,7 @@ export const ImagesCarousel = styled(Carousel)`
     }
 
     .carousel.carousel-slider .control-arrow {
-      width: 200px;
+      width: 100px;
       height: 200px;
       top: 25%;
       margin: 0 10px;
@@ -285,9 +310,31 @@ export const ImagesCarousel = styled(Carousel)`
       top: initial;
       bottom: 0;
       right: 0;
+      padding: 1rem;
 
       font-size: 2rem;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 400;
+
+      background-color: ${theme['gray-900']};
+      border-radius: 10px;
     }
+
+    .carousel .control-arrow,
+    .carousel.carousel-slider .control-arrow {
+      opacity: 1;
+    }
+
+    ${mediaQuery(
+      'xxl',
+      'max'
+    )(`
+      .carousel.carousel-slider .control-arrow {
+        width: 100px;
+        height: 200px;
+        margin: 0 10px;
+      }
+    `)}
 
     ${mediaQuery(
       'lg',
@@ -295,8 +342,28 @@ export const ImagesCarousel = styled(Carousel)`
     )(`
       .carousel.carousel-slider .control-arrow {
         width: 100px;
+        height: 150px;
+        margin: 0 10px;
+      }
+
+      .carousel p.carousel-status {
+        font-size: 1rem;
+      }
+    `)}
+
+${mediaQuery(
+      'sm',
+      'max'
+    )(`
+      .carousel.carousel-slider .control-arrow {
+        width: 50px;
         height: 100px;
         margin: 0 10px;
+      }
+
+      .carousel p.carousel-status {
+        font-size: .7rem;
+        padding:.5rem;
       }
     `)}
   `}

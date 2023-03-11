@@ -26,6 +26,15 @@ export const CarrouselContainer = styled.div`
         width: 100px;
       }
     `)}
+
+  ${mediaQuery(
+    'sm',
+    'max'
+  )(`
+      img {
+        height: 200px;
+      }
+    `)}
 `;
 
 export const DeleteImageButton = styled.button`

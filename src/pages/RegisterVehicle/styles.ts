@@ -55,6 +55,14 @@ export const LinkItem = styled(Link)`
       background-color: ${theme['gray-200']};
       color: ${theme['gray-900']};
     }
+
+    ${mediaQuery(
+      'sm',
+      'max'
+    )(`
+      padding: 1rem;
+      height: 5rem;
+    `)}
   `}
 `;
 
@@ -103,10 +111,24 @@ export const FormContainer = styled.div`
     }
 
     ${mediaQuery(
+      'xxl',
+      'max'
+    )(`
+        max-width: 900px;
+    `)}
+
+    ${mediaQuery(
       'lg',
       'max'
     )(`
         max-width: 748px;
+    `)}
+
+${mediaQuery(
+      'sm',
+      'max'
+    )(`
+        max-width: 400px;
     `)}
   `}
 `;

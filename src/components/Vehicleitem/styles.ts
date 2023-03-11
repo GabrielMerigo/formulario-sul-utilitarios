@@ -95,10 +95,31 @@ export const VehiclesContainer = styled.div`
     }
 
     ${mediaQuery(
+      'xxl',
+      'max'
+    )(`
+        width: 230px;
+        h3 {
+          font-size: 1.5rem;
+        }
+    `)}
+
+    ${mediaQuery(
       'lg',
       'max'
     )(`
         width: 200px;
+        h3 {
+          font-size: 1.5rem;
+        }
+    `)}
+
+${mediaQuery(
+      'sm',
+      'max'
+    )(`
+    
+        width: 203px;
         h3 {
           font-size: 1.5rem;
         }
@@ -128,6 +149,17 @@ export const MainImageContainer = styled.div`
   }
 
   ${mediaQuery(
+    'xxl',
+    'max'
+  )(`
+    width: 150px;
+      img {
+        width: 230px;
+        height: 230px;
+      }
+    `)}
+
+  ${mediaQuery(
     'lg',
     'max'
   )(`
@@ -135,6 +167,17 @@ export const MainImageContainer = styled.div`
       img {
         width: 200px;
         height: 200px;
+      }
+    `)}
+
+${mediaQuery(
+    'sm',
+    'max'
+  )(`
+    width: 200px;
+      img {
+        width: 200px;
+        height: 160px;
       }
     `)}
 `;

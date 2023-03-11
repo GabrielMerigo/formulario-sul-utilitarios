@@ -107,10 +107,36 @@ export const FormContainer = styled.div`
     }
 
     ${mediaQuery(
+      'xxl',
+      'max'
+    )(`
+      max-width: 1024px;
+    `)}
+
+    ${mediaQuery(
       'lg',
       'max'
     )(`
         max-width: 748px;
+    `)}
+
+${mediaQuery(
+      'sm',
+      'max'
+    )(`
+        max-width: 425px;
+        form{
+          button[type='submit'],
+          button.step {
+          font-size: 1.1rem;
+          word-wrap:wrap;
+          svg{
+            width:20px;
+            height:20px;
+          }
+        }
+        
+      }
     `)}
   `}
 `;
@@ -269,10 +295,25 @@ export const StepContentComponent = styled(M.StepContent)`
   width: 1000px;
 
   ${mediaQuery(
+    'xxl',
+    'max'
+  )(`
+      max-width: 800px;
+    `)}
+
+  ${mediaQuery(
     'lg',
     'max'
   )(`
         max-width: 600px;
+    `)}
+    
+    ${mediaQuery(
+    'sm',
+    'max'
+  )(`
+  max-width: 300px;
+
     `)}
 `;
 export const FormButtonsContainer = styled.div`
@@ -300,4 +341,16 @@ export const FormButtonsContainer = styled.div`
       }
     }
   }
+
+  ${mediaQuery(
+    'sm',
+    'max'
+  )(`
+  margin: 0 1.7rem;
+
+    button {
+      padding: 1rem;
+      font-size:.1rem;
+    }
+    `)}
 `;

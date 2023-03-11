@@ -113,7 +113,7 @@ export const InputGroup = styled.div`
     
       input {
         height: 4rem;
-        font-size: 1rem;
+        font-size: 1rem;SSSSS
 
         &::placeholder {
           font-size: 1.2rem;
@@ -125,6 +125,18 @@ export const InputGroup = styled.div`
           font-size: 1.2rem;
           padding: 2rem;
         }
+    `)}
+
+    ${mediaQuery(
+      'sm',
+      'max'
+    )(`
+    width:100%;
+    
+      input {
+        width:100%;
+      }
+
     `)}
   `}
 `;

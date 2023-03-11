@@ -39,6 +39,8 @@ export default function VehicleDialog({
     fetchImagesReferenceList(vehicleId, setCloudImages, setLoading);
   }, []);
 
+  const statusFormatter = (current: number, total: number) => `Imagem ${current} de ${total}`;
+
   return (
     <>
       <S.Overlay />
@@ -61,6 +63,7 @@ export default function VehicleDialog({
             <S.CarrouselContainer>
               {cloudImages && (
                 <S.ImagesCarousel
+                  statusFormatter={statusFormatter}
                   renderThumbs={() =>
                     cloudImages.map((cloudImage) => (
                       <ImagesCarrousel

@@ -1,3 +1,4 @@
+import { mediaQuery } from '@/styles/ResponsiveStyle';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 
@@ -13,11 +14,20 @@ export const ListVehicleContainer = styled.div`
     background-color: ${theme['gray-800']};
     border-radius: 10px;
     gap: 2rem;
+
+    ${mediaQuery(
+      'sm',
+      'max'
+    )(`
+    justify-content: center;
+      width: calc(100vw - 10rem);
+    `)}
   `}
 `;
 
 export const LinksContainer = styled.div`
   ${({ theme }) => css`
+    z-index: 10;
     position: fixed;
     display: flex;
     justify-content: space-around;
@@ -52,6 +62,14 @@ export const LinkItem = styled(Link)`
       background-color: ${theme['gray-200']};
       color: ${theme['gray-900']};
     }
+
+    ${mediaQuery(
+      'sm',
+      'max'
+    )(`
+      padding: 1rem;
+      height: 5rem;
+    `)}
   `}
 `;
 
