@@ -3,10 +3,9 @@ import * as P from 'phosphor-react';
 import { useContext, useEffect } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { Vehicleitem } from '@/components/Vehicleitem';
-import { toast } from 'react-toastify';
 
 export default function ListVehicles() {
-  const { vehicles, setCloudImages } = useContext(VehiclesContext);
+  const { vehicles } = useContext(VehiclesContext);
   return (
     <>
       <S.LinksContainer>
@@ -19,23 +18,7 @@ export default function ListVehicles() {
       </S.LinksContainer>
       <S.ListVehicleContainer>
         {vehicles.map((vehicle) => {
-          return (
-            <Vehicleitem
-              key={vehicle.vehicleId}
-              vehicleId={vehicle.vehicleId}
-              vehicleType={vehicle.vehicleType}
-              vehicleName={vehicle.vehicleName}
-              vehiclePrice={vehicle.vehiclePrice}
-              brand={vehicle.brand}
-              model={vehicle.model}
-              manufactureYear={vehicle.manufactureYear}
-              manufactureModel={vehicle.manufactureModel}
-              traction={vehicle.traction}
-              bodywork={vehicle.bodywork}
-              description={vehicle.description}
-              created_at={vehicle.created_at}
-            />
-          );
+          return <Vehicleitem key={vehicle.vehicleId} vehicle={vehicle} />;
         })}
       </S.ListVehicleContainer>
     </>

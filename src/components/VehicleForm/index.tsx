@@ -1,12 +1,16 @@
 import * as S from './styles';
 import * as P from 'phosphor-react';
 import * as Z from 'zod';
-import { CreateVehicleProps } from '@/types/VehiclesTypes';
+import {
+  CloudImagesArrayProps,
+  CloudMainImageImageProps,
+  CreateVehicleProps,
+  FirebaseVehicleProps,
+} from '@/types/VehiclesTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { StorageReference } from 'firebase/storage';
 import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase';
 import { uploadImages, uploadMainImage } from '@/utils/fireStorage';
 import { formatValue } from '@/utils/FormatNumberValue';
@@ -18,9 +22,17 @@ import { Loading } from '../Loading';
 
 type VehicleFormProps = {
   setUpdating?: Dispatch<SetStateAction<boolean>>;
-  vehicleData?: CreateVehicleProps;
-  cloudImages?: StorageReference[];
+  vehicleData?: FirebaseVehicleProps;
+  images?: {
+    name: string;
+    url: string;
+  }[];
   setOpen?: Dispatch<SetStateAction<boolean>>;
+};
+
+type imagesProps = {
+  name: string;
+  url: string;
 };
 
 const newVehicleFormValidationSchema = Z.object({
@@ -37,16 +49,11 @@ const newVehicleFormValidationSchema = Z.object({
   created_at: Z.coerce.string(),
 });
 
-export const VehicleForm = ({
-  setUpdating,
-  cloudImages,
-  vehicleData,
-  setOpen,
-}: VehicleFormProps) => {
-  const { mainImage, images, setMainImage, setImages } = useContext(VehiclesContext);
+export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: VehicleFormProps) => {
+  const { newMainImage, newImages, setNewImages, setNewMainImage, setVehicleItemImages } =
+    useContext(VehiclesContext);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [sedingData, setSendingData] = useState(false);
-  const [loading, setLoading] = useState(false);
   const {
     control,
     register,
@@ -66,9 +73,12 @@ export const VehicleForm = ({
       traction: vehicleData?.traction,
       bodywork: vehicleData?.bodywork,
       description: vehicleData?.description,
+      mainImageUrl: vehicleData?.mainImageUrl,
+      imagesUrl: vehicleData?.imagesUrl,
     },
   });
   console.log(errors);
+
   const steps = [
     {
       label: 'DADOS DO VEICULO',
@@ -84,11 +94,7 @@ export const VehicleForm = ({
     {
       label: 'IMAGENS DO VEICULO',
       description: (
-        <VehicleImages
-          setUpdating={setUpdating}
-          cloudImages={cloudImages}
-          vehicleData={vehicleData}
-        />
+        <VehicleImages setUpdating={setUpdating} images={images} vehicleData={vehicleData} />
       ),
     },
   ];
@@ -96,42 +102,63 @@ export const VehicleForm = ({
   const handleNext = () => setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   const handleBack = () => setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
 
-  useEffect(() => {
-    setMainImage([]);
-    setImages([]);
-  }, []);
-
   function generateUniqueId() {
     return Math.random().toString(36).substr(2, 9);
   }
 
   const onSubmit: SubmitHandler<CreateVehicleProps> = async (data) => {
+    debugger;
+    setSendingData(true);
     const generateId = generateUniqueId();
     const formattedValue = formatValue(String(data.vehiclePrice));
     data.vehiclePrice = formattedValue;
 
     if (vehicleData) {
-      updateVehicles(vehicleData.vehicleId, {
+      const thereIsAnewMainImage = newMainImage.length > 0;
+      const thereArenewImages = newImages.length > 0;
+
+      const uploadMainImagesAndGetUrl =
+        thereIsAnewMainImage && (await uploadMainImage(vehicleData.vehicleId, newMainImage));
+      const uploadImagesAndGetUrl =
+        thereArenewImages && (await uploadImages(vehicleData.vehicleId, newImages));
+
+      await updateVehicles(vehicleData.vehicleId, {
         ...data,
         vehicleId: vehicleData.vehicleId,
         created_at: vehicleData.created_at,
+        mainImageUrl: thereIsAnewMainImage
+          ? (uploadMainImagesAndGetUrl as CloudMainImageImageProps)
+          : vehicleData.mainImageUrl,
+        imagesUrl: thereArenewImages
+          ? [...vehicleData.imagesUrl, ...uploadImagesAndGetUrl!]
+          : (vehicleData.imagesUrl as CloudImagesArrayProps),
       });
-      mainImage.length > 0 &&
-        (await uploadMainImage(vehicleData.vehicleId, mainImage, setSendingData));
-      images.length > 0 && (await uploadImages(vehicleData.vehicleId, images, setSendingData));
+
+      setNewImages([]);
+      setNewMainImage([]);
+      setSendingData(false);
       setOpen!(false);
       toast('Os dados do veiculo foram atualizados', { className: 'success' });
       return;
     }
 
-    mainImage.length > 0 && (await uploadMainImage(generateId, mainImage, setSendingData));
-    images.length > 0 && (await uploadImages(generateId, images, setSendingData));
-    await postVehicles({ ...data, vehicleId: generateId, created_at: new Date() }, setLoading);
+    const uploadMainImagesAndGetUrl =
+      newMainImage.length > 0 && (await uploadMainImage(generateId, newMainImage));
+    const uploadImagesAndGetUrl =
+      newImages.length > 0 && (await uploadImages(generateId, newImages));
+
+    await postVehicles({
+      ...data,
+      vehicleId: generateId,
+      mainImageUrl: uploadMainImagesAndGetUrl as { name: string; url: string },
+      imagesUrl: uploadImagesAndGetUrl as imagesProps[],
+      created_at: new Date(),
+    });
     toast('Veiculo registrado!', { className: 'success', autoClose: 5000 });
-    !sedingData &&
-      setTimeout(() => {
-        router.push('ListVehicles/');
-      }, 3000);
+    setNewImages([]);
+    setNewMainImage([]);
+    setSendingData(false);
+    router.push('ListVehicles/');
   };
 
   return (
@@ -170,7 +197,7 @@ export const VehicleForm = ({
               Voltar etapa
             </button>
             <button type="submit">
-              {loading ? <Loading /> : <P.Check size={32} />}
+              {sedingData ? <Loading /> : <P.Check size={32} />}
               Atualizar Informações
             </button>
           </S.FormButtonsContainer>

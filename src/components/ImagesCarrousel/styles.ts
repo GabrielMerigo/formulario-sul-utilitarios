@@ -42,6 +42,7 @@ export const DeleteImageButton = styled.button`
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 1;
     cursor: pointer;
 
     border: none;

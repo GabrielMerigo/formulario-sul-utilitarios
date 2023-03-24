@@ -15,7 +15,8 @@ export type CreateVehicleProps = {
   bodywork: string;
   description: string;
   created_at: Date;
-  File?: ImageFile[];
+  imagesUrl: CloudImagesArrayProps;
+  mainImageUrl: CloudMainImageImageProps;
 };
 
 export type FirebaseVehicleProps = {
@@ -31,16 +32,26 @@ export type FirebaseVehicleProps = {
   bodywork: string;
   description: string;
   created_at: Timestamp;
+  imagesUrl: CloudImagesArrayProps;
+  mainImageUrl: CloudMainImageImageProps;
+};
+
+export type UploadzoneProps = {
+  imageType: string;
+  setUpdating?: Dispatch<SetStateAction<boolean>>;
+  vehicle?: FirebaseVehicleProps;
 };
 
 export type ImageFile = {
   preview: string;
 } & File;
 
-export type UploadzoneProps = {
-  imageType: string;
-  setUpdating?: Dispatch<SetStateAction<boolean>>;
-  vehicleId?: string;
-  cloudMainImage?: StorageReference;
-  cloudImages?: StorageReference[];
+export type CloudMainImageImageProps = {
+  name: string;
+  url: string;
 };
+
+export type CloudImagesArrayProps = {
+  name: string;
+  url: string;
+}[];

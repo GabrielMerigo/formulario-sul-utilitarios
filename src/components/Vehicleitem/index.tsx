@@ -4,27 +4,21 @@ import * as D from '@radix-ui/react-dialog';
 import * as P from 'phosphor-react';
 import VehicleDialog from '@/components/VehicleDialog';
 import { FirebaseVehicleProps } from '@/types/VehiclesTypes';
-import { useContext, useEffect, useState } from 'react';
+import { useState, useContext } from 'react';
 import { deleteVehicles } from '@/utils/fireStoreDatabase';
-import { fetchMainImageUrl } from '@/utils/fireStorage';
-import { VehiclesContext } from '@/contexts/VehiclesContext';
 import { FormatToCurrency } from '@/utils/FormatNumber';
-import { Loading } from '../Loading';
 import { format } from 'date-fns';
+import { VehiclesContext } from '@/contexts/VehiclesContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
-export function Vehicleitem(vehicle: FirebaseVehicleProps) {
-  const { setCloudImages } = useContext(VehiclesContext);
-  const [URLsImages, setURLsImages] = useState('');
+type VehicleItemProps = {
+  vehicle: FirebaseVehicleProps;
+};
+
+export function Vehicleitem({ vehicle }: VehicleItemProps) {
+  const { setVehicleItemImages } = useContext(VehiclesContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchMainImageUrl(vehicle.vehicleId, setURLsImages, setLoading);
-  }, [vehicle.vehicleId, open]);
-
-  const HandleOpenModal = () => {
-    setCloudImages([]);
-  };
 
   return (
     <S.VehiclesContainer key={vehicle.vehicleId}>
@@ -32,14 +26,20 @@ export function Vehicleitem(vehicle: FirebaseVehicleProps) {
         <P.Trash size={32} />
       </button>
       <S.MainImageContainer>
-        {URLsImages && <img src={URLsImages} alt={vehicle.vehicleName} />}
-        {!loading && !URLsImages && (
+        {vehicle.mainImageUrl && (
+          <LazyLoadImage
+            effect="blur"
+            src={vehicle.mainImageUrl.url}
+            alt={vehicle.vehicleName}
+            loading="lazy"
+          />
+        )}
+        {!vehicle.mainImageUrl && (
           <>
             <P.FileDotted size={50} />
             <h4>Imagem principal não encontrada</h4>
           </>
         )}
-        {loading && <Loading />}
       </S.MainImageContainer>
       <S.CardDataContainer>
         <h3>{vehicle.vehicleName}</h3>
@@ -61,24 +61,14 @@ export function Vehicleitem(vehicle: FirebaseVehicleProps) {
         </S.VehicleInfosGroup>
         <D.Root open={open} onOpenChange={setOpen}>
           <D.Trigger asChild>
-            <S.VehicleDetailsButton onClick={HandleOpenModal}>Detalhes</S.VehicleDetailsButton>
+            <S.VehicleDetailsButton
+              onClick={() => setVehicleItemImages([vehicle.mainImageUrl, ...vehicle.imagesUrl])}
+            >
+              Detalhes
+            </S.VehicleDetailsButton>
           </D.Trigger>
           <D.Portal>
-            <VehicleDialog
-              vehicleId={vehicle.vehicleId}
-              vehicleType={vehicle.vehicleType}
-              vehicleName={vehicle.vehicleName}
-              vehiclePrice={vehicle.vehiclePrice}
-              brand={vehicle.brand}
-              model={vehicle.model}
-              manufactureYear={vehicle.manufactureYear}
-              manufactureModel={vehicle.manufactureModel}
-              traction={vehicle.traction}
-              bodywork={vehicle.bodywork}
-              description={vehicle.description}
-              created_at={vehicle.created_at.toDate()}
-              setOpen={setOpen}
-            />
+            <VehicleDialog vehicle={vehicle} setOpen={setOpen} />
           </D.Portal>
         </D.Root>
       </S.CardDataContainer>

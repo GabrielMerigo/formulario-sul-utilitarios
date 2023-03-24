@@ -33,16 +33,10 @@ export const fetchVehicles = async (
   }
 };
 
-export const postVehicles = async (
-  vehicleToPost: CreateVehicleProps,
-  setLoadingState: Dispatch<SetStateAction<boolean>>
-) => {
+export const postVehicles = async (vehicleToPost: CreateVehicleProps) => {
   try {
-    setLoadingState(true);
     await addDoc(vehiclesCollection, vehicleToPost);
-    setLoadingState(false);
   } catch ({ message, name }) {
-    setLoadingState(false);
     toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, {
       className: 'error',
     });
@@ -68,7 +62,10 @@ export const deleteVehicles = async (vehicleToDeleteId: string) => {
   }
 };
 
-export const updateVehicles = async (vehicleToUpdateid: string, UpdateData: CreateVehicleProps) => {
+export const updateVehicles = async (
+  vehicleToUpdateid: string,
+  UpdateData: FirebaseVehicleProps
+) => {
   try {
     const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToUpdateid));
     const querySnapshot = await getDocs(q);

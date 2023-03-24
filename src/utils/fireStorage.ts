@@ -1,4 +1,4 @@
-import { ImageFile } from '@/types/VehiclesTypes';
+import { CloudImagesArrayProps, ImageFile } from '@/types/VehiclesTypes';
 import {
   deleteObject,
   getDownloadURL,
@@ -6,6 +6,7 @@ import {
   ref,
   StorageReference,
   uploadBytes,
+  uploadBytesResumable,
 } from 'firebase/storage';
 import { storage } from 'firebaseEnv';
 import { Dispatch, SetStateAction } from 'react';
@@ -108,14 +109,21 @@ export const deleteImageByStorageReference = async (
 
 export const deleteImageByURL = async (
   vehicleId: string,
-  URLCloudName: string[],
-  URLCloudImages: string[],
-  setState: Dispatch<SetStateAction<string[]>>
+  imageName: string,
+  Images: { name: string; url: string }[],
+  setState: Dispatch<
+    SetStateAction<
+      {
+        name: string;
+        url: string;
+      }[]
+    >
+  >
 ) => {
   try {
-    const deleteFile = deleteObject(ref(storage, `${vehicleId}/${URLCloudName[1]}`));
-    const remainingUrls = URLCloudImages.filter((url) => url.split('||')[0] !== URLCloudName[0]);
-    setState((state) => remainingUrls);
+    const deleteFile = await deleteObject(ref(storage, `${vehicleId}/${imageName}`));
+    const remainingImages = Images.filter((image) => image.name !== imageName);
+    setState((state) => remainingImages);
     toast('Imagem Deletada!', { className: 'success' });
   } catch ({ message, name }) {
     toast('Houve um erro com a exclusão da imagem:\n' + `${message}:${name}`, {
@@ -138,38 +146,32 @@ export const deleteVehicleImagesFolder = async (vehicleId: string) => {
   }
 };
 
-export const uploadMainImage = async (
-  vehicleId: string,
-  mainImage: ImageFile[],
-  setSendingDataState: Dispatch<SetStateAction<boolean>>
-) => {
+export const uploadMainImage = async (vehicleId: string, mainImage: ImageFile[]) => {
   try {
-    setSendingDataState(true);
     const mainImageStorageRef = ref(storage, `${vehicleId}/mainImage`);
-    await uploadBytes(mainImageStorageRef, mainImage[0]);
-    setSendingDataState(false);
+    const uploadTask = uploadBytesResumable(mainImageStorageRef, mainImage[0]);
+    await uploadTask;
+    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+    return { name: 'mainImage', url: downloadURL };
   } catch ({ message, name }) {
-    setSendingDataState(false);
     toast('Houve um erro com ao registrar a imagem principal:\n' + `${message}:${name}`, {
       className: 'error',
     });
   }
 };
 
-export const uploadImages = async (
-  vehicleId: string,
-  Images: ImageFile[],
-  setSendingDataState: Dispatch<SetStateAction<boolean>>
-) => {
+export const uploadImages = async (vehicleId: string, images: ImageFile[]) => {
   try {
-    setSendingDataState(true);
-    Images.forEach(async (image) => {
-      const ImagesStorageRef = ref(storage, `${vehicleId}/${image.name}`);
-      await uploadBytes(ImagesStorageRef, image);
-    });
-    setSendingDataState(false);
+    const urlArray = [];
+    for (let i = 0; i < images.length; i++) {
+      const ImagesStorageRef = ref(storage, `${vehicleId}/${images[i].name}`);
+      const uploadTask = uploadBytesResumable(ImagesStorageRef, images[i]);
+      await uploadTask;
+      const downloadURL = getDownloadURL(uploadTask.snapshot.ref);
+      urlArray.push({ url: await downloadURL, name: images[i].name });
+    }
+    return urlArray;
   } catch ({ message, name }) {
-    setSendingDataState(false);
     toast('Houve um erro com ao registrar as imagens:\n' + `${message}:${name}`, {
       className: 'error',
     });

@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import * as P from 'phosphor-react';
 import { useDropzone } from 'react-dropzone';
-import Image from 'next/image';
 import * as S from './styles';
 import { ImageFile, UploadzoneProps } from '@/types/VehiclesTypes';
 import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { setManyImagesUrls, fetchMainImageUrl, deleteImageByURL } from '@/utils/fireStorage';
-import { Loading } from '../Loading';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const transformArrayType = (acceptedFiles: File[]) => {
   const propsToFile = (props: File) => props;
@@ -17,25 +15,23 @@ const acceptedImages = {
   'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
 };
 
-export default function UploadZone({
-  imageType,
-  setUpdating,
-  vehicleId,
-  cloudMainImage,
-  cloudImages,
-}: UploadzoneProps) {
-  const { setMainImage, setImages, mainImage, images } = useContext(VehiclesContext);
-  const [URLCloudMainImage, setURLCloudMainImage] = useState('');
-  const [URLCloudImages, setURLCloudImages] = useState<string[]>([]);
-  const [loadingMainImage, setLoadingMainImage] = useState(false);
-  const [loadingImages, setLoadingImages] = useState(false);
+export default function UploadZone({ setUpdating, vehicle, imageType }: UploadzoneProps) {
+  const {
+    vehicleItemImages,
+    newMainImage,
+    newImages,
+    setNewImages,
+    setNewMainImage,
+    handleDeleteSingleImage,
+  } = useContext(VehiclesContext);
+
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     accept: acceptedImages,
     onDrop: (acceptedFiles) => {
       const transformedArray = transformArrayType(acceptedFiles);
 
       if (imageType === 'Main') {
-        setMainImage(
+        setNewMainImage(
           transformedArray.map((file) =>
             Object.assign(file, {
               preview: URL.createObjectURL(file),
@@ -44,7 +40,7 @@ export default function UploadZone({
         );
         return;
       }
-      setImages((state) => [
+      setNewImages((state) => [
         ...state,
         ...transformedArray.map((file) =>
           Object.assign(file, {
@@ -56,25 +52,18 @@ export default function UploadZone({
   });
 
   useEffect(() => {
-    setURLCloudMainImage('');
-    setURLCloudImages([]);
-
-    if (setUpdating && cloudMainImage) {
-      fetchMainImageUrl(vehicleId!, setURLCloudMainImage, setLoadingMainImage);
-    }
-
-    if (setUpdating && cloudImages) {
-      setManyImagesUrls(vehicleId!, cloudImages!, setURLCloudImages, setLoadingImages);
-    }
+    setNewImages([]);
+    setNewMainImage([]);
   }, []);
 
   const mainThumb = () => {
-    if (URLCloudMainImage && !mainImage.length) {
+    if (imageType === 'Main' && vehicle?.mainImageUrl.url && !newMainImage.length) {
       return (
-        <S.ThumbContainer key={URLCloudMainImage} style={{ display: 'inline-flex' }}>
-          <Image
-            src={URLCloudMainImage}
-            alt={URLCloudMainImage}
+        <S.ThumbContainer key={vehicle?.mainImageUrl.url} style={{ display: 'inline-flex' }}>
+          <LazyLoadImage
+            effect="blur"
+            src={vehicle?.mainImageUrl.url}
+            alt={vehicle?.mainImageUrl.name}
             width={200}
             height={200}
             style={{ margin: 10 }}
@@ -82,12 +71,13 @@ export default function UploadZone({
         </S.ThumbContainer>
       );
     }
-    if (mainImage.length) {
+    if (newMainImage.length) {
       return (
-        <S.ThumbContainer key={mainImage[0].name} style={{ display: 'inline-flex' }}>
-          <Image
-            src={mainImage[0].preview}
-            alt={mainImage[0].name}
+        <S.ThumbContainer key={newMainImage[0].name} style={{ display: 'inline-flex' }}>
+          <LazyLoadImage
+            effect="blur"
+            src={newMainImage[0].preview}
+            alt={newMainImage[0].name}
             width={200}
             height={200}
             style={{ margin: 10 }}
@@ -97,8 +87,8 @@ export default function UploadZone({
     }
     return (
       <S.ThumbContainer>
-        {!loadingMainImage && !mainImage.length && <h4>Nenhuma imagem principal adicionada</h4>}
-        {loadingMainImage && <Loading />}
+        {!newMainImage.length && <h4>Nenhuma imagem principal adicionada</h4>}
+        {/* {loadingMainImage && <Loading />} */}
       </S.ThumbContainer>
     );
   };
@@ -135,13 +125,9 @@ export default function UploadZone({
     return <strong>Arraste ou clique aqui para Inserir as imagens!</strong>;
   };
 
-  const handleDeleteRegistredSingleImage = (cloudImageName: string[]) => {
-    deleteImageByURL(vehicleId!, cloudImageName, URLCloudImages, setURLCloudImages);
-  };
-
   const handleDeleteSingleImageToAdd = (imageToRemove: ImageFile) => {
-    const remainingImages = images.filter((image) => image.name !== imageToRemove.name);
-    setImages(remainingImages);
+    const remainingImages = newImages.filter((image) => image.name !== imageToRemove.name);
+    setNewImages(remainingImages);
   };
 
   return (
@@ -172,18 +158,20 @@ export default function UploadZone({
                   <h4>Imagens Registradas:</h4>
                 </S.TitleContainer>
                 <S.ThumbContainer>
-                  {URLCloudImages.length &&
-                    URLCloudImages.map((image) => {
+                  {vehicle?.imagesUrl.length &&
+                    vehicle?.imagesUrl.map((image) => {
                       return (
-                        <div key={image} style={{ display: 'inline-flex' }}>
+                        <div key={image.url} style={{ display: 'inline-flex' }}>
                           <S.DeleteImageButton
-                            onClick={() => handleDeleteRegistredSingleImage(image.split('||'))}
+                            type="button"
+                            onClick={() => handleDeleteSingleImage(vehicle, image.name)}
                           >
                             <P.Trash size={32} />
                           </S.DeleteImageButton>
-                          <Image
-                            src={image}
-                            alt={image}
+                          <LazyLoadImage
+                            effect="blur"
+                            src={image.url}
+                            alt={image.name}
                             width={200}
                             height={200}
                             style={{ margin: 10 }}
@@ -191,8 +179,8 @@ export default function UploadZone({
                         </div>
                       );
                     })}
-                  {loadingImages && <Loading />}
-                  {!loadingImages && !URLCloudImages.length && <h4>Sem imagens registradas</h4>}
+                  {/* {loadingImages && <Loading />} */}
+                  {!vehicle?.imagesUrl.length && <h4>Sem imagens registradas</h4>}
                 </S.ThumbContainer>
               </S.ImageContainer>
             </>
@@ -203,8 +191,8 @@ export default function UploadZone({
               <h4>Adicionando imagens:</h4>
             </S.TitleContainer>
             <S.ThumbContainer>
-              {images.length ? (
-                images.map((image, index) => {
+              {newImages.length ? (
+                newImages.map((image, index) => {
                   return (
                     <div key={index} style={{ display: 'inline-flex' }}>
                       <S.DeleteImageButton
@@ -213,7 +201,8 @@ export default function UploadZone({
                       >
                         <P.Trash size={32} />
                       </S.DeleteImageButton>
-                      <Image
+                      <LazyLoadImage
+                        effect="blur"
                         src={image.preview}
                         alt={image.name}
                         width={200}

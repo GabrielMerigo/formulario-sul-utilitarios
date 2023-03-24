@@ -109,6 +109,7 @@ export const ThumbContainer = styled.div`
     flex-wrap: wrap;
     margin: 1rem 0;
     padding: 1rem;
+    gap: 2rem;
 
     width: 100%;
 
@@ -129,6 +130,7 @@ export const ThumbContainer = styled.div`
 export const DeleteImageButton = styled.button`
   ${({ theme }) => css`
     position: absolute;
+    z-index: 1;
     cursor: pointer;
 
     height: 4rem;
