@@ -77,7 +77,6 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
       imagesUrl: vehicleData?.imagesUrl,
     },
   });
-  console.log(errors);
 
   const steps = [
     {
@@ -99,7 +98,50 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
     },
   ];
 
-  const handleNext = () => setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
+  const handleNext = () => {
+    if (Object.entries(errors).length > 0) {
+      const errorsArray = Object.entries(errors).reduce((acc: string, error, index) => {
+        let transletedError = '';
+        switch (error[0]) {
+          case 'vehicleType':
+            transletedError = 'Tipo de Veículo';
+            break;
+          case 'vehicleName':
+            transletedError = 'Nome do Veículo';
+            break;
+          case 'vehiclePrice':
+            transletedError = 'Valor do Veículo';
+            break;
+          case 'brand':
+            transletedError = 'Marca do Veículo';
+            break;
+          case 'model':
+            transletedError = 'Modelo do Veículo';
+            break;
+          case 'manufactureYear':
+            transletedError = 'Ano de fabricação do Veículo';
+            break;
+          case 'manufactureModel':
+            transletedError = 'Ano do modelo do Veículo';
+            break;
+          case 'traction':
+            transletedError = 'Tração do Veículo';
+            break;
+          case 'bodywork':
+            transletedError = 'Carroceria do Veículo';
+            break;
+        }
+        index < Object.entries(errors).length - 1
+          ? (acc += `${transletedError},\n`)
+          : (acc += `${transletedError}`);
+        return acc;
+      }, '');
+      toast(`Houve um erro ou os campos abaixo estão vazios:\n\n${errorsArray}`, {
+        className: 'error',
+      });
+    }
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
+  };
   const handleBack = () => setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
 
   function generateUniqueId() {
@@ -107,7 +149,6 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
   }
 
   const onSubmit: SubmitHandler<CreateVehicleProps> = async (data) => {
-    debugger;
     setSendingData(true);
     const generateId = generateUniqueId();
     const formattedValue = formatValue(String(data.vehiclePrice));

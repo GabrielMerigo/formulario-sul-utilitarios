@@ -3,6 +3,10 @@ import styled, { css } from 'styled-components';
 
 export const StyledToastContainer = styled(ToastContainer)`
   ${({ theme }) => css`
+    .Toastify__toast {
+      white-space: pre-wrap;
+    }
+
     .Toastify__toast-body {
       font-size: 1.3rem;
     }

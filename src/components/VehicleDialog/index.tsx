@@ -20,10 +20,6 @@ export default function VehicleDialog({ vehicle, setOpen }: DialogProps) {
   const [updating, setUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(vehicleItemImages);
-  }, []);
-
   const statusFormatter = (current: number, total: number) => `Imagem ${current} de ${total}`;
 
   return (
