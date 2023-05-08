@@ -1,5 +1,5 @@
-import * as S from './styles';
-import Link from 'next/link';
+import * as S from '../../styles/pages/SignIn'
+import Link from 'next/link'
 
 function SignIn() {
   return (
@@ -15,7 +15,7 @@ function SignIn() {
         </form>
       </S.LoginFormContainer>
     </S.LoginContainer>
-  );
+  )
 }
 
-export default SignIn;
+export default SignIn

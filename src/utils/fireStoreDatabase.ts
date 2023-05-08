@@ -1,4 +1,7 @@
-import { CreateVehicleProps, FirebaseVehicleProps } from '@/types/VehiclesTypes';
+import {
+  CreateVehicleProps,
+  FirebaseVehicleProps,
+} from "@/types/VehiclesTypes";
 import {
   addDoc,
   deleteDoc,
@@ -9,27 +12,34 @@ import {
   where,
   collection,
   getDocs,
-} from 'firebase/firestore';
-import { db, vehiclesCollection } from 'firebaseEnv';
-import { Dispatch, SetStateAction } from 'react';
-import { toast } from 'react-toastify';
-import { deleteVehicleImagesFolder } from './fireStorage';
+} from "firebase/firestore";
+import { db, vehiclesCollection } from "./firebaseEnv";
+import { Dispatch, SetStateAction } from "react";
+import { toast } from "react-toastify";
+import { deleteVehicleImagesFolder } from "./fireStorage";
 
 export const fetchVehicles = async (
   setVehicles: Dispatch<SetStateAction<FirebaseVehicleProps[]>>
 ) => {
   try {
     onSnapshot(vehiclesCollection, (snapshot) => {
-      const vehicles = snapshot.docs.map((doc) => doc.data() as FirebaseVehicleProps);
+      const vehicles = snapshot.docs.map(
+        (doc) => doc.data() as FirebaseVehicleProps
+      );
       const orderedVehicles = vehicles.sort((a, b) => {
-        return b.created_at.toDate().getTime() - a.created_at.toDate().getTime();
+        return (
+          b.created_at.toDate().getTime() - a.created_at.toDate().getTime()
+        );
       });
       setVehicles(orderedVehicles);
     });
   } catch ({ message, name }) {
-    toast('Houve um erro ao carregar os dados veiculos:\n' + `${message}:${name}`, {
-      className: 'error',
-    });
+    toast(
+      "Houve um erro ao carregar os dados veiculos:\n" + `${message}:${name}`,
+      {
+        className: "error",
+      }
+    );
   }
 };
 
@@ -37,27 +47,32 @@ export const postVehicles = async (vehicleToPost: CreateVehicleProps) => {
   try {
     await addDoc(vehiclesCollection, vehicleToPost);
   } catch ({ message, name }) {
-    toast('Houve um erro com o cadastro do veiculo:\n' + `${message}:${name}`, {
-      className: 'error',
+    toast("Houve um erro com o cadastro do veiculo:\n" + `${message}:${name}`, {
+      className: "error",
     });
   }
 };
 
 export const deleteVehicles = async (vehicleToDeleteId: string) => {
   try {
-    const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToDeleteId));
+    const q = query(
+      collection(db, "Vehicles"),
+      where("vehicleId", "==", vehicleToDeleteId)
+    );
     const querySnapshot = await getDocs(q);
-    let docId = '';
+    let docId = "";
     querySnapshot.forEach(async (doc) => {
       docId = doc.id;
     });
-    const vehicleToDelete = doc(db, 'Vehicles', docId);
+    const vehicleToDelete = doc(db, "Vehicles", docId);
     await deleteDoc(vehicleToDelete);
     await deleteVehicleImagesFolder(vehicleToDeleteId);
-    toast('O veiculo e todas as suas imagens foram excluídas!', { className: 'success' });
+    toast("O veiculo e todas as suas imagens foram excluídas!", {
+      className: "success",
+    });
   } catch ({ message, name }) {
-    toast('Houve um erro com a exclusão do veiculo:\n' + `${message}:${name}`, {
-      className: 'error',
+    toast("Houve um erro com a exclusão do veiculo:\n" + `${message}:${name}`, {
+      className: "error",
     });
   }
 };
@@ -67,17 +82,24 @@ export const updateVehicles = async (
   UpdateData: FirebaseVehicleProps
 ) => {
   try {
-    const q = query(collection(db, 'Vehicles'), where('vehicleId', '==', vehicleToUpdateid));
+    const q = query(
+      collection(db, "Vehicles"),
+      where("vehicleId", "==", vehicleToUpdateid)
+    );
     const querySnapshot = await getDocs(q);
-    let docId = '';
+    let docId = "";
     querySnapshot.forEach(async (doc) => {
       docId = doc.id;
     });
-    const vehicleDoc = doc(db, 'Vehicles', docId);
+    const vehicleDoc = doc(db, "Vehicles", docId);
     await updateDoc(vehicleDoc, UpdateData);
   } catch ({ message, name }) {
-    toast('Houve um erro com a atualização de dados do veiculo:\n' + `${message}:${name}`, {
-      className: 'error',
-    });
+    toast(
+      "Houve um erro com a atualização de dados do veiculo:\n" +
+        `${message}:${name}`,
+      {
+        className: "error",
+      }
+    );
   }
 };

@@ -1,5 +1,5 @@
-import * as S from './styles';
-import * as P from 'phosphor-react';
+import * as S from '../styles/pages/Index'
+import * as P from 'phosphor-react'
 
 export default function Home() {
   return (
@@ -16,5 +16,5 @@ export default function Home() {
         </S.LinkItem>
       </S.LinksContainer>
     </S.IndexContainer>
-  );
+  )
 }

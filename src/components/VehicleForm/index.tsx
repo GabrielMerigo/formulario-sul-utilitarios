@@ -1,39 +1,39 @@
-import * as S from './styles';
-import * as P from 'phosphor-react';
-import * as Z from 'zod';
+import * as S from './styles'
+import * as P from 'phosphor-react'
+import * as Z from 'zod'
 import {
   CloudImagesArrayProps,
   CloudMainImageImageProps,
   CreateVehicleProps,
   FirebaseVehicleProps,
-} from '@/types/VehiclesTypes';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
-import { VehiclesContext } from '@/contexts/VehiclesContext';
-import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase';
-import { uploadImages, uploadMainImage } from '@/utils/fireStorage';
-import { formatValue } from '@/utils/FormatNumberValue';
-import { VehicleData } from './VehicleData';
-import { VehicleImages } from './VehicleImages';
-import router from 'next/router';
-import { toast } from 'react-toastify';
-import { Loading } from '../Loading';
+} from '@/types/VehiclesTypes'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
+import { VehiclesContext } from '@/contexts/VehiclesContext'
+import { postVehicles, updateVehicles } from '@/utils/fireStoreDatabase'
+import { uploadImages, uploadMainImage } from '@/utils/fireStorage'
+import { formatValue } from '@/utils/FormatNumberValue'
+import { VehicleData } from './VehicleData'
+import { VehicleImages } from './VehicleImages'
+import router from 'next/router'
+import { toast } from 'react-toastify'
+import { Loading } from '../Loading'
 
 type VehicleFormProps = {
-  setUpdating?: Dispatch<SetStateAction<boolean>>;
-  vehicleData?: FirebaseVehicleProps;
+  setUpdating?: Dispatch<SetStateAction<boolean>>
+  vehicleData?: FirebaseVehicleProps
   images?: {
-    name: string;
-    url: string;
-  }[];
-  setOpen?: Dispatch<SetStateAction<boolean>>;
-};
+    name: string
+    url: string
+  }[]
+  setOpen?: Dispatch<SetStateAction<boolean>>
+}
 
 type imagesProps = {
-  name: string;
-  url: string;
-};
+  name: string
+  url: string
+}
 
 const newVehicleFormValidationSchema = Z.object({
   vehicleType: Z.string().min(1, { message: 'Informe o tipo do veículo' }),
@@ -47,13 +47,13 @@ const newVehicleFormValidationSchema = Z.object({
   bodywork: Z.string().min(1, { message: 'Informe o chassi' }),
   description: Z.coerce.string(),
   created_at: Z.coerce.string(),
-});
+})
 
 export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: VehicleFormProps) => {
   const { newMainImage, newImages, setNewImages, setNewMainImage, setVehicleItemImages } =
-    useContext(VehiclesContext);
-  const [activeStep, setActiveStep] = useState<number>(0);
-  const [sedingData, setSendingData] = useState(false);
+    useContext(VehiclesContext)
+  const [activeStep, setActiveStep] = useState<number>(0)
+  const [sedingData, setSendingData] = useState(false)
   const {
     control,
     register,
@@ -76,7 +76,7 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
       mainImageUrl: vehicleData?.mainImageUrl,
       imagesUrl: vehicleData?.imagesUrl,
     },
-  });
+  })
 
   const steps = [
     {
@@ -96,72 +96,72 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
         <VehicleImages setUpdating={setUpdating} images={images} vehicleData={vehicleData} />
       ),
     },
-  ];
+  ]
 
   const handleNext = () => {
     if (Object.entries(errors).length > 0) {
       const errorsArray = Object.entries(errors).reduce((acc: string, error, index) => {
-        let transletedError = '';
+        let transletedError = ''
         switch (error[0]) {
           case 'vehicleType':
-            transletedError = 'Tipo de Veículo';
-            break;
+            transletedError = 'Tipo de Veículo'
+            break
           case 'vehicleName':
-            transletedError = 'Nome do Veículo';
-            break;
+            transletedError = 'Nome do Veículo'
+            break
           case 'vehiclePrice':
-            transletedError = 'Valor do Veículo';
-            break;
+            transletedError = 'Valor do Veículo'
+            break
           case 'brand':
-            transletedError = 'Marca do Veículo';
-            break;
+            transletedError = 'Marca do Veículo'
+            break
           case 'model':
-            transletedError = 'Modelo do Veículo';
-            break;
+            transletedError = 'Modelo do Veículo'
+            break
           case 'manufactureYear':
-            transletedError = 'Ano de fabricação do Veículo';
-            break;
+            transletedError = 'Ano de fabricação do Veículo'
+            break
           case 'manufactureModel':
-            transletedError = 'Ano do modelo do Veículo';
-            break;
+            transletedError = 'Ano do modelo do Veículo'
+            break
           case 'traction':
-            transletedError = 'Tração do Veículo';
-            break;
+            transletedError = 'Tração do Veículo'
+            break
           case 'bodywork':
-            transletedError = 'Carroceria do Veículo';
-            break;
+            transletedError = 'Carroceria do Veículo'
+            break
         }
         index < Object.entries(errors).length - 1
           ? (acc += `${transletedError},\n`)
-          : (acc += `${transletedError}`);
-        return acc;
-      }, '');
+          : (acc += `${transletedError}`)
+        return acc
+      }, '')
       toast(`Houve um erro ou os campos abaixo estão vazios:\n\n${errorsArray}`, {
         className: 'error',
-      });
+      })
     }
-    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-  };
-  const handleBack = () => setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1)
+  }
+  const handleBack = () => setActiveStep((prevActiveStep: number) => prevActiveStep - 1)
 
   function generateUniqueId() {
-    return Math.random().toString(36).substr(2, 9);
+    return Math.random().toString(36).substr(2, 9)
   }
 
   const onSubmit: SubmitHandler<CreateVehicleProps> = async (data) => {
-    setSendingData(true);
-    const generateId = generateUniqueId();
-    const formattedValue = formatValue(String(data.vehiclePrice));
-    data.vehiclePrice = formattedValue;
+    setSendingData(true)
+    const generateId = generateUniqueId()
+    const formattedValue = formatValue(String(data.vehiclePrice))
+    data.vehiclePrice = formattedValue
 
     if (vehicleData) {
-      const thereIsAnewMainImage = newMainImage.length > 0;
-      const thereArenewImages = newImages.length > 0;
+      const thereIsAnewMainImage = newMainImage.length > 0
+      const thereArenewImages = newImages.length > 0
 
       const uploadMainImagesAndGetUrl =
-        thereIsAnewMainImage && (await uploadMainImage(vehicleData.vehicleId, newMainImage));
+        thereIsAnewMainImage && (await uploadMainImage(vehicleData.vehicleId, newMainImage))
       const uploadImagesAndGetUrl =
-        thereArenewImages && (await uploadImages(vehicleData.vehicleId, newImages));
+        thereArenewImages && (await uploadImages(vehicleData.vehicleId, newImages))
 
       await updateVehicles(vehicleData.vehicleId, {
         ...data,
@@ -171,22 +171,22 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
           ? (uploadMainImagesAndGetUrl as CloudMainImageImageProps)
           : vehicleData.mainImageUrl,
         imagesUrl: thereArenewImages
-          ? [...vehicleData.imagesUrl, ...uploadImagesAndGetUrl!]
+          ? [...vehicleData.imagesUrl, ...(uploadImagesAndGetUrl as CloudImagesArrayProps)]
           : (vehicleData.imagesUrl as CloudImagesArrayProps),
-      });
+      })
 
-      setNewImages([]);
-      setNewMainImage([]);
-      setSendingData(false);
-      setOpen!(false);
-      toast('Os dados do veiculo foram atualizados', { className: 'success' });
-      return;
+      setNewImages([])
+      setNewMainImage([])
+      setSendingData(false)
+      setOpen!(false)
+      toast('Os dados do veiculo foram atualizados', { className: 'success' })
+      return
     }
 
     const uploadMainImagesAndGetUrl =
-      newMainImage.length > 0 && (await uploadMainImage(generateId, newMainImage));
+      newMainImage.length > 0 && (await uploadMainImage(generateId, newMainImage))
     const uploadImagesAndGetUrl =
-      newImages.length > 0 && (await uploadImages(generateId, newImages));
+      newImages.length > 0 && (await uploadImages(generateId, newImages))
 
     await postVehicles({
       ...data,
@@ -194,13 +194,13 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
       mainImageUrl: uploadMainImagesAndGetUrl as { name: string; url: string },
       imagesUrl: uploadImagesAndGetUrl as imagesProps[],
       created_at: new Date(),
-    });
-    toast('Veiculo registrado!', { className: 'success', autoClose: 5000 });
-    setNewImages([]);
-    setNewMainImage([]);
-    setSendingData(false);
-    router.push('ListVehicles/');
-  };
+    })
+    toast('Veiculo registrado!', { className: 'success', autoClose: 5000 })
+    setNewImages([])
+    setNewMainImage([])
+    setSendingData(false)
+    router.push('ListVehicles/')
+  }
 
   return (
     <S.FormContainer>
@@ -221,13 +221,13 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
         <S.StepperBox>
           <S.StepperComponent activeStep={activeStep} orientation="vertical">
             {steps.map((label) => {
-              const stepProps: { completed?: boolean } = {};
+              const stepProps: { completed?: boolean } = {}
               return (
                 <S.StepComponent key={label.label} {...stepProps}>
                   <S.StepLabelComponent>{label.label}</S.StepLabelComponent>
                   <S.StepContentComponent>{label.description}</S.StepContentComponent>
                 </S.StepComponent>
-              );
+              )
             })}
           </S.StepperComponent>
         </S.StepperBox>
@@ -252,5 +252,5 @@ export const VehicleForm = ({ setUpdating, images, vehicleData, setOpen }: Vehic
         )}
       </form>
     </S.FormContainer>
-  );
-};
+  )
+}

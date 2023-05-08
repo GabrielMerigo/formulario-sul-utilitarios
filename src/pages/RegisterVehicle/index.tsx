@@ -1,6 +1,6 @@
-import * as S from './styles';
-import * as P from 'phosphor-react';
-import { VehicleForm } from '@/components/VehicleForm';
+import * as S from '../../styles/pages/RegisterVehicle'
+import * as P from 'phosphor-react'
+import { VehicleForm } from '@/components/VehicleForm'
 
 export default function RegisterVehicle() {
   return (
@@ -18,5 +18,5 @@ export default function RegisterVehicle() {
         <VehicleForm />
       </S.FormContainer>
     </S.RegisterVehicleContainer>
-  );
+  )
 }
